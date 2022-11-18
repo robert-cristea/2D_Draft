@@ -1627,7 +1627,7 @@ Public Module C_ControlMethods
         Dim FirstPolyPoint = New Point(PolyItem.PolyPoint(0).X * width, PolyItem.PolyPoint(0).Y * height)
 
         Dim dPolyCurve, maxdPolyCurve, maxIdx, PPx, PPy, PPDotx, PPDoty As Integer
-        Dim PPOutFlag As Integer
+        Dim PPOutFlag As Boolean
         maxdPolyCurve = pFind_BPointPolyMaxDistance(PolyItem, FirstCurvePoint, width, height)
         maxIdx = 0 : PPx = Main_Form.PXs : PPy = Main_Form.PYs : PPDotx = Main_Form.PDotX : PPDoty = Main_Form.PDotY : PPOutFlag = Main_Form.POutFlag
 
@@ -1644,7 +1644,7 @@ Public Module C_ControlMethods
         Next
 
         If PPOutFlag = True Then
-            result.start_point = New PointF(PPDotx / CSng(width), PPDoty / CSng(height))
+            result.middle_point = New PointF(PPDotx / CSng(width), PPDoty / CSng(height))
             result.dot_flag = True
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMax"

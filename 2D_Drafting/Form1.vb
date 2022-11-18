@@ -474,6 +474,12 @@ Public Class Main_Form
         ID_BTN_P_LINE.BackColor = Color.LightBlue
         ID_BTN_RADIUS.BackColor = Color.LightBlue
         ID_BTN_SCALE.BackColor = Color.LightBlue
+        ID_BTN_C_LINE.BackColor = Color.LightBlue
+        ID_BTN_C_POLY.BackColor = Color.LightBlue
+        ID_BTN_C_POINT.BackColor = Color.LightBlue
+        ID_BTN_C_CURVE.BackColor = Color.LightBlue
+        ID_BTN_C_CUPOLY.BackColor = Color.LightBlue
+        ID_BTN_C_SEL.BackColor = Color.LightBlue
     End Sub
 
     'get setting information from ini file
@@ -635,6 +641,18 @@ Public Class Main_Form
                     ID_BTN_P_LINE.BackColor = Color.DodgerBlue
                 Case 10
                     ID_BTN_SCALE.BackColor = Color.DodgerBlue
+                Case 11
+                    ID_BTN_C_LINE.BackColor = Color.DodgerBlue
+                Case 12
+                    ID_BTN_C_POLY.BackColor = Color.DodgerBlue
+                Case 13
+                    ID_BTN_C_POINT.BackColor = Color.DodgerBlue
+                Case 14
+                    ID_BTN_C_CURVE.BackColor = Color.DodgerBlue
+                Case 15
+                    ID_BTN_C_CUPOLY.BackColor = Color.DodgerBlue
+                Case 16
+                    ID_BTN_C_SEL.BackColor = Color.DodgerBlue
             End Select
 
         End If
@@ -2010,6 +2028,16 @@ Public Class Main_Form
         If undo_num < 2 Then undo_num += 1
     End Sub
 
+    Private Sub AddMaxMinToList()
+        obj_selected.obj_num = cur_obj_num(tab_index)
+        SetLineAndFont(obj_selected, line_infor, font_infor)
+        object_list(tab_index).Add(obj_selected)
+        obj_selected.Refresh()
+        cur_measure_type = -1
+        cur_obj_num(tab_index) += 1
+        If undo_num < 2 Then undo_num += 1
+    End Sub
+
     ''' <summary>
     ''' calculate minimum distance between two selected objects
     ''' </summary>
@@ -2018,65 +2046,49 @@ Public Class Main_Form
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             obj_selected = CalcMinBetweenCuPolyAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CuPolyRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             obj_selected = CalcMinBetweenCuPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             obj_selected = CalcMinBetweenCurveAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             obj_selected = CalcMinBetweenCurveAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If PRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             obj_selected = CalcMinBetweenPointAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If PRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
             obj_selected = CalcMinBetweenPointAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If LRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
             obj_selected = CalcMinBetweenLineAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
             obj_selected = CalcMinBetweenCurveAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
 
         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
@@ -2091,65 +2103,49 @@ Public Class Main_Form
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             obj_selected = CalcMaxBetweenCuPolyAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CuPolyRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             obj_selected = CalcMaxBetweenCuPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             obj_selected = CalcMaxBetweenCurveAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             obj_selected = CalcMaxBetweenCurveAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
             obj_selected = CalcMaxBetweenCurveAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If LRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             obj_selected = CalcMaxBetweenLineAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If LRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
             obj_selected = CalcMaxBetweenLineAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If PolyRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             obj_selected = CalcMaxBetweenPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
         ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
@@ -2236,65 +2232,49 @@ Public Class Main_Form
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             obj_selected = CalcPMaxBetweenCuPolyAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CuPolyRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             obj_selected = CalcPMaxBetweenCuPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             obj_selected = CalcPMaxBetweenCurveAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             obj_selected = CalcPMaxBetweenCurveAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
             obj_selected = CalcPMaxBetweenCurveAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If LRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             obj_selected = CalcPMaxBetweenLineAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If LRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
             obj_selected = CalcPMaxBetweenLineAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If PolyRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             obj_selected = CalcPMaxBetweenPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
         ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
