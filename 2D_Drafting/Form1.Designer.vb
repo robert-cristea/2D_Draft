@@ -40,6 +40,8 @@ Partial Class Main_Form
         Me.ID_MENU_ABOUT = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.ID_BTN_C_LINE = New System.Windows.Forms.Button()
         Me.ID_BTN_TAB_REMOVE = New System.Windows.Forms.Button()
         Me.ID_BTN_TAB_ADD = New System.Windows.Forms.Button()
         Me.ID_BTN_RESEL = New System.Windows.Forms.Button()
@@ -99,10 +101,18 @@ Partial Class Main_Form
         Me.Unit = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.ID_BTN_C_LINE = New System.Windows.Forms.Button()
+        Me.ID_BTN_C_POLY = New System.Windows.Forms.Button()
+        Me.ID_BTN_C_POINT = New System.Windows.Forms.Button()
+        Me.ID_BTN_C_CURVE = New System.Windows.Forms.Button()
+        Me.ID_BTN_C_CUPOLY = New System.Windows.Forms.Button()
+        Me.ID_BTN_C_SEL = New System.Windows.Forms.Button()
+        Me.MinCalcBtn = New System.Windows.Forms.Button()
+        Me.MaxCalcBtn = New System.Windows.Forms.Button()
+        Me.PerMin = New System.Windows.Forms.Button()
+        Me.PerMax = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.ID_GROUP_BOX_CONTROL.SuspendLayout()
         Me.Panel2.SuspendLayout()
         CType(Me.ID_PICTURE_BOX_CAM, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -110,7 +120,6 @@ Partial Class Main_Form
         CType(Me.ID_NUM_LINE_WIDTH, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ID_NUM_DIGIT, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ID_LISTVIEW, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -133,54 +142,54 @@ Partial Class Main_Form
         '
         Me.ID_MENU_OPEN_CAM.Image = Global._2D_Drafting.My.Resources.Resources.import_camera
         Me.ID_MENU_OPEN_CAM.Name = "ID_MENU_OPEN_CAM"
-        Me.ID_MENU_OPEN_CAM.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_OPEN_CAM.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_OPEN_CAM.Text = "OPEN CAMERA"
         '
         'ID_MENU_CLOSE_CAM
         '
         Me.ID_MENU_CLOSE_CAM.Image = Global._2D_Drafting.My.Resources.Resources.close_camera
         Me.ID_MENU_CLOSE_CAM.Name = "ID_MENU_CLOSE_CAM"
-        Me.ID_MENU_CLOSE_CAM.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_CLOSE_CAM.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_CLOSE_CAM.Text = "CLOSE CAMERA"
         '
         'ID_MENU_OPEN
         '
         Me.ID_MENU_OPEN.Image = Global._2D_Drafting.My.Resources.Resources.import_image
         Me.ID_MENU_OPEN.Name = "ID_MENU_OPEN"
-        Me.ID_MENU_OPEN.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_OPEN.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_OPEN.Text = "IMPORT IMAGE"
         '
         'ID_MENU_SAVE
         '
         Me.ID_MENU_SAVE.Image = Global._2D_Drafting.My.Resources.Resources.export_report
         Me.ID_MENU_SAVE.Name = "ID_MENU_SAVE"
-        Me.ID_MENU_SAVE.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_SAVE.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_SAVE.Text = "EXPORT IMAGE"
         '
         'ID_MENU_SAVE_XLSX
         '
         Me.ID_MENU_SAVE_XLSX.Image = Global._2D_Drafting.My.Resources.Resources.export_xlsx
         Me.ID_MENU_SAVE_XLSX.Name = "ID_MENU_SAVE_XLSX"
-        Me.ID_MENU_SAVE_XLSX.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_SAVE_XLSX.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_SAVE_XLSX.Text = "EXPORT XLSX"
         '
         'ID_MENU_EXPORT_REPORT
         '
         Me.ID_MENU_EXPORT_REPORT.Image = Global._2D_Drafting.My.Resources.Resources.export_xlsx
         Me.ID_MENU_EXPORT_REPORT.Name = "ID_MENU_EXPORT_REPORT"
-        Me.ID_MENU_EXPORT_REPORT.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_EXPORT_REPORT.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_EXPORT_REPORT.Text = "EXPORT REPORT"
         '
         'ID_MENU_TO_CURVES
         '
         Me.ID_MENU_TO_CURVES.Name = "ID_MENU_TO_CURVES"
-        Me.ID_MENU_TO_CURVES.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_TO_CURVES.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_TO_CURVES.Text = "TO CURVES"
         '
         'ID_MENU_EXIT
         '
         Me.ID_MENU_EXIT.Name = "ID_MENU_EXIT"
-        Me.ID_MENU_EXIT.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_EXIT.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_EXIT.Text = "EXIT"
         '
         'HELPToolStripMenuItem
@@ -193,25 +202,25 @@ Partial Class Main_Form
         'ID_MENU_ACTIVATE
         '
         Me.ID_MENU_ACTIVATE.Name = "ID_MENU_ACTIVATE"
-        Me.ID_MENU_ACTIVATE.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_ACTIVATE.Size = New System.Drawing.Size(148, 22)
         Me.ID_MENU_ACTIVATE.Text = "ACTIVATE"
         '
         'ID_MENU_LICENSE_INFO
         '
         Me.ID_MENU_LICENSE_INFO.Name = "ID_MENU_LICENSE_INFO"
-        Me.ID_MENU_LICENSE_INFO.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_LICENSE_INFO.Size = New System.Drawing.Size(148, 22)
         Me.ID_MENU_LICENSE_INFO.Text = "LICENSE INFO"
         '
         'ID_MENU_SETTING_INFO
         '
         Me.ID_MENU_SETTING_INFO.Name = "ID_MENU_SETTING_INFO"
-        Me.ID_MENU_SETTING_INFO.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_SETTING_INFO.Size = New System.Drawing.Size(148, 22)
         Me.ID_MENU_SETTING_INFO.Text = "SETTING INFO"
         '
         'ID_MENU_ABOUT
         '
         Me.ID_MENU_ABOUT.Name = "ID_MENU_ABOUT"
-        Me.ID_MENU_ABOUT.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_ABOUT.Size = New System.Drawing.Size(148, 22)
         Me.ID_MENU_ABOUT.Text = "ABOUT"
         '
         'ContextMenuStrip1
@@ -224,6 +233,10 @@ Partial Class Main_Form
         Me.Panel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel1.BackColor = System.Drawing.SystemColors.ControlLight
+        Me.Panel1.Controls.Add(Me.PerMax)
+        Me.Panel1.Controls.Add(Me.PerMin)
+        Me.Panel1.Controls.Add(Me.MaxCalcBtn)
+        Me.Panel1.Controls.Add(Me.MinCalcBtn)
         Me.Panel1.Controls.Add(Me.GroupBox1)
         Me.Panel1.Controls.Add(Me.ID_BTN_TAB_REMOVE)
         Me.Panel1.Controls.Add(Me.ID_BTN_TAB_ADD)
@@ -238,6 +251,31 @@ Partial Class Main_Form
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(1348, 132)
         Me.Panel1.TabIndex = 2
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.ID_BTN_C_SEL)
+        Me.GroupBox1.Controls.Add(Me.ID_BTN_C_CUPOLY)
+        Me.GroupBox1.Controls.Add(Me.ID_BTN_C_CURVE)
+        Me.GroupBox1.Controls.Add(Me.ID_BTN_C_POINT)
+        Me.GroupBox1.Controls.Add(Me.ID_BTN_C_POLY)
+        Me.GroupBox1.Controls.Add(Me.ID_BTN_C_LINE)
+        Me.GroupBox1.Location = New System.Drawing.Point(427, 9)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(224, 120)
+        Me.GroupBox1.TabIndex = 9
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Objects"
+        '
+        'ID_BTN_C_LINE
+        '
+        Me.ID_BTN_C_LINE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_C_LINE.Image = Global._2D_Drafting.My.Resources.Resources.C_line
+        Me.ID_BTN_C_LINE.Location = New System.Drawing.Point(31, 19)
+        Me.ID_BTN_C_LINE.Name = "ID_BTN_C_LINE"
+        Me.ID_BTN_C_LINE.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_C_LINE.TabIndex = 0
+        Me.ID_BTN_C_LINE.UseVisualStyleBackColor = False
         '
         'ID_BTN_TAB_REMOVE
         '
@@ -308,6 +346,7 @@ Partial Class Main_Form
         'ID_BTN_BRIGHTNESS
         '
         Me.ID_BTN_BRIGHTNESS.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_BRIGHTNESS.Image = Global._2D_Drafting.My.Resources.Resources.brightness
         Me.ID_BTN_BRIGHTNESS.Location = New System.Drawing.Point(1008, 83)
         Me.ID_BTN_BRIGHTNESS.Name = "ID_BTN_BRIGHTNESS"
         Me.ID_BTN_BRIGHTNESS.Size = New System.Drawing.Size(36, 36)
@@ -348,6 +387,7 @@ Partial Class Main_Form
         'ID_BTN_SCALE
         '
         Me.ID_BTN_SCALE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_SCALE.Image = Global._2D_Drafting.My.Resources.Resources.measuring_scale1
         Me.ID_BTN_SCALE.Location = New System.Drawing.Point(269, 74)
         Me.ID_BTN_SCALE.Name = "ID_BTN_SCALE"
         Me.ID_BTN_SCALE.Size = New System.Drawing.Size(36, 36)
@@ -358,6 +398,7 @@ Partial Class Main_Form
         'ID_BTN_P_LINE
         '
         Me.ID_BTN_P_LINE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_P_LINE.Image = Global._2D_Drafting.My.Resources.Resources.pt_line
         Me.ID_BTN_P_LINE.Location = New System.Drawing.Point(208, 74)
         Me.ID_BTN_P_LINE.Name = "ID_BTN_P_LINE"
         Me.ID_BTN_P_LINE.Size = New System.Drawing.Size(36, 36)
@@ -368,6 +409,7 @@ Partial Class Main_Form
         'ID_BTN_PENCIL
         '
         Me.ID_BTN_PENCIL.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_PENCIL.Image = Global._2D_Drafting.My.Resources.Resources.pencil
         Me.ID_BTN_PENCIL.Location = New System.Drawing.Point(145, 74)
         Me.ID_BTN_PENCIL.Name = "ID_BTN_PENCIL"
         Me.ID_BTN_PENCIL.Size = New System.Drawing.Size(36, 36)
@@ -378,6 +420,7 @@ Partial Class Main_Form
         'ID_BTN_ANNOTATION
         '
         Me.ID_BTN_ANNOTATION.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_ANNOTATION.Image = Global._2D_Drafting.My.Resources.Resources.annotation
         Me.ID_BTN_ANNOTATION.Location = New System.Drawing.Point(81, 74)
         Me.ID_BTN_ANNOTATION.Name = "ID_BTN_ANNOTATION"
         Me.ID_BTN_ANNOTATION.Size = New System.Drawing.Size(36, 36)
@@ -388,6 +431,7 @@ Partial Class Main_Form
         'ID_BTN_RADIUS
         '
         Me.ID_BTN_RADIUS.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_RADIUS.Image = Global._2D_Drafting.My.Resources.Resources.radius
         Me.ID_BTN_RADIUS.Location = New System.Drawing.Point(22, 74)
         Me.ID_BTN_RADIUS.Name = "ID_BTN_RADIUS"
         Me.ID_BTN_RADIUS.Size = New System.Drawing.Size(36, 36)
@@ -814,24 +858,93 @@ Partial Class Main_Form
         'Timer1
         '
         '
-        'GroupBox1
+        'ID_BTN_C_POLY
         '
-        Me.GroupBox1.Controls.Add(Me.ID_BTN_C_LINE)
-        Me.GroupBox1.Location = New System.Drawing.Point(427, 9)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(302, 120)
-        Me.GroupBox1.TabIndex = 9
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Objects"
+        Me.ID_BTN_C_POLY.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_C_POLY.Image = Global._2D_Drafting.My.Resources.Resources.C_poly
+        Me.ID_BTN_C_POLY.Location = New System.Drawing.Point(95, 19)
+        Me.ID_BTN_C_POLY.Name = "ID_BTN_C_POLY"
+        Me.ID_BTN_C_POLY.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_C_POLY.TabIndex = 1
+        Me.ID_BTN_C_POLY.UseVisualStyleBackColor = False
         '
-        'ID_BTN_C_LINE
+        'ID_BTN_C_POINT
         '
-        Me.ID_BTN_C_LINE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_C_LINE.Location = New System.Drawing.Point(31, 19)
-        Me.ID_BTN_C_LINE.Name = "ID_BTN_C_LINE"
-        Me.ID_BTN_C_LINE.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_C_LINE.TabIndex = 0
-        Me.ID_BTN_C_LINE.UseVisualStyleBackColor = False
+        Me.ID_BTN_C_POINT.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_C_POINT.Image = Global._2D_Drafting.My.Resources.Resources.C_point
+        Me.ID_BTN_C_POINT.Location = New System.Drawing.Point(158, 19)
+        Me.ID_BTN_C_POINT.Name = "ID_BTN_C_POINT"
+        Me.ID_BTN_C_POINT.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_C_POINT.TabIndex = 2
+        Me.ID_BTN_C_POINT.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_C_CURVE
+        '
+        Me.ID_BTN_C_CURVE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_C_CURVE.Image = Global._2D_Drafting.My.Resources.Resources.C_curve
+        Me.ID_BTN_C_CURVE.Location = New System.Drawing.Point(31, 74)
+        Me.ID_BTN_C_CURVE.Name = "ID_BTN_C_CURVE"
+        Me.ID_BTN_C_CURVE.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_C_CURVE.TabIndex = 3
+        Me.ID_BTN_C_CURVE.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_C_CUPOLY
+        '
+        Me.ID_BTN_C_CUPOLY.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_C_CUPOLY.Image = Global._2D_Drafting.My.Resources.Resources.C_cupoly
+        Me.ID_BTN_C_CUPOLY.Location = New System.Drawing.Point(95, 74)
+        Me.ID_BTN_C_CUPOLY.Name = "ID_BTN_C_CUPOLY"
+        Me.ID_BTN_C_CUPOLY.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_C_CUPOLY.TabIndex = 4
+        Me.ID_BTN_C_CUPOLY.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_C_SEL
+        '
+        Me.ID_BTN_C_SEL.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_C_SEL.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ID_BTN_C_SEL.ForeColor = System.Drawing.SystemColors.ControlLightLight
+        Me.ID_BTN_C_SEL.Location = New System.Drawing.Point(158, 74)
+        Me.ID_BTN_C_SEL.Name = "ID_BTN_C_SEL"
+        Me.ID_BTN_C_SEL.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_C_SEL.TabIndex = 5
+        Me.ID_BTN_C_SEL.Text = "Sel"
+        Me.ID_BTN_C_SEL.UseVisualStyleBackColor = False
+        '
+        'MinCalcBtn
+        '
+        Me.MinCalcBtn.Location = New System.Drawing.Point(723, 35)
+        Me.MinCalcBtn.Name = "MinCalcBtn"
+        Me.MinCalcBtn.Size = New System.Drawing.Size(75, 23)
+        Me.MinCalcBtn.TabIndex = 10
+        Me.MinCalcBtn.Text = "Min"
+        Me.MinCalcBtn.UseVisualStyleBackColor = True
+        '
+        'MaxCalcBtn
+        '
+        Me.MaxCalcBtn.Location = New System.Drawing.Point(839, 35)
+        Me.MaxCalcBtn.Name = "MaxCalcBtn"
+        Me.MaxCalcBtn.Size = New System.Drawing.Size(75, 23)
+        Me.MaxCalcBtn.TabIndex = 11
+        Me.MaxCalcBtn.Text = "Max"
+        Me.MaxCalcBtn.UseVisualStyleBackColor = True
+        '
+        'PerMin
+        '
+        Me.PerMin.Location = New System.Drawing.Point(723, 90)
+        Me.PerMin.Name = "PerMin"
+        Me.PerMin.Size = New System.Drawing.Size(75, 23)
+        Me.PerMin.TabIndex = 12
+        Me.PerMin.Text = "P_Min"
+        Me.PerMin.UseVisualStyleBackColor = True
+        '
+        'PerMax
+        '
+        Me.PerMax.Location = New System.Drawing.Point(839, 90)
+        Me.PerMax.Name = "PerMax"
+        Me.PerMax.Size = New System.Drawing.Size(75, 23)
+        Me.PerMax.TabIndex = 13
+        Me.PerMax.Text = "P_Max"
+        Me.PerMax.UseVisualStyleBackColor = True
         '
         'Main_Form
         '
@@ -851,6 +964,7 @@ Partial Class Main_Form
         Me.MenuStrip1.PerformLayout()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
+        Me.GroupBox1.ResumeLayout(False)
         Me.ID_GROUP_BOX_CONTROL.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
@@ -860,7 +974,6 @@ Partial Class Main_Form
         CType(Me.ID_NUM_LINE_WIDTH, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ID_NUM_DIGIT, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ID_LISTVIEW, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GroupBox1.ResumeLayout(False)
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -944,4 +1057,13 @@ End Sub
     Friend WithEvents ID_MENU_TO_CURVES As ToolStripMenuItem
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents ID_BTN_C_LINE As Button
+    Friend WithEvents ID_BTN_C_POINT As Button
+    Friend WithEvents ID_BTN_C_POLY As Button
+    Friend WithEvents PerMax As Button
+    Friend WithEvents PerMin As Button
+    Friend WithEvents MaxCalcBtn As Button
+    Friend WithEvents MinCalcBtn As Button
+    Friend WithEvents ID_BTN_C_SEL As Button
+    Friend WithEvents ID_BTN_C_CUPOLY As Button
+    Friend WithEvents ID_BTN_C_CURVE As Button
 End Class

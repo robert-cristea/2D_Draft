@@ -21,7 +21,13 @@ Public Enum MeasureType
     draw_line = 8
     pt_line = 9
     measure_scale = 10
-    Curves = 11
+    C_Line = 11
+    C_Poly = 12
+    C_Point = 13
+    C_Curve = 14
+    C_CuPoly = 15
+    C_Sel = 16
+    Curves = 17
 End Enum
 
 'structure for drawing line
@@ -115,6 +121,93 @@ Public Structure ScaleObject
 
 End Structure
 
+Public Structure C_LineObject
+    Public FirstPointOfLine As PointF
+    Public SecndPointOfLine As PointF
+    Public LDrawPos As PointF
+
+    Public Sub Refresh()
+        FirstPointOfLine.X = 0
+        FirstPointOfLine.Y = 0
+        SecndPointOfLine.X = 0
+        SecndPointOfLine.Y = 0
+        LDrawPos.X = 0
+        LDrawPos.Y = 0
+    End Sub
+End Structure
+
+Public Class C_CurveObject
+    Public CurvePoint(1000) As PointF
+    Public CDrawPos As PointF
+    Public CArrayIndx As Integer
+
+    Public Sub Refresh()
+        CDrawPos.X = 0
+        CDrawPos.Y = 0
+        CArrayIndx = 0
+        For i = 0 To 1000
+            CurvePoint(i).X = 0
+            CurvePoint(i).Y = 0
+        Next
+    End Sub
+End Class
+
+Public Structure C_PointObject
+    Public PointPoint As PointF
+    Public PDrawPos As PointF
+
+    Public Sub Refresh()
+        PointPoint.X = 0
+        PointPoint.Y = 0
+        PDrawPos.X = 0
+        PDrawPos.Y = 0
+    End Sub
+End Structure
+
+Public Class C_PolyObject
+    Public PolyDrawPos As PointF
+    Public PolyPointIndx As Integer
+    Public PolyPoint(50) As PointF
+
+    Public Sub Refresh()
+        PolyPointIndx = 0
+        PolyDrawPos.X = 0
+        PolyDrawPos.Y = 0
+        For i = 0 To 50
+            PolyPoint(i).X = 0
+            PolyPoint(i).Y = 0
+        Next
+    End Sub
+End Class
+
+Public Class C_CuPolyObject
+    Public CuPolyPoint(30, 1000) As PointF
+    Public CuPolyDrawPos As PointF
+    Public CuPolyPointIndx_j As Integer
+    Public CuPolyPointIndx_k(30) As Integer
+
+    Public Sub Refresh()
+        CuPolyPointIndx_j = 0
+        CuPolyDrawPos.X = 0
+        CuPolyDrawPos.Y = 0
+        For i = 0 To 30
+            CuPolyPointIndx_k(i) = 0
+            For j = 0 To 1000
+                CuPolyPoint(i, j).X = 0
+                CuPolyPoint(i, j).Y = 0
+            Next
+        Next
+    End Sub
+End Class
+
+Public Class CurveObject
+    Public CuPolyItem As List(Of C_CuPolyObject) = New List(Of C_CuPolyObject)()
+    Public PolyItem As List(Of C_PolyObject) = New List(Of C_PolyObject)()
+    Public PointItem As List(Of C_PointObject) = New List(Of C_PointObject)()
+    Public LineItem As List(Of C_LineObject) = New List(Of C_LineObject)()
+    Public CurveItem As List(Of C_CurveObject) = New List(Of C_CurveObject)()
+
+End Class
 'structure for drawing objects
 Public Structure MeasureObject
     Public start_point As PointF        'start point of object
@@ -146,6 +239,7 @@ Public Structure MeasureObject
     Public name As String               'the name of object
     Public remarks As String            'remarks of object
 
+    Public curve_object As CurveObject
     Public Sub Refresh()
         start_point.X = 0
         start_point.Y = 0
@@ -250,6 +344,50 @@ Public Class Main_Form
     Private ToCurveImg_path As String = "C:\Users\Public\Documents\ToCurve.bmp"    'the path of image for Curves
     Private ReturnedImg_path As String = "C:\Users\Public\Documents\To2D.bmp"       'the path of image returned from Curves
     Private ReturnedTxt_path As String = "C:\Users\Public\Documents\To2D.txt"    'the path of text file contains data-table
+
+    Public PolyDrawEndFlag As Boolean          'flag specifies that end point of polygen is drawed
+    Public CuPolyDrawEndFlag As Boolean        'flag specifies that end point of Curve&polygen is drawed
+    Public dumyPoint As Point                  'temp point 
+
+    Public CReadySelectFalg As Boolean                                 'flag specifies whether curve&poly object is ready to select or not. when mouse cursor is in range of object, this becomes true, otherwise this becomes false
+    Public CReadySelectArrayIndx As Integer                            'the candidate index of curve object for selection
+    Public CRealSelectArrayIndx As Integer                             'the real index of curve object which is selected
+    Public CReadySelectArrayIndx_L As Integer                          'the candidate index of label of curve object for selection
+    Public CRealSelectArrayIndx_L As Integer                           'the real index of label of curve object which is selected
+
+    Public CuPolyReadySelectArrayIndx As Integer                       'the candidate index of curve&poly object for selection
+    Public CuPolyRealSelectArrayIndx As Integer                        'the real index of curve&poly object which is selected
+    Public CuPolyReadySelectArrayIndx_L As Integer                     'the candidate index of label of curve&poly object for selection
+    Public CuPolyRealSelectArrayIndx_L As Integer                      'the real index of label of curve&poly object which is selected
+
+    Public PolyReadySelectArrayIndx As Integer                         'the candidate index of polygen object for selection
+    Public PolyRealSelectArrayIndx As Integer                          'the real index of polygen object which is selected
+    Public PolyReadySelectArrayIndx_L As Integer                       'the candidate index of label of polygen object for selection
+    Public PolyRealSelectArrayIndx_L As Integer                        'the real index of label of polygen object which is selected
+
+    Public LReadySelectArrayIndx As Integer                            'the candidate index of line object for selection
+    Public LRealSelectArrayIndx As Integer                             'the real index of line object which is selected
+    Public LReadySelectArrayIndx_L As Integer                          'the candidate index of label of line object for selection
+    Public LRealSelectArrayIndx_L As Integer                           'the real index of label of line object which is selected
+
+    Public PReadySelectArrayIndx As Integer                            'the candidate index of point object for selection
+    Public PRealSelectArrayIndx As Integer                             'the real index of point object which is selected
+    Public PReadySelectArrayIndx_L As Integer                          'the candidate index of label of point object for selection
+    Public PRealSelectArrayIndx_L As Integer                           'the real index of label of point object which is selected
+
+    Public CurvePreviousPoint As System.Nullable(Of Point) = Nothing           'previous point of curve object
+    Public LinePreviousPoint As System.Nullable(Of Point) = Nothing            'previous point of Line object
+    Public PointPreviousPoint As System.Nullable(Of Point) = Nothing           'previous point of Point object
+    Public PolyPreviousPoint As System.Nullable(Of Point) = Nothing            'previous point of polygen object
+    Public CuPolyPreviousPoint As System.Nullable(Of Point) = Nothing          'previous point of curve&poly object
+    Public MousePosPoint As System.Nullable(Of Point) = Nothing                'the position of mouse cursor
+
+    Private C_PolyObj As C_PolyObject = New C_PolyObject()
+    Private C_PointObj As C_PointObject = New C_PointObject()
+    Private C_LineObj As C_LineObject = New C_LineObject()
+    Private C_CuPolyObj As C_CuPolyObject = New C_CuPolyObject()
+    Private C_CurveObj As C_CurveObject = New C_CurveObject()
+    Private curve_sel_index As Integer
 
     Public Sub New()
         InitializeComponent()
@@ -921,60 +1059,83 @@ Public Class Main_Form
         If ID_PICTURE_BOX(tab_index).Image Is Nothing OrElse current_image(tab_index) Is Nothing Then
             Return
         End If
-        SetCapture(CInt(ID_PICTURE_BOX(tab_index).Handle))
-        Dim m_pt As PointF = New Point()
-        m_pt.X = CSng(e.X) / ID_PICTURE_BOX(tab_index).Width
-        m_pt.Y = CSng(e.Y) / ID_PICTURE_BOX(tab_index).Height
-        m_pt.X = Math.Min(Math.Max(m_pt.X, 0), 1)
-        m_pt.Y = Math.Min(Math.Max(m_pt.Y, 0), 1)
-        m_cur_drag = m_pt
+        If e.Button = MouseButtons.Left Then
+            SetCapture(CInt(ID_PICTURE_BOX(tab_index).Handle))
+            Dim m_pt As PointF = New Point()
+            m_pt.X = CSng(e.X) / ID_PICTURE_BOX(tab_index).Width
+            m_pt.Y = CSng(e.Y) / ID_PICTURE_BOX(tab_index).Height
+            m_pt.X = Math.Min(Math.Max(m_pt.X, 0), 1)
+            m_pt.Y = Math.Min(Math.Max(m_pt.Y, 0), 1)
+            m_cur_drag = m_pt
 
-        Dim m_pt2 As Point = New Point(e.X, e.Y)
+            Dim m_pt2 As Point = New Point(e.X, e.Y)
 
+            If cur_measure_type >= 0 Then
+                If cur_measure_type < MeasureType.C_Line Then
+                    Dim completed = ModifyObjSelected(obj_selected, cur_measure_type, m_pt, Enumerable.ElementAt(origin_image, tab_index).Width, Enumerable.ElementAt(origin_image, tab_index).Height, line_infor, font_infor, CF)
 
-        If cur_measure_type >= 0 Then
-            Dim completed = ModifyObjSelected(obj_selected, cur_measure_type, m_pt, Enumerable.ElementAt(origin_image, tab_index).Width, Enumerable.ElementAt(origin_image, tab_index).Height, line_infor, font_infor, CF)
+                    If completed Then
+                        obj_selected.obj_num = cur_obj_num(tab_index)
+                        object_list(tab_index).Add(obj_selected)
+                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+                        obj_selected.Refresh()
+                        cur_measure_type = -1
+                        cur_obj_num(tab_index) += 1
+                        If undo_num < 2 Then undo_num += 1
+                    Else
+                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                        ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, False)
+                    End If
+                Else    'Curve objects
+                    If cur_measure_type = MeasureType.C_Poly Then
+                        If PolyPreviousPoint IsNot Nothing Then
+                            C_PolyObj.PolyPoint(PolyPointIndx) = m_pt
+                            C_PolyObj.PolyPointIndx += 1
+                            PolyPreviousPoint = Nothing
+                        End If
+                    ElseIf cur_measure_type = MeasureType.C_CuPoly Then
+                        CuPolyDrawEndFlag = False
+                        C_CuPolyObj.CuPolyPointIndx_j += 1
+                        C_CuPolyObj.CuPolyPoint(C_CuPolyObj.CuPolyPointIndx_j, 0) = m_pt
+                    End If
 
-            If completed Then
-                obj_selected.obj_num = cur_obj_num(tab_index)
-                object_list(tab_index).Add(obj_selected)
-                ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
-                obj_selected.Refresh()
-                cur_measure_type = -1
-                cur_obj_num(tab_index) += 1
-                If undo_num < 2 Then undo_num += 1
+                End If
+
             Else
-                ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, False)
-            End If
-        Else
-            'select point of selected object
-            If sel_index >= 0 Then
-                sel_pt_index = ID_PICTURE_BOX(tab_index).CheckPointInPos(object_list.ElementAt(tab_index).ElementAt(sel_index), m_pt2)
-                If sel_pt_index >= 0 Then
+                'select point of selected object
+                If sel_index >= 0 Then
+                    sel_pt_index = ID_PICTURE_BOX(tab_index).CheckPointInPos(object_list.ElementAt(tab_index).ElementAt(sel_index), m_pt2)
+                    If sel_pt_index >= 0 Then
+                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                        ID_PICTURE_BOX(tab_index).HightLightItem(object_list.ElementAt(tab_index).ElementAt(sel_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
+                        ID_PICTURE_BOX(tab_index).DrawObjSelected(object_list.ElementAt(tab_index).ElementAt(sel_index), True)
+                        ID_PICTURE_BOX(tab_index).HighlightTargetPt(object_list.ElementAt(tab_index).ElementAt(sel_index), sel_pt_index)
+                        Return
+                    End If
+                End If
+
+                sel_index = CheckItemInPos(m_pt, object_list.ElementAt(tab_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
+                If sel_index >= 0 Then
                     ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
                     ID_PICTURE_BOX(tab_index).HightLightItem(object_list.ElementAt(tab_index).ElementAt(sel_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
                     ID_PICTURE_BOX(tab_index).DrawObjSelected(object_list.ElementAt(tab_index).ElementAt(sel_index), True)
-                    ID_PICTURE_BOX(tab_index).HighlightTargetPt(object_list.ElementAt(tab_index).ElementAt(sel_index), sel_pt_index)
-                    Return
+                Else
+                    If anno_num >= 0 Then
+                        ID_MY_TEXTBOX(tab_index).DisableTextBox(object_list.ElementAt(tab_index), anno_num, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+                        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+                        anno_num = -1
+                    End If
+                    ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
                 End If
             End If
+        Else    'right click
 
-            sel_index = CheckItemInPos(m_pt, object_list.ElementAt(tab_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
-            If sel_index >= 0 Then
-                ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                ID_PICTURE_BOX(tab_index).HightLightItem(object_list.ElementAt(tab_index).ElementAt(sel_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
-                ID_PICTURE_BOX(tab_index).DrawObjSelected(object_list.ElementAt(tab_index).ElementAt(sel_index), True)
-            Else
-                If anno_num >= 0 Then
-                    ID_MY_TEXTBOX(tab_index).DisableTextBox(object_list.ElementAt(tab_index), anno_num, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-                    ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
-                    anno_num = -1
-                End If
-                ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-            End If
+
+
+
         End If
+
     End Sub
 
     'release capture
@@ -1668,6 +1829,62 @@ Public Class Main_Form
             End Try
         End If
 
+    End Sub
+
+#End Region
+#Region "Curves"
+    ''' <summary>
+    ''' set current measurement type as C_Line
+    ''' </summary>
+    Private Sub ID_BTN_C_LINE_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_LINE.Click
+        cur_measure_type = MeasureType.C_Line
+        obj_selected.measure_type = cur_measure_type
+        obj_selected.Refresh()
+    End Sub
+
+    ''' <summary>
+    ''' set current measurement type as C_Poly
+    ''' </summary>
+    Private Sub ID_BTN_C_POLY_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_POLY.Click
+        cur_measure_type = MeasureType.C_Poly
+        obj_selected.measure_type = cur_measure_type
+        obj_selected.Refresh()
+    End Sub
+
+    ''' <summary>
+    ''' set current measurement type as C_Point
+    ''' </summary>
+    Private Sub ID_BTN_C_POINT_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_POINT.Click
+        cur_measure_type = MeasureType.C_Point
+        obj_selected.measure_type = cur_measure_type
+        obj_selected.Refresh()
+    End Sub
+
+    ''' <summary>
+    ''' set current measurement type as C_Curve
+    ''' </summary>
+    Private Sub ID_BTN_C_CURVE_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_CURVE.Click
+        cur_measure_type = MeasureType.C_Curve
+        obj_selected.measure_type = cur_measure_type
+        obj_selected.Refresh()
+    End Sub
+
+    ''' <summary>
+    ''' set current measurement type as C_Cupoly
+    ''' </summary>
+    Private Sub ID_BTN_C_CUPOLY_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_CUPOLY.Click
+        cur_measure_type = MeasureType.C_CuPoly
+        obj_selected.measure_type = cur_measure_type
+        obj_selected.Refresh()
+    End Sub
+
+    ''' <summary>
+    ''' set current measurement type as C_Sel
+    ''' </summary>
+    Private Sub ID_BTN_C_SEL_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_SEL.Click
+        cur_measure_type = MeasureType.C_Sel
+        obj_selected.measure_type = cur_measure_type
+        obj_selected.Refresh()
     End Sub
 
 #End Region
