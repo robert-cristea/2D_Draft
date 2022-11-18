@@ -396,4 +396,72 @@ Public Module C_Utils
         Next
         Return minTempDis
     End Function
+
+    ''' <summary>
+    ''' calculate distance between point and polygen.
+    ''' </summary>
+    ''' <paramname="Polyi">The polygen object.</param>
+    ''' <paramname="m_pt">coordinate of target point.</param>
+    ''' <paramname="width">the width of picturebox.</param>
+    ''' <paramname="width">the height of picturebox.</param>
+    Public Function pFind_BPointPolyDistance(Polyi As C_PolyObject, mPt As Point, width As Integer, height As Integer) As Integer
+        Dim tempDis, minTempDis As Integer
+        Dim FirstPolyPoint = New Point(Polyi.PolyPoint(0).X * width, Polyi.PolyPoint(0).Y * height)
+        Dim SecondPolyPoint = New Point(Polyi.PolyPoint(1).X * width, Polyi.PolyPoint(1).Y * height)
+
+        minTempDis = pFind_BPointLineDistance(FirstPolyPoint.X, FirstPolyPoint.Y, SecondPolyPoint.X, SecondPolyPoint.Y, mPt.X, mPt.Y)
+        Main_Form.POutFlag = Main_Form.OutPointFlag
+        Main_Form.PXs = Main_Form.XsLinePoint
+        Main_Form.PYs = Main_Form.YsLinePoint
+        Main_Form.PDotX = Main_Form.DotX
+        Main_Form.PDotY = Main_Form.DotY
+        For j = 0 To Polyi.PolyPointIndx - 1
+            Dim PolyPoint1 = New Point(Polyi.PolyPoint(j).X * width, Polyi.PolyPoint(j).Y * height)
+            Dim PolyPoint2 = New Point(Polyi.PolyPoint(j + 1).X * width, Polyi.PolyPoint(j + 1).Y * height)
+            tempDis = pFind_BPointLineDistance(PolyPoint1.X, PolyPoint1.Y, PolyPoint2.X, PolyPoint2.Y, mPt.X, mPt.Y)
+            If minTempDis > tempDis Then
+                minTempDis = tempDis
+                Main_Form.PXs = Main_Form.XsLinePoint
+                Main_Form.PYs = Main_Form.YsLinePoint
+                Main_Form.PDotX = Main_Form.DotX
+                Main_Form.PDotY = Main_Form.DotY
+                Main_Form.POutFlag = Main_Form.OutPointFlag
+            End If
+        Next
+        Return minTempDis
+    End Function
+
+    ''' <summary>
+    ''' calculate perpendicular distance between point and polygen.
+    ''' </summary>
+    ''' <paramname="Polyi">The polygen object.</param>
+    ''' <paramname="m_pt">coordinate of target point.</param>
+    ''' <paramname="width">the width of picturebox.</param>
+    ''' <paramname="width">the height of picturebox.</param>
+    Public Function pFind_BPointPolyMaxDistance(Polyi As C_PolyObject, mPt As Point, width As Integer, height As Integer) As Integer
+        Dim tempDis, maxTempDis As Integer
+        Main_Form.POutFlag = False
+        Dim FirstPolyPoint = New Point(Polyi.PolyPoint(0).X * width, Polyi.PolyPoint(0).Y * height)
+        Dim SecondPolyPoint = New Point(Polyi.PolyPoint(1).X * width, Polyi.PolyPoint(1).Y * height)
+        maxTempDis = pFind_BPointLineDistance(FirstPolyPoint.X, FirstPolyPoint.Y, SecondPolyPoint.X, SecondPolyPoint.Y, mPt.X, mPt.Y)
+        Main_Form.POutFlag = Main_Form.OutPointFlag
+        Main_Form.PXs = Main_Form.XsLinePoint
+        Main_Form.PYs = Main_Form.YsLinePoint
+        Main_Form.PDotX = Main_Form.DotX
+        Main_Form.PDotY = Main_Form.DotY
+        For j = 0 To Polyi.PolyPointIndx - 1
+            Dim PolyPoint1 = New Point(Polyi.PolyPoint(j).X * width, Polyi.PolyPoint(j).Y * height)
+            Dim PolyPoint2 = New Point(Polyi.PolyPoint(j + 1).X * width, Polyi.PolyPoint(j + 1).Y * height)
+            tempDis = pFind_BPointLineDistance(PolyPoint1.X, PolyPoint1.Y, PolyPoint2.X, PolyPoint2.Y, mPt.X, mPt.Y)
+            If maxTempDis < tempDis Then
+                maxTempDis = tempDis
+                Main_Form.PXs = Main_Form.XsLinePoint
+                Main_Form.PYs = Main_Form.YsLinePoint
+                Main_Form.PDotX = Main_Form.DotX
+                Main_Form.PDotY = Main_Form.DotY
+                Main_Form.POutFlag = Main_Form.OutPointFlag
+            End If
+        Next
+        Return maxTempDis
+    End Function
 End Module
