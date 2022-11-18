@@ -2120,7 +2120,7 @@ Public Module ControlsMethods
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.Curves
+                    Case MeasureType.C_MinMax
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
@@ -2200,7 +2200,7 @@ Public Module ControlsMethods
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.Curves
+                    Case MeasureType.C_MinMax
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit

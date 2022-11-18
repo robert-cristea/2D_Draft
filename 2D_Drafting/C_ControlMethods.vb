@@ -11,7 +11,6 @@ Public Module C_ControlMethods
 
 #Region "PictureBox Methods"
 
-
     ''' <summary>
     ''' draw object to picture box control.
     ''' </summary>
@@ -109,6 +108,14 @@ Public Module C_ControlMethods
             Next
             Dim DrawPt = New Point(CInt(obj.CuPolyDrawPos.X * pictureBox.Width), CInt(obj.CuPolyDrawPos.Y * pictureBox.Height))
             graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 30, 20))
+        ElseIf item.measure_type = MeasureType.C_MinMax Then
+            Dim startPt = New Point(item.start_point.X * pictureBox.Width, item.start_point.Y * pictureBox.Height)
+            Dim EndPt = New Point(item.end_point.X * pictureBox.Width, item.end_point.Y * pictureBox.Height)
+            graph.DrawLine(graphPen, CInt(startPt.X), CInt(startPt.Y), CInt(EndPt.X), CInt(EndPt.Y))
+            If item.dot_flag Then
+                Dim MidPt = New Point(item.middle_point.X * pictureBox.Width, item.middle_point.Y * pictureBox.Height)
+                graph.DrawLine(graphPen, CInt(startPt.X), CInt(startPt.Y), CInt(MidPt.X), CInt(MidPt.Y))
+            End If
         End If
         PenRed.Dispose()
         graphBrush.Dispose()
@@ -274,6 +281,7 @@ Public Module C_ControlMethods
         graph.Dispose()
     End Sub
 
+
 #End Region
 
 #Region "Initialize"
@@ -312,5 +320,373 @@ Public Module C_ControlMethods
         Main_Form.COutPointFlag = False
 
     End Sub
+#End Region
+
+#Region "Min Max"
+    ''' <summary>
+    ''' calculate min distance between two objects.
+    ''' </summary>
+    ''' <paramname="Obj1">The selected object.</param>
+    ''' <paramname="Obj2">The selected object.</param>
+    ''' <paramname="width">The width of picturebox.</param>
+    ''' <paramname="height">The height of picturebox.</param>
+    Public Function CalcMinBetweenCuPolyAndLine(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
+        Dim result = New MeasureObject()
+        Dim dMinLineCurve, dLineCurve, minIndex_j, minIndex_k, MSx, MSy As Integer
+        Dim LineMidExistFlag, CuPolyLOutflag As Boolean
+        LineMidExistFlag = False : CuPolyLOutflag = False
+        Dim CuPolyItem = Obj1.curve_object.CuPolyItem(0)
+        Dim LineItem = Obj2.curve_object.LineItem(0)
+        Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
+        Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
+        Dim FirstEdgeOfCuPoly = New Point(CuPolyItem.CuPolyPoint(1, 0).X * width, CuPolyItem.CuPolyPoint(1, 0).Y * height)
+        dMinLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, FirstEdgeOfCuPoly.X, FirstEdgeOfCuPoly.Y)
+        minIndex_j = 1 : minIndex_k = 0 : Main_Form.COutPointFlag = False
+        For j = 1 To CuPolyItem.CuPolyPointIndx_j
+            For k = 0 To CuPolyItem.CuPolyPointIndx_k(j)
+                Dim KEdgeOfCuPoly = New Point(CuPolyItem.CuPolyPoint(j, k).X * width, CuPolyItem.CuPolyPoint(j, k).Y * height)
+                dLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, KEdgeOfCuPoly.X, KEdgeOfCuPoly.Y)
+                If Main_Form.OutPointFlag = True Then Main_Form.COutPointFlag = True : Main_Form.CDotX = Main_Form.DotX : Main_Form.CDotY = Main_Form.DotY
+                If dMinLineCurve > dLineCurve Then LineMidExistFlag = False : dMinLineCurve = dLineCurve : minIndex_j = j : minIndex_k = k : 
+            Next
+            If j > 1 Then
+                Dim sP, eP As Point
+                sP = New Point(CuPolyItem.CuPolyPoint(j - 1, CuPolyItem.CuPolyPointIndx_k(j - 1)).X * width, CuPolyItem.CuPolyPoint(j - 1, CuPolyItem.CuPolyPointIndx_k(j - 1)).Y * height)
+                eP = New Point(CuPolyItem.CuPolyPoint(j, 0).X * width, CuPolyItem.CuPolyPoint(j, 0).Y * height)
+
+                If sP.X = eP.X Then
+                    If sP.Y < eP.Y Then
+                        For mpy = sP.Y To eP.Y
+                            dLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, sP.X, mpy)
+                            If dMinLineCurve > dLineCurve Then
+                                LineMidExistFlag = True
+                                dMinLineCurve = dLineCurve
+                                MSx = sP.X
+                                MSy = mpy
+                                If Main_Form.OutPointFlag = True Then Main_Form.COutPointFlag = True : Main_Form.CDotX = Main_Form.DotX : Main_Form.CDotY = Main_Form.DotY
+                            End If
+
+                        Next
+                    Else
+                        For mpy = eP.Y To sP.Y
+                            dLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, sP.X, mpy)
+
+                            If dMinLineCurve > dLineCurve Then
+                                LineMidExistFlag = True
+                                dMinLineCurve = dLineCurve
+                                MSx = sP.X
+                                MSy = mpy
+                                If Main_Form.OutPointFlag = True Then Main_Form.COutPointFlag = True : Main_Form.CDotX = Main_Form.DotX : Main_Form.CDotY = Main_Form.DotY
+                            End If
+
+                        Next
+                    End If
+                ElseIf sP.Y = eP.Y Then
+                    If sP.X < eP.X Then
+                        For mpx = sP.X To eP.X
+                            dLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, mpx, sP.Y)
+
+                            If dMinLineCurve > dLineCurve Then
+                                LineMidExistFlag = True
+                                dMinLineCurve = dLineCurve
+                                MSx = mpx
+                                MSy = sP.Y
+                                If Main_Form.OutPointFlag = True Then Main_Form.COutPointFlag = True : Main_Form.CDotX = Main_Form.DotX : Main_Form.CDotY = Main_Form.DotY
+                            End If
+                        Next
+                    Else
+                        For mpX = eP.X To sP.X
+                            dLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, mpX, sP.Y)
+                            If dMinLineCurve > dLineCurve Then
+                                LineMidExistFlag = True
+                                dMinLineCurve = dLineCurve
+                                MSx = mpX
+                                MSy = sP.Y
+                                If Main_Form.OutPointFlag = True Then Main_Form.COutPointFlag = True : Main_Form.CDotX = Main_Form.DotX : Main_Form.CDotY = Main_Form.DotY
+                            End If
+                        Next
+                    End If
+                Else
+                    If sP.X < eP.X Then
+                        For mpx = sP.X To eP.X
+                            dLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, mpx, GetLineEq(sP, eP, mpx))
+
+                            If dMinLineCurve > dLineCurve Then
+                                LineMidExistFlag = True
+                                dMinLineCurve = dLineCurve
+                                MSx = mpx
+                                MSy = GetLineEq(sP, eP, mpx)
+                                If Main_Form.OutPointFlag = True Then Main_Form.COutPointFlag = True : Main_Form.CDotX = Main_Form.DotX : Main_Form.CDotY = Main_Form.DotY
+                            End If
+                        Next
+                    Else
+                        For mpX = eP.X To sP.X
+                            dLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, mpX, GetLineEq(sP, eP, mpX))
+
+                            If dMinLineCurve > dLineCurve Then
+                                LineMidExistFlag = True
+                                dMinLineCurve = dLineCurve
+                                MSx = mpX
+                                MSy = GetLineEq(sP, eP, mpX)
+                                If Main_Form.OutPointFlag = True Then Main_Form.COutPointFlag = True : Main_Form.CDotX = Main_Form.DotX : Main_Form.CDotY = Main_Form.DotY
+                            End If
+                        Next
+                    End If
+                End If
+            End If
+        Next
+
+        If LineMidExistFlag = False Then
+            Dim minEdge = New Point(CuPolyItem.CuPolyPoint(minIndex_j, minIndex_k).X * width, CuPolyItem.CuPolyPoint(minIndex_j, minIndex_k).Y * height)
+            dLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, minEdge.X, minEdge.Y)
+            If Main_Form.OutPointFlag = True Then Main_Form.COutPointFlag = True : Main_Form.CDotX = Main_Form.DotX : Main_Form.CDotY = Main_Form.DotY
+            MSx = minEdge.X : MSy = minEdge.Y
+        Else
+            dLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, MSx, MSy)
+            If Main_Form.OutPointFlag = True Then Main_Form.COutPointFlag = True : Main_Form.CDotX = Main_Form.DotX : Main_Form.CDotY = Main_Form.DotY
+        End If
+
+        result.name = Obj1.name & "To" & Obj2.name
+        result.length = dLineCurve
+        result.measure_type = MeasureType.C_MinMax
+        result.start_point = New PointF(MSx / CSng(width), MSy / CSng(height))
+        result.end_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
+        Return result
+    End Function
+
+    ''' <summary>
+    ''' calculate min distance between two objects.
+    ''' </summary>
+    ''' <paramname="Obj1">The selected object.</param>
+    ''' <paramname="Obj2">The selected object.</param>
+    ''' <paramname="width">The width of picturebox.</param>
+    ''' <paramname="height">The height of picturebox.</param>
+    Public Function CalcMinBetweenCuPolyAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
+        Dim result As MeasureObject = New MeasureObject()
+        Dim dMinPointCuPoly, dPointCuPoly, minIndexPCuPoly_j, minIndexPCuPoly_k, minExistFlag, Cx, Cy As Integer
+        Dim CuPolyItem = Obj1.curve_object.CuPolyItem(0)
+        Dim PointItem = Obj2.curve_object.PointItem(0)
+
+        Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
+        Dim FirstEdgeOfCuPoly = New Point(CuPolyItem.CuPolyPoint(1, 0).X * width, CuPolyItem.CuPolyPoint(1, 0).Y * height)
+        dMinPointCuPoly = Find_TwoPointDistance(PointPoint.X, PointPoint.Y, FirstEdgeOfCuPoly.X, FirstEdgeOfCuPoly.Y)
+        minIndexPCuPoly_j = 1 : minIndexPCuPoly_k = 0
+        minExistFlag = False
+        For j = 1 To CuPolyItem.CuPolyPointIndx_j
+            For k = 0 To CuPolyItem.CuPolyPointIndx_k(j)
+                Dim KEdgeOfCuPoly = New Point(CuPolyItem.CuPolyPoint(j, k).X * width, CuPolyItem.CuPolyPoint(j, k).Y * height)
+                dPointCuPoly = Find_TwoPointDistance(PointPoint.X, PointPoint.Y, KEdgeOfCuPoly.X, KEdgeOfCuPoly.Y)
+                If dMinPointCuPoly > dPointCuPoly Then dMinPointCuPoly = dPointCuPoly : minIndexPCuPoly_j = j : minIndexPCuPoly_k = k
+            Next
+            If j > 1 Then
+                Dim sP, eP As Point
+                sP = New Point(CuPolyItem.CuPolyPoint(j - 1, CuPolyItem.CuPolyPointIndx_k(j - 1)).X * width, CuPolyItem.CuPolyPoint(j - 1, CuPolyItem.CuPolyPointIndx_k(j - 1)).Y * height)
+                eP = New Point(CuPolyItem.CuPolyPoint(j, 0).X * width, CuPolyItem.CuPolyPoint(j, 0).Y * height)
+
+                dPointCuPoly = Find_BPointLineDistance(sP.X, sP.Y, eP.X, eP.Y, PointPoint.X, PointPoint.Y)
+                If dMinPointCuPoly > dPointCuPoly Then dMinPointCuPoly = dPointCuPoly : minExistFlag = True : Cx = Main_Form.XsLinePoint : Cy = Main_Form.YsLinePoint
+            End If
+        Next
+
+        If minExistFlag Then
+            result.end_point = New PointF(Cx / CSng(width), Cy / CSng(height))
+        Else
+            result.end_point = CuPolyItem.CuPolyPoint(minIndexPCuPoly_j, minIndexPCuPoly_k)
+        End If
+        result.name = Obj1.name & "To" & Obj2.name
+        result.start_point = PointItem.PointPoint
+        result.measure_type = MeasureType.C_MinMax
+        result.length = dMinPointCuPoly
+        Return result
+    End Function
+
+    ''' <summary>
+    ''' calculate min distance between two objects.
+    ''' </summary>
+    ''' <paramname="Obj1">The selected object.</param>
+    ''' <paramname="Obj2">The selected object.</param>
+    ''' <paramname="width">The width of picturebox.</param>
+    ''' <paramname="height">The height of picturebox.</param>
+    Public Function CalcMinBetweenCurveAndLine(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
+        Dim result = New MeasureObject()
+        Dim CurveItem = Obj1.curve_object.CurveItem(0)
+        Dim LineItem = Obj2.curve_object.LineItem(0)
+        Dim dMinLineCurve, dLineCurve, minIndex As Integer
+        Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
+        Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
+        Dim FirstCurvePoint = New Point(CurveItem.CurvePoint(0).X * width, CurveItem.CurvePoint(0).Y * height)
+        dMinLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, FirstCurvePoint.X, FirstCurvePoint.Y)
+        minIndex = 0 : Main_Form.COutPointFlag = False
+
+        For i = 0 To CurveItem.CPointIndx
+            Dim CurvePoint = New Point(CurveItem.CurvePoint(i).X * width, CurveItem.CurvePoint(i).Y * height)
+            dLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, CurvePoint.X, CurvePoint.Y)
+            If Main_Form.OutPointFlag = True Then Main_Form.COutPointFlag = True : Main_Form.CDotX = Main_Form.DotX : Main_Form.CDotY = Main_Form.DotY
+            If dMinLineCurve > dLineCurve Then dMinLineCurve = dLineCurve : minIndex = i
+        Next
+        Dim MinCurvePoint = New Point(CurveItem.CurvePoint(minIndex).X * width, CurveItem.CurvePoint(minIndex).Y * height)
+        dLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, MinCurvePoint.X, MinCurvePoint.Y)
+
+        If Main_Form.COutPointFlag = True Then
+            result.middle_point = New PointF(Main_Form.CDotX / CSng(width), Main_Form.CDotY / CSng(height))
+            result.dot_flag = True
+        End If
+        result.start_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
+        result.end_point = CurveItem.CurvePoint(minIndex)
+        result.name = Obj1.name & "To" & Obj2.name
+        result.length = dLineCurve
+        result.measure_type = MeasureType.C_MinMax
+        Return result
+    End Function
+
+    ''' <summary>
+    ''' calculate min distance between two objects.
+    ''' </summary>
+    ''' <paramname="Obj1">The selected object.</param>
+    ''' <paramname="Obj2">The selected object.</param>
+    ''' <paramname="width">The width of picturebox.</param>
+    ''' <paramname="height">The height of picturebox.</param>
+    Public Function CalcMinBetweenCurveAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
+        Dim result As MeasureObject = New MeasureObject()
+        Dim CurveItem = Obj1.curve_object.CurveItem(0)
+        Dim PointItem = Obj2.curve_object.PointItem(0)
+
+        Dim dMinPointCurve, dPointCurve, minIndexP As Integer
+        Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
+        Dim FirstCurvePoint = New Point(CurveItem.CurvePoint(0).X * width, CurveItem.CurvePoint(0).Y * height)
+        dMinPointCurve = Find_TwoPointDistance(PointPoint.X, PointPoint.Y, FirstCurvePoint.X, FirstCurvePoint.Y)
+        minIndexP = 0
+        For i = 0 To CurveItem.CPointIndx
+            Dim CurvePoint = New Point(CurveItem.CurvePoint(i).X * width, CurveItem.CurvePoint(i).Y * height)
+            dPointCurve = Find_TwoPointDistance(PointPoint.X, PointPoint.Y, CurvePoint.X, CurvePoint.Y)
+
+            If dMinPointCurve > dPointCurve Then dMinPointCurve = dPointCurve : minIndexP = i
+        Next
+        result.start_point = PointItem.PointPoint
+        result.end_point = CurveItem.CurvePoint(minIndexP)
+        result.length = dMinPointCurve
+        result.name = Obj1.name & "To" & Obj2.name
+        result.measure_type = MeasureType.C_MinMax
+        Return result
+    End Function
+
+    ''' <summary>
+    ''' calculate min distance between two objects.
+    ''' </summary>
+    ''' <paramname="Obj1">The selected object.</param>
+    ''' <paramname="Obj2">The selected object.</param>
+    ''' <paramname="width">The width of picturebox.</param>
+    ''' <paramname="height">The height of picturebox.</param>
+    Public Function CalcMinBetweenPointAndLine(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
+        Dim result As MeasureObject = New MeasureObject()
+        Dim PointItem = Obj1.curve_object.PointItem(0)
+        Dim LineItem = Obj2.curve_object.LineItem(0)
+
+        Dim dLinePoint As Integer
+        Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
+        Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
+        Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
+        dLinePoint = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, PointPoint.X, PointPoint.Y)
+
+        result.start_point = PointItem.PointPoint
+        result.end_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
+        result.length = dLinePoint
+        result.name = Obj1.name & "To" & Obj2.name
+        result.measure_type = MeasureType.C_MinMax
+        Return result
+    End Function
+
+    ''' <summary>
+    ''' calculate min distance between two objects.
+    ''' </summary>
+    ''' <paramname="Obj1">The selected object.</param>
+    ''' <paramname="Obj2">The selected object.</param>
+    ''' <paramname="width">The width of picturebox.</param>
+    ''' <paramname="height">The height of picturebox.</param>
+    Public Function CalcMinBetweenPointAndPoly(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
+        Dim result As MeasureObject = New MeasureObject()
+        Dim PointItem = Obj1.curve_object.PointItem(0)
+        Dim PolyItem = Obj2.curve_object.PolyItem(0)
+
+        Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
+        Dim dPolyPoint As Integer
+        dPolyPoint = Find_BPointPolyDistance(PolyItem, PointPoint, width, height)
+
+        result.start_point = PointItem.PointPoint
+        result.end_point = New PointF(Main_Form.PXs / CSng(width), Main_Form.PYs / CSng(height))
+        result.length = dPolyPoint
+        result.name = Obj1.name & "To" & Obj2.name
+        result.measure_type = MeasureType.C_MinMax
+        Return result
+    End Function
+
+    ''' <summary>
+    ''' calculate min distance between two objects.
+    ''' </summary>
+    ''' <paramname="Obj1">The selected object.</param>
+    ''' <paramname="Obj2">The selected object.</param>
+    ''' <paramname="width">The width of picturebox.</param>
+    ''' <paramname="height">The height of picturebox.</param>
+    Public Function CalcMinBetweenLineAndPoly(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
+        Dim result As MeasureObject = New MeasureObject()
+        Dim LineItem = Obj1.curve_object.LineItem(0)
+        Dim PolyItem = Obj2.curve_object.PolyItem(0)
+        Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
+        Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
+
+        Dim dLinePoly, minLinePoly, LPx, LPy, LPx1, LPy1 As Integer
+        minLinePoly = Find_BPointPolyDistance(PolyItem, FirstPointofLine, width, height)
+        LPx = FirstPointofLine.X : LPy = FirstPointofLine.Y
+        LPx1 = Main_Form.PXs : LPy1 = Main_Form.PYs
+        dLinePoly = Find_BPointPolyDistance(PolyItem, SecndPointOfLine, width, height)
+        If minLinePoly > dLinePoly Then minLinePoly = dLinePoly : LPx = SecndPointOfLine.X : LPy = SecndPointOfLine.Y : LPx1 = Main_Form.PXs : LPy1 = Main_Form.PYs
+
+        For j = 0 To PolyItem.PolyPointIndx
+            Dim PolyPoint = New Point(PolyItem.PolyPoint(j).X * width, PolyItem.PolyPoint(j).Y * height)
+            dLinePoly = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, PolyPoint.X, PolyPoint.Y)
+            If minLinePoly > dLinePoly Then
+                minLinePoly = dLinePoly
+                LPx = Main_Form.XsLinePoint : LPy = Main_Form.YsLinePoint
+                LPx1 = PolyPoint.X : LPy1 = PolyPoint.Y
+            End If
+        Next
+
+        result.start_point = New PointF(LPx / CSng(width), LPy / CSng(height))
+        result.end_point = New PointF(LPx1 / CSng(width), LPy1 / CSng(height))
+        result.length = minLinePoly
+        result.name = Obj1.name & "To" & Obj2.name
+        result.measure_type = MeasureType.C_MinMax
+        Return result
+    End Function
+
+    ''' <summary>
+    ''' calculate min distance between two objects.
+    ''' </summary>
+    ''' <paramname="Obj1">The selected object.</param>
+    ''' <paramname="Obj2">The selected object.</param>
+    ''' <paramname="width">The width of picturebox.</param>
+    ''' <paramname="height">The height of picturebox.</param>
+    Public Function CalcMinBetweenCurveAndPoly(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
+        Dim result As MeasureObject = New MeasureObject()
+        Dim CurveItem = Obj1.curve_object.CurveItem(0)
+        Dim PolyItem = Obj2.curve_object.PolyItem(0)
+        Dim FirstCurvePoint = New Point(CurveItem.CurvePoint(0).X * width, CurveItem.CurvePoint(0).Y * height)
+
+        Dim dPolyCurve, mindPolyCurve, minIdx, PPx, PPy As Integer
+        mindPolyCurve = Find_BPointPolyDistance(PolyItem, FirstCurvePoint, width, height)
+        minIdx = 0 : PPx = Main_Form.PXs : PPy = Main_Form.PYs
+        For j = 0 To CurveItem.CPointIndx
+            Dim CurvePoint = New Point(CurveItem.CurvePoint(j).X * width, CurveItem.CurvePoint(j).Y * height)
+            dPolyCurve = Find_BPointPolyDistance(PolyItem, CurvePoint, width, height)
+            If mindPolyCurve > dPolyCurve Then mindPolyCurve = dPolyCurve : minIdx = j : PPx = Main_Form.PXs : PPy = Main_Form.PYs
+        Next
+
+        result.start_point = CurveItem.CurvePoint(minIdx)
+        result.end_point = New PointF(PPx / CSng(width), PPy / CSng(height))
+        result.length = mindPolyCurve
+        result.name = Obj1.name & "To" & Obj2.name
+        result.measure_type = MeasureType.C_MinMax
+        Return result
+    End Function
 #End Region
 End Module

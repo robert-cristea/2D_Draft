@@ -1,5 +1,6 @@
 ﻿Imports System.IO
 Imports System.Runtime.InteropServices
+Imports System.Windows.Interop
 Imports AForge.Video
 Imports AForge.Video.DirectShow
 Imports Emgu.CV
@@ -27,7 +28,8 @@ Public Enum MeasureType
     C_Curve = 14
     C_CuPoly = 15
     C_Sel = 16
-    Curves = 17
+    C_MinMax = 17
+    Curves = 18
 End Enum
 
 'structure for drawing line
@@ -180,6 +182,7 @@ Public Structure MeasureObject
     Public remarks As String            'remarks of object
 
     Public curve_object As CurveObject
+    Public dot_flag As Boolean
     Public Sub Refresh()
         start_point.X = 0
         start_point.Y = 0
@@ -203,7 +206,7 @@ Public Structure MeasureObject
 
         name = ""
         remarks = ""
-
+        dot_flag = False
     End Sub
 End Structure
 
@@ -2005,6 +2008,94 @@ Public Class Main_Form
         cur_measure_type = -1
         cur_obj_num(tab_index) += 1
         If undo_num < 2 Then undo_num += 1
+    End Sub
+
+    ''' <summary>
+    ''' calculate minimum distance between two selected objects
+    ''' </summary>
+    Private Sub MinCalcBtn_Click(sender As Object, e As EventArgs) Handles MinCalcBtn.Click
+        If CuPolyRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
+            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
+            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
+            obj_selected = CalcMinBetweenCuPolyAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            SetLineAndFont(obj_selected, line_infor, font_infor)
+            object_list(tab_index).Add(obj_selected)
+            obj_selected.Refresh()
+        End If
+        If CuPolyRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
+            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
+            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
+            obj_selected = CalcMinBetweenCuPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            SetLineAndFont(obj_selected, line_infor, font_infor)
+            object_list(tab_index).Add(obj_selected)
+            obj_selected.Refresh()
+        End If
+        If CRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
+            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
+            obj_selected = CalcMinBetweenCurveAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            SetLineAndFont(obj_selected, line_infor, font_infor)
+            object_list(tab_index).Add(obj_selected)
+            obj_selected.Refresh()
+        End If
+        If CRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
+            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
+            obj_selected = CalcMinBetweenCurveAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            SetLineAndFont(obj_selected, line_infor, font_infor)
+            object_list(tab_index).Add(obj_selected)
+            obj_selected.Refresh()
+        End If
+        If PRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
+            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
+            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
+            obj_selected = CalcMinBetweenPointAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            SetLineAndFont(obj_selected, line_infor, font_infor)
+            object_list(tab_index).Add(obj_selected)
+            obj_selected.Refresh()
+        End If
+        If PRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
+            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
+            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
+            obj_selected = CalcMinBetweenPointAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            SetLineAndFont(obj_selected, line_infor, font_infor)
+            object_list(tab_index).Add(obj_selected)
+            obj_selected.Refresh()
+        End If
+        If LRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
+            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
+            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
+            obj_selected = CalcMinBetweenLineAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            SetLineAndFont(obj_selected, line_infor, font_infor)
+            object_list(tab_index).Add(obj_selected)
+            obj_selected.Refresh()
+        End If
+        If CRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
+            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
+            obj_selected = CalcMinBetweenCurveAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            SetLineAndFont(obj_selected, line_infor, font_infor)
+            object_list(tab_index).Add(obj_selected)
+            obj_selected.Refresh()
+        End If
+
+        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+    End Sub
+
+    ''' <summary>
+    ''' calculate maximum distance between two selected objects
+    ''' </summary>
+    Private Sub MaxCalcBtn_Click(sender As Object, e As EventArgs) Handles MaxCalcBtn.Click
+
+    End Sub
+
+    Private Sub PerMin_Click(sender As Object, e As EventArgs) Handles PerMin.Click
+
+    End Sub
+
+    Private Sub PerMax_Click(sender As Object, e As EventArgs) Handles PerMax.Click
+
     End Sub
 #End Region
 
