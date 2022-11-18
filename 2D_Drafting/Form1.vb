@@ -139,12 +139,12 @@ End Structure
 Public Class C_CurveObject
     Public CurvePoint(1000) As PointF
     Public CDrawPos As PointF
-    Public CArrayIndx As Integer
+    Public CPointIndx As Integer
 
     Public Sub Refresh()
         CDrawPos.X = 0
         CDrawPos.Y = 0
-        CArrayIndx = 0
+        CPointIndx = 0
         For i = 0 To 1000
             CurvePoint(i).X = 0
             CurvePoint(i).Y = 0
@@ -382,6 +382,19 @@ Public Class Main_Form
     Public CuPolyPreviousPoint As System.Nullable(Of Point) = Nothing          'previous point of curve&poly object
     Public MousePosPoint As System.Nullable(Of Point) = Nothing                'the position of mouse cursor
 
+    Public XsLinePoint As Integer                                      'X-coordinate of foot of perpendicular
+    Public YsLinePoint As Integer                                      'Y-coordinate of foot of perpendicular
+    Public PXs, PYs As Integer                                         'points used for drawing max, min lines
+    Public FinalPXs, FinalPYs As Integer
+
+    Public DotX, DotY, CDotX, CDotY As Integer                         'points used for dotted lines
+
+    Public OutPointFlag As Boolean                                     'flag specifies whether the foot of perpendicular is in range of object or not
+    Public COutPointFlag As Boolean                                    'flag specifies whether the foot of perpendicular is in range of curve&poly object or not
+    Public PDotX As Integer                                            'X-coordinate of point which is used for drawing dotted line in case of polygen object
+    Public PDotY As Integer                                            'Y-coordinate of point which is used for drawing dotted line in case of polygen object
+    Public POutFlag As Boolean                                         'flag specifies whether the foot of perpendicular is in range of polygen object or not
+
     Private C_PolyObj As C_PolyObject = New C_PolyObject()
     Private C_PointObj As C_PointObject = New C_PointObject()
     Private C_LineObj As C_LineObject = New C_LineObject()
@@ -612,12 +625,12 @@ Public Class Main_Form
     'check license information when main dialog is loading
     Private Sub Main_Form_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
-            Init()
+            'Init()
             Initialize_Button_Colors()
             Timer1.Interval = 30
             Timer1.Start()
             GetInforFromIni()
-
+            initVar()
         Catch ex As Exception
 
             'ID_GROUP_BOX_CONTROL.Enabled = False
@@ -724,6 +737,7 @@ Public Class Main_Form
 
         If img_cnt >= 1 Then
             ID_PICTURE_BOX(tab_index).Image = Nothing
+            initVar()
         End If
         Dim added_tag = 0
         While added_tag < img_cnt
@@ -853,7 +867,6 @@ Public Class Main_Form
         cur_measure_type = MeasureType.annotation
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
-
     End Sub
 
     'set current measurement type as draw line
@@ -862,7 +875,6 @@ Public Class Main_Form
         cur_measure_type = MeasureType.draw_line
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
-
     End Sub
 
     'set current measurement type as point to line
@@ -943,6 +955,7 @@ Public Class Main_Form
             obj_selected.Refresh()
             sel_index = -1
             sel_pt_index = -1
+            curve_sel_index = -1
             Dim flag = RemoveObjFromList(object_list.ElementAt(tab_index))
             If flag = True Then
                 ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
@@ -1090,7 +1103,7 @@ Public Class Main_Form
                 Else    'Curve objects
                     If cur_measure_type = MeasureType.C_Poly Then
                         If PolyPreviousPoint IsNot Nothing Then
-                            C_PolyObj.PolyPoint(PolyPointIndx) = m_pt
+                            C_PolyObj.PolyPoint(C_PolyObj.PolyPointIndx) = m_pt
                             C_PolyObj.PolyPointIndx += 1
                             PolyPreviousPoint = Nothing
                         End If
@@ -1098,6 +1111,30 @@ Public Class Main_Form
                         CuPolyDrawEndFlag = False
                         C_CuPolyObj.CuPolyPointIndx_j += 1
                         C_CuPolyObj.CuPolyPoint(C_CuPolyObj.CuPolyPointIndx_j, 0) = m_pt
+                    ElseIf cur_measure_type = MeasureType.C_Point Then
+                        C_PointObj.PointPoint = m_pt
+                    ElseIf cur_measure_type = MeasureType.C_Line Then
+                        If LinePreviousPoint Is Nothing Then
+                            LinePreviousPoint = e.Location
+                            C_LineObj.FirstPointOfLine = m_pt
+                        End If
+                    ElseIf cur_measure_type = MeasureType.C_Sel Then
+                        If curve_sel_index >= 0 Then
+                            Dim obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index)
+                            If obj.measure_type = MeasureType.C_CuPoly Then
+                                CuPolyRealSelectArrayIndx = curve_sel_index
+                            ElseIf obj.measure_type = MeasureType.C_Curve Then
+                                CRealSelectArrayIndx = curve_sel_index
+                            ElseIf obj.measure_type = MeasureType.C_Line Then
+                                LRealSelectArrayIndx = curve_sel_index
+                            ElseIf obj.measure_type = MeasureType.C_Point Then
+                                PRealSelectArrayIndx = curve_sel_index
+                            ElseIf obj.measure_type = MeasureType.C_Poly Then
+                                PolyRealSelectArrayIndx = curve_sel_index
+                            End If
+                            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                            DrawCurveObjSelected(ID_PICTURE_BOX(tab_index), obj)
+                        End If
                     End If
 
                 End If
@@ -1130,10 +1167,27 @@ Public Class Main_Form
                 End If
             End If
         Else    'right click
-
-
-
-
+            If cur_measure_type = MeasureType.C_Poly Then
+                PolyPreviousPoint = Nothing
+                C_PolyObj.PolyDrawPos = PolyGetPos(C_PolyObj)
+                Dim tempObj = ClonePolyObj(C_PolyObj)
+                obj_selected.curve_object = New CurveObject()
+                obj_selected.curve_object.PolyItem.Add(tempObj)
+                obj_selected.name = "PL" & cur_obj_num(tab_index)
+                AddCurveToList()
+                C_PolyObj.Refresh()
+                PolyDrawEndFlag = True
+            ElseIf cur_measure_type = MeasureType.C_CuPoly Then
+                CuPolyPreviousPoint = Nothing
+                C_CuPolyObj.CuPolyDrawPos = CuPolyGetPos(C_CuPolyObj)
+                Dim tempObj = CloneCuPolyObj(C_CuPolyObj)
+                obj_selected.curve_object = New CurveObject()
+                obj_selected.curve_object.CuPolyItem.Add(tempObj)
+                obj_selected.name = "CP" & cur_obj_num(tab_index)
+                AddCurveToList()
+                C_CuPolyObj.Refresh()
+                CuPolyDrawEndFlag = True
+            End If
         End If
 
     End Sub
@@ -1142,68 +1196,178 @@ Public Class Main_Form
     Private Sub ID_PICTURE_BOX_MouseUp(ByVal sender As Object, ByVal e As MouseEventArgs)
         Call ReleaseCapture()
 
+        If cur_measure_type = MeasureType.C_Point Then
+            C_PointObj.PDrawPos = PGetPos(C_PointObj.PointPoint)
+            Dim tempObj = ClonePointObj(C_PointObj)
+            obj_selected.curve_object = New CurveObject()
+            obj_selected.curve_object.PointItem.Add(tempObj)
+            obj_selected.name = "P" & cur_obj_num(tab_index)
+            AddCurveToList()
+            C_PointObj.Refresh()
+        ElseIf cur_measure_type = MeasureType.C_Line Then
+            LinePreviousPoint = Nothing
+            C_LineObj.LDrawPos = LGetPos(C_LineObj)
+            Dim tempObj = CloneLineObj(C_LineObj)
+            obj_selected.curve_object = New CurveObject()
+            obj_selected.curve_object.LineItem.Add(tempObj)
+            obj_selected.name = "L" & cur_obj_num(tab_index)
+            AddCurveToList()
+            C_LineObj.Refresh()
+        ElseIf cur_measure_type = MeasureType.C_Curve Then
+            CurvePreviousPoint = Nothing
+            C_CurveObj.CDrawPos = CGetPos(C_CurveObj)
+            Dim tempObj = CloneCurveObj(C_CurveObj)
+            obj_selected.curve_object = New CurveObject()
+            obj_selected.curve_object.CurveItem.Add(tempObj)
+            obj_selected.name = "C" & cur_obj_num(tab_index)
+            AddCurveToList()
+            C_CurveObj.Refresh()
+        ElseIf cur_measure_type = MeasureType.C_CuPoly Then
+            CuPolyPreviousPoint = Nothing
+        End If
     End Sub
 
 
     'draw temporal objects according to mouse cursor
     Private Sub ID_PICTURE_BOX_MouseMove(sender As Object, e As MouseEventArgs)
-        If cur_measure_type >= 0 Then
-            Dim m_pt As Point = New Point(e.X, e.Y)
-            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-            ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, False)
-            ID_PICTURE_BOX(tab_index).DrawTempFinal(obj_selected, m_pt, side_drag, digit, CF, True)
-        ElseIf GetCapture() = ID_PICTURE_BOX(tab_index).Handle AndAlso sel_index >= 0 Then
-            Dim m_pt As PointF = New PointF()
-            m_pt.X = CSng(e.X) / ID_PICTURE_BOX(tab_index).Width
-            m_pt.Y = CSng(e.Y) / ID_PICTURE_BOX(tab_index).Height
-            m_pt.X = Math.Min(Math.Max(m_pt.X, 0), 1)
-            m_pt.Y = Math.Min(Math.Max(m_pt.Y, 0), 1)
-            Dim dx = m_pt.X - m_cur_drag.X
-            Dim dy = m_pt.Y - m_cur_drag.Y
-            m_cur_drag = m_pt
+        Dim m_pt As PointF = New PointF()
+        m_pt.X = CSng(e.X) / ID_PICTURE_BOX(tab_index).Width
+        m_pt.Y = CSng(e.Y) / ID_PICTURE_BOX(tab_index).Height
+        m_pt.X = Math.Min(Math.Max(m_pt.X, 0), 1)
+        m_pt.Y = Math.Min(Math.Max(m_pt.Y, 0), 1)
+        Dim dx = m_pt.X - m_cur_drag.X
+        Dim dy = m_pt.Y - m_cur_drag.Y
 
-            If sel_pt_index >= 0 Then
+        If GetCapture() = ID_PICTURE_BOX(tab_index).Handle Then
+            If cur_measure_type < 0 Then
+                If sel_index >= 0 Then
+                    m_cur_drag = m_pt
+                    If sel_pt_index >= 0 Then
+                        ID_PICTURE_BOX(tab_index).Refresh()
+                        MovePoint(object_list.ElementAt(tab_index), sel_index, sel_pt_index, dx, dy)
+                        ModifyObjSelected(object_list.ElementAt(tab_index), sel_index, Enumerable.ElementAt(origin_image, tab_index).Width, Enumerable.ElementAt(origin_image, tab_index).Height)
+                        Dim obj = object_list.ElementAt(tab_index).ElementAt(sel_index)
+                        Dim target_pt As Point = New Point()
+                        If obj.measure_type = MeasureType.angle Then
 
-                ID_PICTURE_BOX(tab_index).Refresh()
-                MovePoint(object_list.ElementAt(tab_index), sel_index, sel_pt_index, dx, dy)
-                ModifyObjSelected(object_list.ElementAt(tab_index), sel_index, Enumerable.ElementAt(origin_image, tab_index).Width, Enumerable.ElementAt(origin_image, tab_index).Height)
-                Dim obj = object_list.ElementAt(tab_index).ElementAt(sel_index)
-                Dim target_pt As Point = New Point()
-                If obj.measure_type = MeasureType.angle Then
+                            Dim start_point As Point = New Point()
+                            Dim end_point As Point = New Point()
+                            Dim middle_point As Point = New Point()
 
-                    Dim start_point As Point = New Point()
-                    Dim end_point As Point = New Point()
-                    Dim middle_point As Point = New Point()
+                            start_point.X = CInt(obj.start_point.X * ID_PICTURE_BOX(tab_index).Width)
+                            start_point.Y = CInt(obj.start_point.Y * ID_PICTURE_BOX(tab_index).Height)
+                            middle_point.X = CInt(obj.middle_point.X * ID_PICTURE_BOX(tab_index).Width)
+                            middle_point.Y = CInt(obj.middle_point.Y * ID_PICTURE_BOX(tab_index).Height)
+                            end_point.X = CInt(obj.end_point.X * ID_PICTURE_BOX(tab_index).Width)
+                            end_point.Y = CInt(obj.end_point.Y * ID_PICTURE_BOX(tab_index).Height)
 
-                    start_point.X = CInt(obj.start_point.X * ID_PICTURE_BOX(tab_index).Width)
-                    start_point.Y = CInt(obj.start_point.Y * ID_PICTURE_BOX(tab_index).Height)
-                    middle_point.X = CInt(obj.middle_point.X * ID_PICTURE_BOX(tab_index).Width)
-                    middle_point.Y = CInt(obj.middle_point.Y * ID_PICTURE_BOX(tab_index).Height)
-                    end_point.X = CInt(obj.end_point.X * ID_PICTURE_BOX(tab_index).Width)
-                    end_point.Y = CInt(obj.end_point.Y * ID_PICTURE_BOX(tab_index).Height)
+                            target_pt.X = (start_point.X + end_point.X) / 2
+                            target_pt.Y = (start_point.Y + end_point.Y) / 2
+                            Dim angles = CalcStartAndSweepAngle(obj, start_point, middle_point, end_point, target_pt)
+                            Dim start_angle, sweep_angle As Double
+                            start_angle = angles(0)
+                            sweep_angle = angles(1)
+                            Dim angle As Integer = CInt(2 * start_angle + sweep_angle) / 2
+                            Dim radius = CInt(obj.angle_object.radius * ID_PICTURE_BOX(tab_index).Width) + 10
+                            target_pt = CalcPositionInCircle(middle_point, radius, angle)
+                        Else
+                            target_pt = New Point(obj.draw_point.X * ID_PICTURE_BOX(tab_index).Width, obj.draw_point.Y * ID_PICTURE_BOX(tab_index).Height)
+                        End If
+                        ID_PICTURE_BOX(tab_index).DrawTempFinal(obj, target_pt, side_drag, digit, CF, False)
+                        object_list(tab_index)(sel_index) = obj
+                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
 
-                    target_pt.X = (start_point.X + end_point.X) / 2
-                    target_pt.Y = (start_point.Y + end_point.Y) / 2
-                    Dim angles = CalcStartAndSweepAngle(obj, start_point, middle_point, end_point, target_pt)
-                    Dim start_angle, sweep_angle As Double
-                    start_angle = angles(0)
-                    sweep_angle = angles(1)
-                    Dim angle As Integer = CInt(2 * start_angle + sweep_angle) / 2
-                    Dim radius = CInt(obj.angle_object.radius * ID_PICTURE_BOX(tab_index).Width) + 10
-                    target_pt = CalcPositionInCircle(middle_point, radius, angle)
-                Else
-                    target_pt = New Point(obj.draw_point.X * ID_PICTURE_BOX(tab_index).Width, obj.draw_point.Y * ID_PICTURE_BOX(tab_index).Height)
+                    Else
+                        MoveObject(object_list.ElementAt(tab_index), sel_index, dx, dy)
+                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                    End If
+                    ID_PICTURE_BOX(tab_index).HightLightItem(object_list.ElementAt(tab_index).ElementAt(sel_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
+                    ID_PICTURE_BOX(tab_index).DrawObjSelected(object_list.ElementAt(tab_index).ElementAt(sel_index), True)
                 End If
-                ID_PICTURE_BOX(tab_index).DrawTempFinal(obj, target_pt, side_drag, digit, CF, False)
-                object_list(tab_index)(sel_index) = obj
-                ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
-            Else
-                MoveObject(object_list.ElementAt(tab_index), sel_index, dx, dy)
-                ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
             End If
-            ID_PICTURE_BOX(tab_index).HightLightItem(object_list.ElementAt(tab_index).ElementAt(sel_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
-            ID_PICTURE_BOX(tab_index).DrawObjSelected(object_list.ElementAt(tab_index).ElementAt(sel_index), True)
+
+            If cur_measure_type = MeasureType.C_Curve Then
+                If CurvePreviousPoint Is Nothing Then
+                    CurvePreviousPoint = e.Location
+                    C_CurveObj.CurvePoint(0) = m_pt
+                Else
+                    ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                    DrawCurveObj(ID_PICTURE_BOX(tab_index), line_infor, C_CurveObj)
+                    DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, CurvePreviousPoint.Value, e.Location)
+                    C_CurveObj.CPointIndx += 1
+                    CurvePreviousPoint = e.Location
+                    C_CurveObj.CurvePoint(C_CurveObj.CPointIndx) = m_pt
+                End If
+            ElseIf cur_measure_type = MeasureType.C_Line Then
+                If LinePreviousPoint IsNot Nothing Then
+                    C_LineObj.SecndPointOfLine = m_pt
+                    ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                    DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, LinePreviousPoint.Value, e.Location)
+                End If
+            ElseIf cur_measure_type = MeasureType.C_CuPoly Then
+                If CuPolyDrawEndFlag = False Then
+                    If CuPolyPreviousPoint Is Nothing Then
+                        CuPolyPreviousPoint = e.Location
+                        C_CuPolyObj.CuPolyPoint(C_CuPolyObj.CuPolyPointIndx_j, 0) = m_pt
+                    Else
+                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                        DrawCuPolyObj(ID_PICTURE_BOX(tab_index), line_infor, C_CuPolyObj)
+                        DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, CuPolyPreviousPoint.Value, e.Location)
+                        C_CuPolyObj.CuPolyPointIndx_k(C_CuPolyObj.CuPolyPointIndx_j) += 1
+                        CuPolyPreviousPoint = e.Location
+                        C_CuPolyObj.CuPolyPoint(C_CuPolyObj.CuPolyPointIndx_j, C_CuPolyObj.CuPolyPointIndx_k(C_CuPolyObj.CuPolyPointIndx_j)) = m_pt
+                    End If
+                End If
+            End If
+        Else    'mouse is not clicked
+            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+            If sel_index >= 0 Then
+                ID_PICTURE_BOX(tab_index).HightLightItem(object_list.ElementAt(tab_index).ElementAt(sel_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
+                ID_PICTURE_BOX(tab_index).DrawObjSelected(object_list.ElementAt(tab_index).ElementAt(sel_index), True)
+            End If
+
+            If cur_measure_type >= 0 Then
+                If cur_measure_type < MeasureType.C_Line Then
+                    Dim temp As Point = New Point(e.X, e.Y)
+                    ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, False)
+                    ID_PICTURE_BOX(tab_index).DrawTempFinal(obj_selected, temp, side_drag, digit, CF, True)
+                ElseIf cur_measure_type = MeasureType.C_Poly Then
+                    If PolyDrawEndFlag = False Then
+                        If PolyPreviousPoint Is Nothing Then
+                            PolyPreviousPoint = e.Location
+                            Dim ptF = New PointF(e.X / CSng(ID_PICTURE_BOX(tab_index).Width), e.Y / CSng(ID_PICTURE_BOX(tab_index).Height))
+                            C_PolyObj.PolyPoint(C_PolyObj.PolyPointIndx) = ptF
+                        Else
+                            If C_PolyObj.PolyPointIndx >= 1 Then
+                                DrawPolyObj(ID_PICTURE_BOX(tab_index), line_infor, C_PolyObj)
+                                DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, PolyPreviousPoint.Value, e.Location)
+                            End If
+                        End If
+                    End If
+                ElseIf cur_measure_type = MeasureType.C_CuPoly Then
+                    If CuPolyDrawEndFlag = False Then
+                        Dim temp As Point
+                        If C_CuPolyObj.CuPolyPointIndx_j > 0 Then
+                            Dim tempF = C_CuPolyObj.CuPolyPoint(C_CuPolyObj.CuPolyPointIndx_j, C_CuPolyObj.CuPolyPointIndx_k(C_CuPolyObj.CuPolyPointIndx_j))
+                            temp = New Point(tempF.X * ID_PICTURE_BOX(tab_index).Width, tempF.Y * ID_PICTURE_BOX(tab_index).Height)
+                        Else
+                            temp = dumyPoint
+                        End If
+                        If temp <> dumyPoint Then
+                            DrawCuPolyObj(ID_PICTURE_BOX(tab_index), line_infor, C_CuPolyObj)
+                            DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, temp, e.Location)
+                        End If
+                    End If
+                ElseIf cur_measure_type = MeasureType.C_Sel Then
+                    curve_sel_index = CheckCurveItemInPos(ID_PICTURE_BOX(tab_index), m_pt, object_list.ElementAt(tab_index))
+                    If curve_sel_index >= 0 Then
+                        Dim obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index)
+                        DrawCurveObjSelected(ID_PICTURE_BOX(tab_index), obj)
+                    End If
+                End If
+            End If
+
         End If
     End Sub
 
@@ -1248,6 +1412,8 @@ Public Class Main_Form
         obj_selected.Refresh()
         cur_measure_type = -1
         sel_index = -1
+        curve_sel_index = -1
+        initVar()
     End Sub
 
     'set brightness, contrast and gamma to current image
@@ -1887,6 +2053,20 @@ Public Class Main_Form
         obj_selected.Refresh()
     End Sub
 
+    ''' <summary>
+    ''' Add Curve object to obj list
+    ''' </summary>
+    Private Sub AddCurveToList()
+        obj_selected.obj_num = cur_obj_num(tab_index)
+        SetLineAndFont(obj_selected, line_infor, font_infor)
+        object_list(tab_index).Add(obj_selected)
+        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+        obj_selected.Refresh()
+        cur_measure_type = -1
+        cur_obj_num(tab_index) += 1
+        If undo_num < 2 Then undo_num += 1
+    End Sub
 #End Region
 
 

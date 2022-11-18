@@ -200,6 +200,7 @@ Public Module C_ControlMethods
     ''' <paramname="obj_list">The list of objects.</param>
     Public Function CheckCurveItemInPos(ByVal pictureBox As PictureBox, ByVal m_pt As PointF, ByVal obj_list As List(Of MeasureObject)) As Integer
         Dim index = -1
+        Dim mPt = New Point(m_pt.X * pictureBox.Width, m_pt.Y * pictureBox.Height)
         For Each item In obj_list
             If item.measure_type < MeasureType.C_Line Then
                 Continue For
@@ -213,6 +214,16 @@ Public Module C_ControlMethods
                             Exit For
                         End If
                     Next
+
+                    If i >= 1 Then
+                        Dim startPt = New Point(obj.CuPolyPoint(i - 1, obj.CuPolyPointIndx_k(i - 1)).X * pictureBox.Width, obj.CuPolyPoint(i - 1, obj.CuPolyPointIndx_k(i - 1)).Y * pictureBox.Height)
+                        Dim EndPt = New Point(obj.CuPolyPoint(i, 0).X * pictureBox.Width, obj.CuPolyPoint(i, 0).Y * pictureBox.Height)
+                        Dim dist = Find_BPointLineDistance(startPt.X, startPt.Y, EndPt.X, EndPt.Y, mPt.X, mPt.Y)
+
+                        If dist < 5 And Main_Form.OutPointFlag = False Then
+                            index = item.obj_num
+                        End If
+                    End If
                 Next
             ElseIf item.measure_type = MeasureType.C_Curve Then
                 Dim obj = item.curve_object.CurveItem(0)
@@ -224,11 +235,10 @@ Public Module C_ControlMethods
                 Next
             ElseIf item.measure_type = MeasureType.C_Line Then
                 Dim obj = item.curve_object.LineItem(0)
-                Dim mPt = New Point(m_pt.X * pictureBox.Width, m_pt.Y * pictureBox.Height)
                 Dim startPt = New Point(obj.FirstPointOfLine.X * pictureBox.Width, obj.FirstPointOfLine.Y * pictureBox.Height)
                 Dim EndPt = New Point(obj.SecndPointOfLine.X * pictureBox.Width, obj.SecndPointOfLine.Y * pictureBox.Height)
-                Dim dist = CalcDistFromPointToLine(startPt, EndPt, mPt)
-                If dist < 5 Then
+                Dim dist = Find_BPointLineDistance(startPt.X, startPt.Y, EndPt.X, EndPt.Y, mPt.X, mPt.Y)
+                If dist < 5 And Main_Form.OutPointFlag = False Then
                     index = item.obj_num
                 End If
             ElseIf item.measure_type = MeasureType.C_Point Then
@@ -238,7 +248,6 @@ Public Module C_ControlMethods
                 End If
             ElseIf item.measure_type = MeasureType.C_Poly Then
                 Dim obj = item.curve_object.PolyItem(0)
-                Dim mPt = New Point(m_pt.X * pictureBox.Width, m_pt.Y * pictureBox.Height)
                 If obj.PolyPointIndx > 0 Then
                     Dim dist = Find_BPointPolyDistance(obj, mPt, pictureBox.Width, pictureBox.Height)
                     If dist < 5 Then
@@ -274,7 +283,6 @@ Public Module C_ControlMethods
     Public Sub initVar()
 
         Main_Form.CurvePreviousPoint = Nothing
-        Main_Form.COutPointFlag = False
         Main_Form.CReadySelectFalg = False
         Main_Form.LReadySelectArrayIndx = -1
         Main_Form.LRealSelectArrayIndx = -1
@@ -287,8 +295,6 @@ Public Module C_ControlMethods
         Main_Form.CRealSelectArrayIndx = -1
         Main_Form.CuPolyReadySelectArrayIndx = -1
         Main_Form.CuPolyRealSelectArrayIndx = -1
-        Main_Form.maxDistanceCnt = -1
-        Main_Form.minDistanceCnt = -1
         Main_Form.dumyPoint.X = -1
         Main_Form.dumyPoint.Y = -1
 
@@ -303,6 +309,7 @@ Public Module C_ControlMethods
         Main_Form.CuPolyRealSelectArrayIndx_L = -1
         Main_Form.CuPolyReadySelectArrayIndx_L = -1
 
+        Main_Form.COutPointFlag = False
 
     End Sub
 #End Region

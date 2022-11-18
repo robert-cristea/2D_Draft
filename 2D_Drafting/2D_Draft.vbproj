@@ -182,11 +182,10 @@
     <Compile Include="ControlsMethods.vb" />
     <Compile Include="C_ControlMethods.vb" />
     <Compile Include="C_Utils.vb" />
-    <Compile Include="Form1.vb" />
     <Compile Include="Form1.Designer.vb">
       <DependentUpon>Form1.vb</DependentUpon>
-      <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form1.vb" />
     <Compile Include="Form2.Designer.vb">
       <DependentUpon>Form2.vb</DependentUpon>
     </Compile>

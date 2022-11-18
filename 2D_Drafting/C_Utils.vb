@@ -1,6 +1,7 @@
 ﻿
 Imports System.Drawing
 
+
 ''' <summary>
 ''' This class contains utilities of Curves.
 ''' </summary>
@@ -244,6 +245,120 @@ Public Module C_Utils
     End Sub
 
     ''' <summary>
+    ''' calculate distance between two points.
+    ''' </summary>
+    ''' <paramname="X1">X-coordinate of first point.</param>
+    ''' <paramname="Y1">Y-coordinate of first point.</param>
+    ''' <paramname="X2">X-coordinate of second point.</param>
+    ''' <paramname="Y2">Y-coordinate of second point.</param>
+    Public Function Find_TwoPointDistance(X1 As Integer, Y1 As Integer, X2 As Integer, Y2 As Integer) As Integer
+        Dim distance As Integer
+        distance = Math.Round(Math.Sqrt((X1 - X2) * (X1 - X2) + (Y1 - Y2) * (Y1 - Y2)))
+        Return distance
+    End Function
+
+    ''' <summary>
+    ''' get Y-coordinate of Point lies in certain line.
+    ''' </summary>
+    ''' <paramname="P1">first point of line.</param>
+    ''' <paramname="P2">second point of line.</param>
+    ''' <paramname="x3">X-coordinate of target point.</param>
+    Public Function GetLineEq(P1 As Point, P2 As Point, x3 As Integer) As Integer
+        Dim kk As Double
+        Dim bb As Double
+        kk = (P1.Y - P2.Y) / (P1.X - P2.X)
+        bb = P1.Y - kk * P1.X
+        Return Math.Round(kk * x3 + bb)
+    End Function
+
+    ''' <summary>
+    ''' calculate distance between point and line.
+    ''' </summary>
+    ''' <paramname="X1">X-coordinate of first point of line.</param>
+    ''' <paramname="Y1">Y-coordinate of first point of line.</param>
+    ''' <paramname="X2">X-coordinate of second point of line.</param>
+    ''' <paramname="Y2">Y-coordinate of second point of line.</param>
+    ''' <paramname="Xp">X-coordinate of target point.</param>
+    ''' <paramname="Yp">Y-coordinate of target point.</param>
+    Public Function Find_BPointLineDistance(X1 As Integer, Y1 As Integer, X2 As Integer, Y2 As Integer, Xp As Integer, Yp As Integer) As Integer
+        Dim a, b, a1, b1, Xs, Ys As Double
+        Dim distance As Integer
+        Main_Form.OutPointFlag = False
+        If Y2 <> Y1 Then
+            If X2 <> X1 Then
+                a = (Y2 - Y1) / (X2 - X1) : b = Y1 - a * X1
+                a1 = -1 / a : b1 = Yp - a1 * Xp
+                Xs = (b - b1) / (a1 - a) : Ys = a1 * Xs + b1
+                distance = Math.Round(Math.Sqrt((Xp - Xs) * (Xp - Xs) + (Yp - Ys) * (Yp - Ys)))
+            Else
+                Xs = X1 : Ys = Yp
+                distance = Math.Abs(Xs - Xp)
+            End If
+
+            If Y1 < Y2 And Ys < Y1 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X1 : Main_Form.DotY = Y1
+            If Y2 < Y1 And Ys < Y2 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X2 : Main_Form.DotY = Y2
+            If Y1 > Y2 And Ys > Y1 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X1 : Main_Form.DotY = Y1
+            If Y2 > Y1 And Ys > Y2 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X2 : Main_Form.DotY = Y2
+        Else
+            If X1 < X2 And Xs < X1 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X1 : Main_Form.DotY = Y1
+            If X2 < X1 And Xs < X2 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X2 : Main_Form.DotY = Y2
+            If X1 > X2 And Xs > X1 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X1 : Main_Form.DotY = Y1
+            If X2 > X1 And Xs > X2 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X2 : Main_Form.DotY = Y2
+
+            Ys = Y1 : Xs = Xp
+            distance = Math.Abs(Ys - Yp)
+        End If
+
+        Main_Form.XsLinePoint = Xs : Main_Form.YsLinePoint = Ys
+        If Main_Form.OutPointFlag = True Then distance = Find_TwoPointDistance(Main_Form.DotX, Main_Form.DotY, Xp, Yp) : Main_Form.XsLinePoint = Main_Form.DotX : Main_Form.YsLinePoint = Main_Form.DotY
+
+        Return distance
+    End Function
+
+    ''' <summary>
+    ''' calculate distance between point and line.
+    ''' </summary>
+    ''' <paramname="X1">X-coordinate of first point of line.</param>
+    ''' <paramname="Y1">Y-coordinate of first point of line.</param>
+    ''' <paramname="X2">X-coordinate of second point of line.</param>
+    ''' <paramname="Y2">Y-coordinate of second point of line.</param>
+    ''' <paramname="Xp">X-coordinate of target point.</param>
+    ''' <paramname="Yp">Y-coordinate of target point.</param>
+    Public Function pFind_BPointLineDistance(X1 As Integer, Y1 As Integer, X2 As Integer, Y2 As Integer, Xp As Integer, Yp As Integer) As Integer
+        Dim a, b, a1, b1, Xs, Ys As Double
+        Dim distance As Integer
+        Main_Form.OutPointFlag = False
+        If Y2 <> Y1 Then
+            If X2 <> X1 Then
+                a = (Y2 - Y1) / (X2 - X1) : b = Y1 - a * X1
+                a1 = -1 / a : b1 = Yp - a1 * Xp
+                Xs = (b - b1) / (a1 - a) : Ys = a1 * Xs + b1
+                distance = Math.Round(Math.Sqrt((Xp - Xs) * (Xp - Xs) + (Yp - Ys) * (Yp - Ys)))
+            Else
+                Xs = X1 : Ys = Yp
+                distance = Math.Abs(Xs - Xp)
+            End If
+
+            If Y1 < Y2 And Ys < Y1 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X1 : Main_Form.DotY = Y1
+            If Y2 < Y1 And Ys < Y2 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X2 : Main_Form.DotY = Y2
+            If Y1 > Y2 And Ys > Y1 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X1 : Main_Form.DotY = Y1
+            If Y2 > Y1 And Ys > Y2 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X2 : Main_Form.DotY = Y2
+        Else
+            If X1 < X2 And Xs < X1 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X1 : Main_Form.DotY = Y1
+            If X2 < X1 And Xs < X2 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X2 : Main_Form.DotY = Y2
+            If X1 > X2 And Xs > X1 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X1 : Main_Form.DotY = Y1
+            If X2 > X1 And Xs > X2 Then Main_Form.OutPointFlag = True : Main_Form.DotX = X2 : Main_Form.DotY = Y2
+
+            Ys = Y1 : Xs = Xp
+            distance = Math.Abs(Ys - Yp)
+        End If
+        Main_Form.XsLinePoint = Xs : Main_Form.YsLinePoint = Ys
+        'If OutPointFlag = True Then distance = Find_TwoPointDistance(DotX, DotY, Xp, Yp) : XsLinePoint = DotX : YsLinePoint = DotY
+
+        Return distance
+    End Function
+
+    ''' <summary>
     ''' calculate distance between point and polygen.
     ''' </summary>
     ''' <paramname="Polyi">The polygen object.</param>
@@ -259,17 +374,25 @@ Public Module C_Utils
             Dim StartPt = New Point(Polyi.PolyPoint(j).X * width, Polyi.PolyPoint(j).Y * height)
             Dim EndPt = New Point(Polyi.PolyPoint(j + 1).X * width, Polyi.PolyPoint(j + 1).Y * height)
 
-            tempDis = CalcDistFromPointToLine(StartPt, EndPt, mPt)
+            tempDis = Find_BPointLineDistance(StartPt.X, StartPt.Y, EndPt.X, EndPt.Y, mPt.X, mPt.Y)
 
-            If minTempDis > tempDis Then
-                minTempDis = tempDis
+            If Main_Form.OutPointFlag = False Then
+                If minTempDis > tempDis Then
+                    minTempDis = tempDis
+                    Main_Form.PXs = Main_Form.XsLinePoint
+                    Main_Form.PYs = Main_Form.YsLinePoint
+                End If
             End If
         Next
         For j = 1 To Polyi.PolyPointIndx
             Dim StartPt = New Point(Polyi.PolyPoint(j).X * width, Polyi.PolyPoint(j).Y * height)
             tempDis = CalcDistBetweenPoints(StartPt, mPt)
 
-            If minTempDis > tempDis Then minTempDis = tempDis
+            If minTempDis > tempDis Then
+                minTempDis = tempDis
+                Main_Form.PXs = StartPt.X
+                Main_Form.PYs = StartPt.Y
+            End If
         Next
         Return minTempDis
     End Function
