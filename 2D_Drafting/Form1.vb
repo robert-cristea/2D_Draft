@@ -1823,6 +1823,27 @@ Public Class Main_Form
     Private Sub ID_BTN_CAPTURE_Click(sender As Object, e As EventArgs) Handles ID_BTN_CAPTURE.Click
 
         Try
+            'temp code for test
+            'For i = 1 To 4
+            '    Dim img_name As String
+            '    'img_name = Format("%d", i)
+            '    'img_name = "MyImages\\(" + img_name + ").jpg"
+            '    img_name = "MyImages\\test_" & (i) & ".jpeg"
+            '    Dim img1 As Image = Image.FromFile(img_name)
+            '    file_counter += 1
+            '    photoList.ImageSize = New Size(200, 150)
+            '    photoList.Images.Add(img1)
+            'Next
+
+            'ID_LISTVIEW_IMAGE.LargeImageList = photoList
+            'ID_LISTVIEW_IMAGE.Items.Clear()
+            'For index = 0 To photoList.Images.Count - 1
+            '    Dim item As New ListViewItem With {
+            '        .ImageIndex = index,
+            '        .Text = "MyImages\\test_" & (index) & ".jpeg"
+            '    }
+            '    ID_LISTVIEW_IMAGE.Items.Add(item)
+            'Next
 
             Dim img1 As Image = ID_PICTURE_BOX_CAM.Image.Clone()
 
@@ -1869,32 +1890,57 @@ Public Class Main_Form
     Private Sub ID_LISTVIEW_IMAGE_DoubleClick(sender As Object, e As EventArgs) Handles ID_LISTVIEW_IMAGE.DoubleClick
         Try
             flag = True
-            ID_PICTURE_BOX(tab_index).Image = Nothing
 
             Dim itemSelected As Integer = GetListViewSelectedItemIndex(ID_LISTVIEW_IMAGE)
             SetListViewSelectedItem(ID_LISTVIEW_IMAGE, itemSelected)
             Dim Image As Image = Image.FromFile(ID_LISTVIEW_IMAGE.SelectedItems(0).Tag)
             ID_PICTURE_BOX_CAM.Image = Image
 
-            ID_PICTURE_BOX(tab_index).LoadImageFromFile(ID_LISTVIEW_IMAGE.SelectedItems(0).Tag, origin_image, resized_image,
-                                                         initial_ratio, tab_index)
+            Dim page_num = tab_index
 
-            Dim img = resized_image.ElementAt(tab_index)
+            If tab_index = 0 Or img_import_flag(tab_index) = False Then
+                For i = 1 To 24
+                    If img_import_flag(i) = True Then
+                        page_num = i
+                        tag_page_flag(i) = True
 
-            ID_PICTURE_BOX(tab_index).Image = img.ToBitmap()
+                        ID_PICTURE_BOX(i).Image = Nothing
+                        current_image(i) = Nothing
+                        resized_image(i) = Nothing
+                        origin_image(i) = Nothing
+                        cur_obj_num(i) = 0
+                        Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, i).Clear()
+                        brightness(i) = 0
+                        contrast(i) = 0
+                        gamma(i) = 100
 
-            left_top = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
+                        ID_TAG_CTRL.TabPages.Add(ID_TAG_PAGE(i))
+                        Exit For
+                    End If
+                Next
+            Else
+                page_num = tab_index
+            End If
 
-            current_image(tab_index) = img
-            cur_obj_num(tab_index) = 0
-            Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, tab_index).Clear()
-            brightness(tab_index) = 0
-            contrast(tab_index) = 0
-            gamma(tab_index) = 100
-            img_import_flag(tab_index) = False
-            ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+            ID_PICTURE_BOX(page_num).LoadImageFromFile(ID_LISTVIEW_IMAGE.SelectedItems(0).Tag, origin_image, resized_image,
+                                                         initial_ratio, page_num)
 
-            ID_TAG_CTRL.SelectedTab = ID_TAG_PAGE(tab_index)
+            Dim img = resized_image.ElementAt(page_num)
+
+            ID_PICTURE_BOX(page_num).Image = img.ToBitmap()
+
+            left_top = ID_PICTURE_BOX(page_num).CenteringImage(ID_PANEL(page_num))
+
+            current_image(page_num) = img
+            cur_obj_num(page_num) = 0
+            Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, page_num).Clear()
+            brightness(page_num) = 0
+            contrast(page_num) = 0
+            gamma(page_num) = 100
+            img_import_flag(page_num) = False
+            ID_LISTVIEW.LoadObjectList(object_list.ElementAt(page_num), CF, digit, scale_unit, name_list)
+
+            ID_TAG_CTRL.SelectedTab = ID_TAG_PAGE(page_num)
         Catch ex As Exception
             MessageBox.Show(ex.ToString())
         End Try
