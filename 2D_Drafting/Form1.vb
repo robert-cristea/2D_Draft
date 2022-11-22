@@ -255,6 +255,7 @@ Public Class Main_Form
     Private name_list As List(Of String) = New List(Of String)          'specify the list of item names
     Private CF_list As List(Of String) = New List(Of String)            'specify the names of CF
     Private CF_num As List(Of Double) = New List(Of Double)             'specify the values of CF
+    Private menu_click As Boolean = False                               'specify whether the menu item is clicked
 
     'member variable for webcam
     Private videoDevices As FilterInfoCollection                        'usable video devices
@@ -621,55 +622,55 @@ Public Class Main_Form
             cur_measure_type_prev = cur_measure_type
             Select Case cur_measure_type
                 Case 0
-                    ID_BTN_LINE_ALIGN.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_LINE_ALIGN.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates a line through two input points."
                 Case 1
-                    ID_BTN_LINE_HOR.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_LINE_HOR.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates a horizontal line through two input points."
                 Case 2
-                    ID_BTN_LINE_VER.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_LINE_VER.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates a vertical line through two input points."
                 Case 3
-                    ID_BTN_ARC.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_ARC.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates angle through three points in degree."
                 Case 4
-                    ID_BTN_RADIUS.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_RADIUS.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates a arc through three input points."
                 Case 5
-                    ID_BTN_ANNOTATION.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_ANNOTATION.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Add a annotation."
                 Case 6
-                    ID_BTN_ANGLE.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_ANGLE.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates angle through two lines in degree."
                 Case 7
-                    ID_BTN_LINE_PARA.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_LINE_PARA.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates a line through two parallel lines."
                 Case 8
-                    ID_BTN_PENCIL.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_PENCIL.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Draw a line through two input points."
                 Case 9
-                    ID_BTN_P_LINE.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_P_LINE.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates a line between a point and a line."
                 Case 10
-                    ID_BTN_SCALE.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_SCALE.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Insert a measuring scale."
                 Case 11
-                    ID_BTN_C_LINE.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_C_LINE.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Draw a line."
                 Case 12
-                    ID_BTN_C_POLY.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_C_POLY.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Draw a polygen."
                 Case 13
-                    ID_BTN_C_POINT.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_C_POINT.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Draw a point."
                 Case 14
-                    ID_BTN_C_CURVE.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_C_CURVE.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Draw a curve."
                 Case 15
-                    ID_BTN_C_CUPOLY.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_C_CUPOLY.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Draw a curve&polygen."
                 Case 16
-                    ID_BTN_C_SEL.BackColor = Color.DodgerBlue
+                    If menu_click = False Then ID_BTN_C_SEL.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "select objects."
             End Select
 
@@ -782,12 +783,14 @@ Public Class Main_Form
     'set current measurement type as line_align
     'reset the current object
     Private Sub ID_BTN_LINE_ALIGN_Click(sender As Object, e As EventArgs) Handles ID_BTN_LINE_ALIGN.Click
+        menu_click = False
         cur_measure_type = MeasureType.line_align
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
     End Sub
 
     Private Sub LINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LINEToolStripMenuItem.Click
+        menu_click = True
         cur_measure_type = MeasureType.line_align
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -796,12 +799,14 @@ Public Class Main_Form
     'set current measurement type as line_horizontal
     'reset the current object
     Private Sub ID_BTN_LINE_HOR_Click(sender As Object, e As EventArgs) Handles ID_BTN_LINE_HOR.Click
+        menu_click = False
         cur_measure_type = MeasureType.line_horizontal
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
     End Sub
 
     Private Sub HORIZONTALLINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles HORIZONTALLINEToolStripMenuItem.Click
+        menu_click = True
         cur_measure_type = MeasureType.line_horizontal
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -810,6 +815,7 @@ Public Class Main_Form
     'set current measurement type as line_vertical
     'reset the current object
     Private Sub ID_BTN_LINE_VER_Click(sender As Object, e As EventArgs) Handles ID_BTN_LINE_VER.Click
+        menu_click = False
         cur_measure_type = MeasureType.line_vertical
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -817,6 +823,7 @@ Public Class Main_Form
     End Sub
 
     Private Sub VERTICALLINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VERTICALLINEToolStripMenuItem.Click
+        menu_click = True
         cur_measure_type = MeasureType.line_vertical
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -825,6 +832,7 @@ Public Class Main_Form
     'set current measurement type as line parallel
     'reset the current object
     Private Sub ID_BTN_LINE_PARA_Click(sender As Object, e As EventArgs) Handles ID_BTN_LINE_PARA.Click
+        menu_click = False
         cur_measure_type = MeasureType.line_para
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -832,6 +840,7 @@ Public Class Main_Form
     End Sub
 
     Private Sub PARALLELLINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PARALLELLINEToolStripMenuItem.Click
+        menu_click = True
         cur_measure_type = MeasureType.line_para
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -840,6 +849,7 @@ Public Class Main_Form
     'set current measurement type as angle
     'reset the current object
     Private Sub ID_BTN_ARC_Click(sender As Object, e As EventArgs) Handles ID_BTN_ARC.Click
+        menu_click = False
         cur_measure_type = MeasureType.angle
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -847,6 +857,7 @@ Public Class Main_Form
     End Sub
 
     Private Sub ANGLETHROUGHTHREEPOINTSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ANGLETHROUGHTHREEPOINTSToolStripMenuItem.Click
+        menu_click = True
         cur_measure_type = MeasureType.angle
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -855,6 +866,7 @@ Public Class Main_Form
     'set current measurement type as angle far
     'reset the current object
     Private Sub ID_BTN_ANGLE_Click(sender As Object, e As EventArgs) Handles ID_BTN_ANGLE.Click
+        menu_click = False
         cur_measure_type = MeasureType.angle_far
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -862,6 +874,7 @@ Public Class Main_Form
     End Sub
 
     Private Sub ANGLETHROUGHTWOLINESToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ANGLETHROUGHTWOLINESToolStripMenuItem.Click
+        menu_click = True
         cur_measure_type = MeasureType.angle_far
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -870,6 +883,7 @@ Public Class Main_Form
     'set current measurement type as radius
     'reset the current object
     Private Sub ID_BTN_RADIUS_Click(sender As Object, e As EventArgs) Handles ID_BTN_RADIUS.Click
+        menu_click = False
         cur_measure_type = MeasureType.radius
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -877,6 +891,7 @@ Public Class Main_Form
     End Sub
 
     Private Sub ARCToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ARCToolStripMenuItem.Click
+        menu_click = True
         cur_measure_type = MeasureType.radius
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -885,12 +900,14 @@ Public Class Main_Form
     'set current measurement type as annotation
     'reset the current object
     Private Sub ID_BTN_ANNOTATION_Click(sender As Object, e As EventArgs) Handles ID_BTN_ANNOTATION.Click
+        menu_click = False
         cur_measure_type = MeasureType.annotation
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
     End Sub
 
     Private Sub ANNOTATIONToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ANNOTATIONToolStripMenuItem.Click
+        menu_click = True
         cur_measure_type = MeasureType.annotation
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -899,6 +916,7 @@ Public Class Main_Form
     'set current measurement type as draw line
     'reset the current object
     Private Sub ID_BTN_PENCIL_Click(sender As Object, e As EventArgs) Handles ID_BTN_PENCIL.Click
+        menu_click = False
         cur_measure_type = MeasureType.draw_line
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -907,12 +925,14 @@ Public Class Main_Form
     'set current measurement type as point to line
     'reset the current object
     Private Sub ID_BTN_P_LINE_Click(sender As Object, e As EventArgs) Handles ID_BTN_P_LINE.Click
+        menu_click = False
         cur_measure_type = MeasureType.pt_line
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
     End Sub
 
     Private Sub DISTANCEFROMPOINTTOLINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DISTANCEFROMPOINTTOLINEToolStripMenuItem.Click
+        menu_click = True
         cur_measure_type = MeasureType.pt_line
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -922,7 +942,7 @@ Public Class Main_Form
     'set current measurement type as measuring scale
     'reset the current object
     Private Sub ID_BTN_SCALE_Click(sender As Object, e As EventArgs) Handles ID_BTN_SCALE.Click
-
+        menu_click = False
         Dim form As ID_FORM_SCALE = New ID_FORM_SCALE(scale_unit)
         If form.ShowDialog() = DialogResult.OK Then
             scale_style = form.scale_style
@@ -959,6 +979,7 @@ Public Class Main_Form
 
     'zoom in image and draw it to picturebox
     Private Sub ID_BTN_ZOON_IN_Click(sender As Object, e As EventArgs) Handles ID_BTN_ZOON_IN.Click
+        menu_click = False
         zoom_factor(tab_index) *= 1.1
         Zoom_Image()
         ID_STATUS_LABEL.Text = "Zoom In"
@@ -966,6 +987,7 @@ Public Class Main_Form
 
     'zoom out image and draw it to picturebox
     Private Sub ID_BTN_ZOOM_OUT_Click(sender As Object, e As EventArgs) Handles ID_BTN_ZOOM_OUT.Click
+        menu_click = False
         zoom_factor(tab_index) /= 1.1
         Zoom_Image()
         ID_STATUS_LABEL.Text = "Zoom Out"
@@ -973,6 +995,7 @@ Public Class Main_Form
 
     'zoom in
     Private Sub ZOOMINToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZOOMINToolStripMenuItem.Click
+        menu_click = True
         zoom_factor(tab_index) *= 1.1
         Zoom_Image()
         ID_STATUS_LABEL.Text = "Zoom In"
@@ -980,6 +1003,7 @@ Public Class Main_Form
 
     'zoom out
     Private Sub ZOOMOUTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZOOMOUTToolStripMenuItem.Click
+        menu_click = True
         zoom_factor(tab_index) /= 1.1
         Zoom_Image()
         ID_STATUS_LABEL.Text = "Zoom Out"
@@ -1002,24 +1026,28 @@ Public Class Main_Form
         End If
     End Sub
     Private Sub ID_BTN_UNDO_Click(sender As Object, e As EventArgs) Handles ID_BTN_UNDO.Click
+        menu_click = False
         Undo()
         ID_STATUS_LABEL.Text = "Undo"
     End Sub
 
 
     Private Sub UNDOToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UNDOToolStripMenuItem.Click
+        menu_click = True
         Undo()
         ID_STATUS_LABEL.Text = "Undo"
     End Sub
 
     'reset current object
     Private Sub ID_BTN_RESEL_Click(sender As Object, e As EventArgs) Handles ID_BTN_RESEL.Click
+        menu_click = False
         obj_selected.Refresh()
         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
         ID_STATUS_LABEL.Text = "Reselect"
     End Sub
 
     Private Sub RESELECTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RESELECTToolStripMenuItem.Click
+        menu_click = True
         obj_selected.Refresh()
         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
         ID_STATUS_LABEL.Text = "Reselect"
@@ -1028,6 +1056,7 @@ Public Class Main_Form
     'reset digit
     'reload image and obj_list
     Private Sub ID_NUM_DIGIT_ValueChanged(sender As Object, e As EventArgs) Handles ID_NUM_DIGIT.ValueChanged
+        menu_click = False
         digit = CInt(ID_NUM_DIGIT.Value)
         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
         ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
@@ -1036,12 +1065,14 @@ Public Class Main_Form
 
     'set the width of line
     Private Sub ID_NUM_LINE_WIDTH_ValueChanged(sender As Object, e As EventArgs) Handles ID_NUM_LINE_WIDTH.ValueChanged
+        menu_click = False
         line_infor.line_width = CInt(ID_NUM_LINE_WIDTH.Value)
         ID_STATUS_LABEL.Text = "Changing the width of drawing line."
     End Sub
 
     'change the color of LineStyle object
     Private Sub ID_BTN_COL_PICKER_Click(sender As Object, e As EventArgs) Handles ID_BTN_COL_PICKER.Click
+        menu_click = False
         Dim clrDialog As ColorDialog = New ColorDialog()
 
         'show the colour dialog and check that user clicked ok
@@ -1055,6 +1086,7 @@ Public Class Main_Form
 
     'set the line style
     Private Sub ID_COMBO_LINE_SHAPE_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ID_COMBO_LINE_SHAPE.SelectedIndexChanged
+        menu_click = False
         Dim comboIndex = ID_COMBO_LINE_SHAPE.SelectedIndex
         If comboIndex = 0 Then
             graphPen_line.DashStyle = Drawing2D.DashStyle.Dot
@@ -1392,8 +1424,8 @@ Public Class Main_Form
                     ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, False)
                     ID_PICTURE_BOX(tab_index).DrawTempFinal(obj_selected, temp, side_drag, digit, CF, True)
                 ElseIf cur_measure_type = MeasureType.C_Poly Then
-                    If PolyDrawEndFlag = False Then
-                        If PolyPreviousPoint Is Nothing Then
+                    'If PolyDrawEndFlag = False Then
+                    If PolyPreviousPoint Is Nothing Then
                             PolyPreviousPoint = e.Location
                             Dim ptF = New PointF(e.X / CSng(ID_PICTURE_BOX(tab_index).Width), e.Y / CSng(ID_PICTURE_BOX(tab_index).Height))
                             C_PolyObj.PolyPoint(C_PolyObj.PolyPointIndx) = ptF
@@ -1403,7 +1435,7 @@ Public Class Main_Form
                                 DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, PolyPreviousPoint.Value, e.Location)
                             End If
                         End If
-                    End If
+                    'End If
                 ElseIf cur_measure_type = MeasureType.C_CuPoly Then
                     If CuPolyDrawEndFlag = False Then
                         Dim temp As Point
@@ -2137,11 +2169,13 @@ Public Class Main_Form
     ''' set current measurement type as C_Line
     ''' </summary>
     Private Sub ID_BTN_C_LINE_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_LINE.Click
+        menu_click = False
         cur_measure_type = MeasureType.C_Line
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
     End Sub
     Private Sub LINEToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles LINEToolStripMenuItem1.Click
+        menu_click = True
         cur_measure_type = MeasureType.C_Line
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -2151,12 +2185,14 @@ Public Class Main_Form
     ''' set current measurement type as C_Poly
     ''' </summary>
     Private Sub ID_BTN_C_POLY_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_POLY.Click
+        menu_click = False
         cur_measure_type = MeasureType.C_Poly
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
     End Sub
 
     Private Sub POLYGENToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles POLYGENToolStripMenuItem.Click
+        menu_click = True
         cur_measure_type = MeasureType.C_Poly
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -2166,12 +2202,14 @@ Public Class Main_Form
     ''' set current measurement type as C_Point
     ''' </summary>
     Private Sub ID_BTN_C_POINT_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_POINT.Click
+        menu_click = False
         cur_measure_type = MeasureType.C_Point
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
     End Sub
 
     Private Sub POINTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles POINTToolStripMenuItem.Click
+        menu_click = True
         cur_measure_type = MeasureType.C_Point
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -2181,12 +2219,14 @@ Public Class Main_Form
     ''' set current measurement type as C_Curve
     ''' </summary>
     Private Sub ID_BTN_C_CURVE_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_CURVE.Click
+        menu_click = False
         cur_measure_type = MeasureType.C_Curve
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
     End Sub
 
     Private Sub CURVEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CURVEToolStripMenuItem.Click
+        menu_click = True
         cur_measure_type = MeasureType.C_Curve
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -2196,12 +2236,14 @@ Public Class Main_Form
     ''' set current measurement type as C_Cupoly
     ''' </summary>
     Private Sub ID_BTN_C_CUPOLY_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_CUPOLY.Click
+        menu_click = False
         cur_measure_type = MeasureType.C_CuPoly
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
     End Sub
 
     Private Sub CURVEPOLYGENToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CURVEPOLYGENToolStripMenuItem.Click
+        menu_click = True
         cur_measure_type = MeasureType.C_CuPoly
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
@@ -2211,6 +2253,7 @@ Public Class Main_Form
     ''' set current measurement type as C_Sel
     ''' </summary>
     Private Sub ID_BTN_C_SEL_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_SEL.Click
+        menu_click = False
         cur_measure_type = MeasureType.C_Sel
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
