@@ -136,6 +136,8 @@ Partial Class Main_Form
         Me.CURVEPOLYGENToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ID_PICTURE_BOX_CAM = New System.Windows.Forms.PictureBox()
         Me.ID_CHECK_SHOW_LEGEND = New System.Windows.Forms.CheckBox()
+        Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
+        Me.ID_STATUS_LABEL = New System.Windows.Forms.ToolStripStatusLabel()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -146,6 +148,7 @@ Partial Class Main_Form
         CType(Me.ID_NUM_DIGIT, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ID_LISTVIEW, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ID_PICTURE_BOX_CAM, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -337,8 +340,6 @@ Partial Class Main_Form
         '
         'Panel2
         '
-        Me.Panel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Panel2.Controls.Add(Me.Btn_CameraProperties)
         Me.Panel2.Controls.Add(Me.btn_delete)
         Me.Panel2.Controls.Add(Me.btn_browse)
@@ -352,7 +353,7 @@ Partial Class Main_Form
         Me.Panel2.Controls.Add(Me.ID_BTN_CAPTURE)
         Me.Panel2.Location = New System.Drawing.Point(0, 165)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(256, 704)
+        Me.Panel2.Size = New System.Drawing.Size(256, 699)
         Me.Panel2.TabIndex = 3
         '
         'Btn_CameraProperties
@@ -367,7 +368,7 @@ Partial Class Main_Form
         'btn_delete
         '
         Me.btn_delete.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btn_delete.Location = New System.Drawing.Point(161, 662)
+        Me.btn_delete.Location = New System.Drawing.Point(161, 657)
         Me.btn_delete.Name = "btn_delete"
         Me.btn_delete.Size = New System.Drawing.Size(64, 23)
         Me.btn_delete.TabIndex = 22
@@ -421,7 +422,7 @@ Partial Class Main_Form
         'ID_BTN_CLEAR_ALL
         '
         Me.ID_BTN_CLEAR_ALL.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.ID_BTN_CLEAR_ALL.Location = New System.Drawing.Point(29, 662)
+        Me.ID_BTN_CLEAR_ALL.Location = New System.Drawing.Point(29, 657)
         Me.ID_BTN_CLEAR_ALL.Name = "ID_BTN_CLEAR_ALL"
         Me.ID_BTN_CLEAR_ALL.Size = New System.Drawing.Size(64, 23)
         Me.ID_BTN_CLEAR_ALL.TabIndex = 16
@@ -435,7 +436,7 @@ Partial Class Main_Form
         Me.ID_LISTVIEW_IMAGE.HideSelection = False
         Me.ID_LISTVIEW_IMAGE.Location = New System.Drawing.Point(29, 378)
         Me.ID_LISTVIEW_IMAGE.Name = "ID_LISTVIEW_IMAGE"
-        Me.ID_LISTVIEW_IMAGE.Size = New System.Drawing.Size(196, 278)
+        Me.ID_LISTVIEW_IMAGE.Size = New System.Drawing.Size(196, 273)
         Me.ID_LISTVIEW_IMAGE.TabIndex = 13
         Me.ID_LISTVIEW_IMAGE.UseCompatibleStateImageBehavior = False
         '
@@ -450,7 +451,7 @@ Partial Class Main_Form
         '
         'Panel3
         '
-        Me.Panel3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel3.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Panel3.Controls.Add(Me.ID_COMBOBOX_CF)
         Me.Panel3.Controls.Add(Me.ID_BTN_TEXT_FONT)
         Me.Panel3.Controls.Add(Me.ID_BTN_TEXT_COL_PICKER)
@@ -467,9 +468,9 @@ Partial Class Main_Form
         Me.Panel3.Controls.Add(Me.Label3)
         Me.Panel3.Controls.Add(Me.Label2)
         Me.Panel3.Controls.Add(Me.Label1)
-        Me.Panel3.Location = New System.Drawing.Point(1050, 586)
+        Me.Panel3.Location = New System.Drawing.Point(1050, 578)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(298, 278)
+        Me.Panel3.Size = New System.Drawing.Size(298, 277)
         Me.Panel3.TabIndex = 4
         '
         'ID_COMBOBOX_CF
@@ -589,8 +590,7 @@ Partial Class Main_Form
         '
         'ID_TAG_CTRL
         '
-        Me.ID_TAG_CTRL.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.ID_TAG_CTRL.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ID_TAG_CTRL.Location = New System.Drawing.Point(262, 165)
         Me.ID_TAG_CTRL.Name = "ID_TAG_CTRL"
@@ -607,7 +607,7 @@ Partial Class Main_Form
         Me.ID_LISTVIEW.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Item, Me.Length, Me.Angle, Me.Radius, Me.Unit, Me.Remarks})
         Me.ID_LISTVIEW.Location = New System.Drawing.Point(1050, 165)
         Me.ID_LISTVIEW.Name = "ID_LISTVIEW"
-        Me.ID_LISTVIEW.Size = New System.Drawing.Size(298, 415)
+        Me.ID_LISTVIEW.Size = New System.Drawing.Size(298, 399)
         Me.ID_LISTVIEW.TabIndex = 6
         '
         'Item
@@ -1167,11 +1167,27 @@ Partial Class Main_Form
         Me.ID_CHECK_SHOW_LEGEND.Text = "Show Legend"
         Me.ID_CHECK_SHOW_LEGEND.UseVisualStyleBackColor = True
         '
+        'StatusStrip1
+        '
+        Me.StatusStrip1.BackColor = System.Drawing.SystemColors.ScrollBar
+        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ID_STATUS_LABEL})
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 860)
+        Me.StatusStrip1.Name = "StatusStrip1"
+        Me.StatusStrip1.Size = New System.Drawing.Size(1350, 22)
+        Me.StatusStrip1.TabIndex = 7
+        Me.StatusStrip1.Text = "StatusStrip1"
+        '
+        'ID_STATUS_LABEL
+        '
+        Me.ID_STATUS_LABEL.Name = "ID_STATUS_LABEL"
+        Me.ID_STATUS_LABEL.Size = New System.Drawing.Size(0, 17)
+        '
         'Main_Form
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1350, 868)
+        Me.ClientSize = New System.Drawing.Size(1350, 882)
+        Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.ID_LISTVIEW)
         Me.Controls.Add(Me.ID_TAG_CTRL)
         Me.Controls.Add(Me.Panel3)
@@ -1195,6 +1211,8 @@ Partial Class Main_Form
         CType(Me.ID_NUM_DIGIT, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ID_LISTVIEW, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ID_PICTURE_BOX_CAM, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.StatusStrip1.ResumeLayout(False)
+        Me.StatusStrip1.PerformLayout()
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1313,4 +1331,6 @@ End Sub
     Friend WithEvents ADDTAGToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents REMOVETAGToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ID_CHECK_SHOW_LEGEND As CheckBox
+    Friend WithEvents StatusStrip1 As StatusStrip
+    Friend WithEvents ID_STATUS_LABEL As ToolStripStatusLabel
 End Class

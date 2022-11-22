@@ -575,7 +575,7 @@ Public Class Main_Form
     'check license information when main dialog is loading
     Private Sub Main_Form_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
-            Init()
+            'Init()
             Initialize_Button_Colors()
             Timer1.Interval = 30
             Timer1.Start()
@@ -622,38 +622,55 @@ Public Class Main_Form
             Select Case cur_measure_type
                 Case 0
                     ID_BTN_LINE_ALIGN.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Calculates a line through two input points."
                 Case 1
                     ID_BTN_LINE_HOR.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Calculates a horizontal line through two input points."
                 Case 2
                     ID_BTN_LINE_VER.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Calculates a vertical line through two input points."
                 Case 3
                     ID_BTN_ARC.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Calculates angle through three points in degree."
                 Case 4
                     ID_BTN_RADIUS.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Calculates a arc through three input points."
                 Case 5
                     ID_BTN_ANNOTATION.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Add a annotation."
                 Case 6
                     ID_BTN_ANGLE.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Calculates angle through two lines in degree."
                 Case 7
                     ID_BTN_LINE_PARA.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Calculates a line through two parallel lines."
                 Case 8
                     ID_BTN_PENCIL.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Draw a line through two input points."
                 Case 9
                     ID_BTN_P_LINE.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Calculates a line between a point and a line."
                 Case 10
                     ID_BTN_SCALE.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Insert a measuring scale."
                 Case 11
                     ID_BTN_C_LINE.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Draw a line."
                 Case 12
                     ID_BTN_C_POLY.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Draw a polygen."
                 Case 13
                     ID_BTN_C_POINT.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Draw a point."
                 Case 14
                     ID_BTN_C_CURVE.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Draw a curve."
                 Case 15
                     ID_BTN_C_CUPOLY.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "Draw a curve&polygen."
                 Case 16
                     ID_BTN_C_SEL.BackColor = Color.DodgerBlue
+                    ID_STATUS_LABEL.Text = "select objects."
             End Select
 
         End If
@@ -944,24 +961,28 @@ Public Class Main_Form
     Private Sub ID_BTN_ZOON_IN_Click(sender As Object, e As EventArgs) Handles ID_BTN_ZOON_IN.Click
         zoom_factor(tab_index) *= 1.1
         Zoom_Image()
+        ID_STATUS_LABEL.Text = "Zoom In"
     End Sub
 
     'zoom out image and draw it to picturebox
     Private Sub ID_BTN_ZOOM_OUT_Click(sender As Object, e As EventArgs) Handles ID_BTN_ZOOM_OUT.Click
         zoom_factor(tab_index) /= 1.1
         Zoom_Image()
+        ID_STATUS_LABEL.Text = "Zoom Out"
     End Sub
 
     'zoom in
     Private Sub ZOOMINToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZOOMINToolStripMenuItem.Click
         zoom_factor(tab_index) *= 1.1
         Zoom_Image()
+        ID_STATUS_LABEL.Text = "Zoom In"
     End Sub
 
     'zoom out
     Private Sub ZOOMOUTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZOOMOUTToolStripMenuItem.Click
         zoom_factor(tab_index) /= 1.1
         Zoom_Image()
+        ID_STATUS_LABEL.Text = "Zoom Out"
     End Sub
 
     'undo last object and last row of listview
@@ -982,22 +1003,26 @@ Public Class Main_Form
     End Sub
     Private Sub ID_BTN_UNDO_Click(sender As Object, e As EventArgs) Handles ID_BTN_UNDO.Click
         Undo()
+        ID_STATUS_LABEL.Text = "Undo"
     End Sub
 
 
     Private Sub UNDOToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UNDOToolStripMenuItem.Click
         Undo()
+        ID_STATUS_LABEL.Text = "Undo"
     End Sub
 
     'reset current object
     Private Sub ID_BTN_RESEL_Click(sender As Object, e As EventArgs) Handles ID_BTN_RESEL.Click
         obj_selected.Refresh()
         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+        ID_STATUS_LABEL.Text = "Reselect"
     End Sub
 
     Private Sub RESELECTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RESELECTToolStripMenuItem.Click
         obj_selected.Refresh()
         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+        ID_STATUS_LABEL.Text = "Reselect"
     End Sub
 
     'reset digit
@@ -1006,11 +1031,13 @@ Public Class Main_Form
         digit = CInt(ID_NUM_DIGIT.Value)
         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
         ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+        ID_STATUS_LABEL.Text = "Changing the digit of decimal numbers."
     End Sub
 
     'set the width of line
     Private Sub ID_NUM_LINE_WIDTH_ValueChanged(sender As Object, e As EventArgs) Handles ID_NUM_LINE_WIDTH.ValueChanged
         line_infor.line_width = CInt(ID_NUM_LINE_WIDTH.Value)
+        ID_STATUS_LABEL.Text = "Changing the width of drawing line."
     End Sub
 
     'change the color of LineStyle object
@@ -1023,6 +1050,7 @@ Public Class Main_Form
             line_infor.line_color = clrDialog.Color
             ID_BTN_CUR_COL.BackColor = clrDialog.Color
         End If
+        ID_STATUS_LABEL.Text = "Changing the color of drawing line."
     End Sub
 
     'set the line style
@@ -1037,6 +1065,7 @@ Public Class Main_Form
             'obj_selected.line_shape = "dashed";
             line_infor.line_style = "dashed"
         End If
+        ID_STATUS_LABEL.Text = "Changing the shape of drawing line."
     End Sub
 
     'set text fore color
@@ -1049,6 +1078,7 @@ Public Class Main_Form
             font_infor.font_color = clrDialog.Color
             ID_BTN_TEXT_COL.BackColor = clrDialog.Color
         End If
+        ID_STATUS_LABEL.Text = "Changing the color of text."
     End Sub
 
     'set text font
@@ -1058,6 +1088,7 @@ Public Class Main_Form
         If fontDialog.ShowDialog() = DialogResult.OK Then
             font_infor.text_font = fontDialog.Font
         End If
+        ID_STATUS_LABEL.Text = "Changing the font of text."
     End Sub
 
     'redraw objects
@@ -1494,7 +1525,8 @@ Public Class Main_Form
 
     'add tag page at the end
     Private Sub ID_BTN_TAB_ADD_Click(sender As Object, e As EventArgs) Handles ID_BTN_TAB_ADD.Click
-        Add_tab()
+        Add_Tab()
+        ID_STATUS_LABEL.Text = "Add tab."
     End Sub
 
     'remove tab
@@ -1530,14 +1562,17 @@ Public Class Main_Form
     'remove last tag page
     Private Sub ID_BTN_TAB_REMOVE_Click(sender As Object, e As EventArgs) Handles ID_BTN_TAB_REMOVE.Click
         Remove_Tab()
+        ID_STATUS_LABEL.Text = "Remove tab."
     End Sub
 
     Private Sub ADDTAGToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ADDTAGToolStripMenuItem.Click
         Add_Tab()
+        ID_STATUS_LABEL.Text = "Add tab."
     End Sub
 
     Private Sub REMOVETAGToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles REMOVETAGToolStripMenuItem.Click
         Remove_Tab()
+        ID_STATUS_LABEL.Text = "Remove tab."
     End Sub
 
     'save setting information to setting.ini
@@ -1664,6 +1699,7 @@ Public Class Main_Form
         CF = CF_num(index)
         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
         ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+        ID_STATUS_LABEL.Text = "Changing CF."
     End Sub
 
     'show About dialog
@@ -2163,6 +2199,8 @@ Public Class Main_Form
     ''' calculate minimum distance between two selected objects
     ''' </summary>
     Private Sub MinCalcBtn_Click(sender As Object, e As EventArgs) Handles MinCalcBtn.Click
+        ID_STATUS_LABEL.Text = "Calculate minimum distance between selected objects."
+
         If CuPolyRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
@@ -2220,6 +2258,8 @@ Public Class Main_Form
     ''' calculate maximum distance between two selected objects
     ''' </summary>
     Private Sub MaxCalcBtn_Click(sender As Object, e As EventArgs) Handles MaxCalcBtn.Click
+        ID_STATUS_LABEL.Text = "Calculate maximum distance between selected objects."
+
         If CuPolyRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
@@ -2276,6 +2316,8 @@ Public Class Main_Form
     ''' calculate minimum perpendicular distance between two selected objects
     ''' </summary>
     Private Sub PerMin_Click(sender As Object, e As EventArgs) Handles PerMin.Click
+        ID_STATUS_LABEL.Text = "Calculate perpendicular minimum distance between selected objects."
+
         If CuPolyRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
@@ -2349,6 +2391,8 @@ Public Class Main_Form
     ''' calculate maximum perpendicular distance between two selected objects
     ''' </summary>
     Private Sub PerMax_Click(sender As Object, e As EventArgs) Handles PerMax.Click
+        ID_STATUS_LABEL.Text = "Calculate perpendicular maximum distance between selected objects."
+
         If CuPolyRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
