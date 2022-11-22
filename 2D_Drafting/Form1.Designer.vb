@@ -135,6 +135,7 @@ Partial Class Main_Form
         Me.CURVEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CURVEPOLYGENToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ID_PICTURE_BOX_CAM = New System.Windows.Forms.PictureBox()
+        Me.ID_CHECK_SHOW_LEGEND = New System.Windows.Forms.CheckBox()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -216,6 +217,7 @@ Partial Class Main_Form
         Me.Panel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel1.BackColor = System.Drawing.SystemColors.ControlLight
+        Me.Panel1.Controls.Add(Me.ID_CHECK_SHOW_LEGEND)
         Me.Panel1.Controls.Add(Me.PerMax)
         Me.Panel1.Controls.Add(Me.PerMin)
         Me.Panel1.Controls.Add(Me.MaxCalcBtn)
@@ -242,6 +244,7 @@ Partial Class Main_Form
         Me.PerMax.Size = New System.Drawing.Size(75, 23)
         Me.PerMax.TabIndex = 13
         Me.PerMax.Text = "P_Max"
+        Me.ToolTip1.SetToolTip(Me.PerMax, "get maximum perpendicular distance between selected objects.")
         Me.PerMax.UseVisualStyleBackColor = True
         '
         'PerMin
@@ -251,6 +254,7 @@ Partial Class Main_Form
         Me.PerMin.Size = New System.Drawing.Size(75, 23)
         Me.PerMin.TabIndex = 12
         Me.PerMin.Text = "P_Min"
+        Me.ToolTip1.SetToolTip(Me.PerMin, "get minimum perpendicular distance between selected objects.")
         Me.PerMin.UseVisualStyleBackColor = True
         '
         'MaxCalcBtn
@@ -260,6 +264,7 @@ Partial Class Main_Form
         Me.MaxCalcBtn.Size = New System.Drawing.Size(75, 23)
         Me.MaxCalcBtn.TabIndex = 11
         Me.MaxCalcBtn.Text = "Max"
+        Me.ToolTip1.SetToolTip(Me.MaxCalcBtn, "get maximum distance between selected objects.")
         Me.MaxCalcBtn.UseVisualStyleBackColor = True
         '
         'MinCalcBtn
@@ -269,6 +274,7 @@ Partial Class Main_Form
         Me.MinCalcBtn.Size = New System.Drawing.Size(75, 23)
         Me.MinCalcBtn.TabIndex = 10
         Me.MinCalcBtn.Text = "Min"
+        Me.ToolTip1.SetToolTip(Me.MinCalcBtn, "get minimum distance between selected objects.")
         Me.MinCalcBtn.UseVisualStyleBackColor = True
         '
         'GroupBox1
@@ -296,12 +302,13 @@ Partial Class Main_Form
         Me.ID_BTN_C_SEL.Size = New System.Drawing.Size(36, 36)
         Me.ID_BTN_C_SEL.TabIndex = 5
         Me.ID_BTN_C_SEL.Text = "Sel"
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_SEL, "Select objects")
         Me.ID_BTN_C_SEL.UseVisualStyleBackColor = False
         '
         'ID_CHECK_SIDE
         '
         Me.ID_CHECK_SIDE.AutoSize = True
-        Me.ID_CHECK_SIDE.Location = New System.Drawing.Point(986, 39)
+        Me.ID_CHECK_SIDE.Location = New System.Drawing.Point(981, 28)
         Me.ID_CHECK_SIDE.Name = "ID_CHECK_SIDE"
         Me.ID_CHECK_SIDE.Size = New System.Drawing.Size(73, 17)
         Me.ID_CHECK_SIDE.TabIndex = 1
@@ -714,6 +721,7 @@ Partial Class Main_Form
         Me.ID_BTN_C_CUPOLY.Name = "ID_BTN_C_CUPOLY"
         Me.ID_BTN_C_CUPOLY.Size = New System.Drawing.Size(36, 36)
         Me.ID_BTN_C_CUPOLY.TabIndex = 4
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_CUPOLY, "Draw a Polygen&Curve")
         Me.ID_BTN_C_CUPOLY.UseVisualStyleBackColor = False
         '
         'ID_BTN_C_CURVE
@@ -724,6 +732,7 @@ Partial Class Main_Form
         Me.ID_BTN_C_CURVE.Name = "ID_BTN_C_CURVE"
         Me.ID_BTN_C_CURVE.Size = New System.Drawing.Size(36, 36)
         Me.ID_BTN_C_CURVE.TabIndex = 3
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_CURVE, "Draw a Curve")
         Me.ID_BTN_C_CURVE.UseVisualStyleBackColor = False
         '
         'ID_BTN_C_POINT
@@ -734,6 +743,7 @@ Partial Class Main_Form
         Me.ID_BTN_C_POINT.Name = "ID_BTN_C_POINT"
         Me.ID_BTN_C_POINT.Size = New System.Drawing.Size(36, 36)
         Me.ID_BTN_C_POINT.TabIndex = 2
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_POINT, "Draw a Point")
         Me.ID_BTN_C_POINT.UseVisualStyleBackColor = False
         '
         'ID_BTN_C_POLY
@@ -744,6 +754,7 @@ Partial Class Main_Form
         Me.ID_BTN_C_POLY.Name = "ID_BTN_C_POLY"
         Me.ID_BTN_C_POLY.Size = New System.Drawing.Size(36, 36)
         Me.ID_BTN_C_POLY.TabIndex = 1
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_POLY, "Draw a Polygen")
         Me.ID_BTN_C_POLY.UseVisualStyleBackColor = False
         '
         'ID_BTN_C_LINE
@@ -754,6 +765,7 @@ Partial Class Main_Form
         Me.ID_BTN_C_LINE.Name = "ID_BTN_C_LINE"
         Me.ID_BTN_C_LINE.Size = New System.Drawing.Size(36, 36)
         Me.ID_BTN_C_LINE.TabIndex = 0
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_LINE, "Draw a line")
         Me.ID_BTN_C_LINE.UseVisualStyleBackColor = False
         '
         'ID_BTN_TAB_REMOVE
@@ -1145,6 +1157,16 @@ Partial Class Main_Form
         Me.ID_PICTURE_BOX_CAM.TabIndex = 12
         Me.ID_PICTURE_BOX_CAM.TabStop = False
         '
+        'ID_CHECK_SHOW_LEGEND
+        '
+        Me.ID_CHECK_SHOW_LEGEND.AutoSize = True
+        Me.ID_CHECK_SHOW_LEGEND.Location = New System.Drawing.Point(981, 51)
+        Me.ID_CHECK_SHOW_LEGEND.Name = "ID_CHECK_SHOW_LEGEND"
+        Me.ID_CHECK_SHOW_LEGEND.Size = New System.Drawing.Size(92, 17)
+        Me.ID_CHECK_SHOW_LEGEND.TabIndex = 14
+        Me.ID_CHECK_SHOW_LEGEND.Text = "Show Legend"
+        Me.ID_CHECK_SHOW_LEGEND.UseVisualStyleBackColor = True
+        '
         'Main_Form
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1290,4 +1312,5 @@ End Sub
     Friend WithEvents SELECTOBJECTSToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ADDTAGToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents REMOVETAGToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ID_CHECK_SHOW_LEGEND As CheckBox
 End Class

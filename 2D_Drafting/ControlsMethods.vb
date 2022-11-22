@@ -843,7 +843,9 @@ Public Module ControlsMethods
 
             Dim length_decimal = GetDecimalNumber(item.length, digit, CF)
             Dim textSize As SizeF = graph.MeasureString(length_decimal.ToString(), graphFont)
-            graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
+            If Main_Form.show_legend = True Then
+                graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
+            End If
             graph.RotateTransform(-1 * item.line_object.trans_angle)
         ElseIf item.measure_type = MeasureType.angle OrElse item.measure_type = MeasureType.angle_far Then
 
@@ -881,7 +883,9 @@ Public Module ControlsMethods
             Dim trans_pt = GetRotationTransform(draw_pt, item.angle_object.trans_angle)
             Dim length_decimal = GetDecimalNumber(Math.Abs(item.angle_object.sweep_angle), digit, 1)
             Dim textSize As SizeF = graph.MeasureString(length_decimal.ToString(), graphFont)
-            graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
+            If Main_Form.show_legend = True Then
+                graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
+            End If
             graph.RotateTransform(-1 * item.angle_object.trans_angle)
         ElseIf item.measure_type = MeasureType.radius Then
             Dim center_pt As Point = New Point(item.radius_object.center_pt.X * pictureBox.Width, item.radius_object.center_pt.Y * pictureBox.Height)
@@ -959,7 +963,9 @@ Public Module ControlsMethods
                 Dim length_decimal = GetDecimalNumber(item.radius, digit, CF)
 
                 Dim textSize As SizeF = graph.MeasureString(length_decimal.ToString(), graphFont)
-                graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
+                If Main_Form.show_legend = True Then
+                    graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
+                End If
                 graph.RotateTransform(-1 * trans_angle)
             End If
         ElseIf item.measure_type = MeasureType.annotation Then
@@ -970,9 +976,7 @@ Public Module ControlsMethods
             textsize.Height = item.anno_object.size.Height
             graph.DrawString(item.annotation, graphFont, graphBrush, textsize)
             Dim left_top As Point = New Point(item.left_top.X * pictureBox.Width, item.left_top.Y * pictureBox.Height)
-
             Dim line_pt As Point = New Point(item.anno_object.line_pt.X * pictureBox.Width, item.anno_object.line_pt.Y * pictureBox.Height)
-
             graph.DrawLine(graphPen2, start_point, line_pt)
         ElseIf item.measure_type = MeasureType.draw_line Then
             If Equals(item.line_infor.line_style, "dotted") Then
@@ -1028,7 +1032,10 @@ Public Module ControlsMethods
             Dim length_decimal = GetDecimalNumber(item.length, digit, CF)
             Dim textSize As SizeF = graph.MeasureString(length_decimal.ToString(), graphFont)
 
-            graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
+            If Main_Form.show_legend = True Then
+                graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
+            End If
+
             graph.RotateTransform(-1 * trans_angle)
 
         Else

@@ -45,7 +45,10 @@ Public Module C_ControlMethods
 
             'draw label
             Dim DrawPt = New Point(CInt(obj.LDrawPos.X * pictureBox.Width), CInt(obj.LDrawPos.Y * pictureBox.Height))
-            graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 30, 20))
+            If Main_Form.show_legend = True Then
+                graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 30, 20))
+            End If
+
         ElseIf item.measure_type = MeasureType.C_Point Then
             Dim obj = item.curve_object.PointItem(0)
             Dim PointPt = New Point(CInt(obj.PointPoint.X * pictureBox.Width), CInt(obj.PointPoint.Y * pictureBox.Height))
@@ -55,7 +58,10 @@ Public Module C_ControlMethods
                 graph.DrawEllipse(graphPen, New Rectangle(PointPt.X, PointPt.Y, 2, 2))
             End If
             Dim DrawPt = New Point(CInt(obj.PDrawPos.X * pictureBox.Width), CInt(obj.PDrawPos.Y * pictureBox.Height))
-            graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 30, 20))
+            If Main_Form.show_legend = True Then
+                graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 30, 20))
+            End If
+
         ElseIf item.measure_type = MeasureType.C_Poly Then
             Dim obj = item.curve_object.PolyItem(0)
             For i = 0 To obj.PolyPointIndx - 1
@@ -68,7 +74,10 @@ Public Module C_ControlMethods
                 End If
             Next
             Dim DrawPt = New Point(CInt(obj.PolyDrawPos.X * pictureBox.Width), CInt(obj.PolyDrawPos.Y * pictureBox.Height))
-            graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 40, 20))
+            If Main_Form.show_legend = True Then
+                graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 40, 20))
+            End If
+
 
         ElseIf item.measure_type = MeasureType.C_Curve Then
             Dim obj = item.curve_object.CurveItem(0)
@@ -82,7 +91,10 @@ Public Module C_ControlMethods
                 End If
             Next
             Dim DrawPt = New Point(CInt(obj.CDrawPos.X * pictureBox.Width), CInt(obj.CDrawPos.Y * pictureBox.Height))
-            graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 30, 20))
+            If Main_Form.show_legend = True Then
+                graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 30, 20))
+            End If
+
         ElseIf item.measure_type = MeasureType.C_CuPoly Then
             Dim obj = item.curve_object.CuPolyItem(0)
             For i = 1 To obj.CuPolyPointIndx_j
@@ -110,7 +122,10 @@ Public Module C_ControlMethods
                 End If
             Next
             Dim DrawPt = New Point(CInt(obj.CuPolyDrawPos.X * pictureBox.Width), CInt(obj.CuPolyDrawPos.Y * pictureBox.Height))
-            graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 30, 20))
+            If Main_Form.show_legend = True Then
+                graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 30, 20))
+            End If
+
         ElseIf item.measure_type = MeasureType.C_MinMax Then
             Dim startPt = New Point(item.start_point.X * pictureBox.Width, item.start_point.Y * pictureBox.Height)
             Dim EndPt = New Point(item.end_point.X * pictureBox.Width, item.end_point.Y * pictureBox.Height)

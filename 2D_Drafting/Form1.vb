@@ -232,6 +232,7 @@ Public Class Main_Form
     Private dashValues As Single() = {5, 2}                             'format dash style of line
     Private line_infor As LineStyle = New LineStyle(1)                  'include the information of style, width, color ...
     Private side_drag As Boolean = False                                'flag of side drawing
+    Public show_legend As Boolean = False                              'flag of show legend
     Private scale_style As String = "horizontal"                        'the style of measuring scale horizontal or vertical
     Private scale_value As Integer = 0                                  'the value of measuring scale
     Private scale_unit As String = "cm"                                 'unit of measuring scale may be cm, mm, ...
@@ -1679,6 +1680,15 @@ Public Class Main_Form
             side_drag = True
         Else
             side_drag = False
+        End If
+    End Sub
+
+    'show legend when ID_CHECK_SHOW_LEGEND is checked
+    Private Sub ID_CHECK_SHOW_LEGEND_CheckedChanged(sender As Object, e As EventArgs) Handles ID_CHECK_SHOW_LEGEND.CheckedChanged
+        If ID_CHECK_SHOW_LEGEND.Checked = True Then
+            show_legend = True
+        Else
+            show_legend = False
         End If
     End Sub
 
