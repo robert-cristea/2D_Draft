@@ -258,20 +258,13 @@ Public Class Main_Form
     Private menu_click As Boolean = False                               'specify whether the menu item is clicked
 
     'member variable for webcam
-    Private videoDevices As FilterInfoCollection                        'usable video devices
-    Private videoDevice As VideoCaptureDevice                           'video device currently used 
-    Private snapshotCapabilities As VideoCapabilities()
-    Private ReadOnly listCamera As ArrayList = New ArrayList()
-    Private Shared needSnapshot As Boolean = False
-    Private newImage As Bitmap = Nothing                                'used for capturing frame of webcam
-    Private ReadOnly _devicename As String = "MultitekHDCam"            'device name
-    'Private ReadOnly _devicename As String = "USB Camera"
-    'Private ReadOnly _devicename As String = "Lenovo FHD Webcam"
+
     Private ReadOnly photoList As New System.Windows.Forms.ImageList    'list of captured images
     Private file_counter As Integer = 0                                 'the count of captured images
     Private camera_state As Boolean = False                             'the state of camera is opened or not
     Public imagepath As String = ""                                     'path of folder storing captured images
-    Private flag As Boolean = False                                     'flag for live image
+    Private live_flag As Boolean = True                                 'flag specify the statue of pause/resume of camera
+    Private axMainVideoCap As AxVIDEOCAPLib.AxVideoCap = New AxVIDEOCAPLib.AxVideoCap()
 
     'member variable for keygen
     Dim licState As licState                                            'the state of this program is licensed or not
@@ -402,6 +395,7 @@ Public Class Main_Form
             ID_PANEL(i) = New Panel()
             ID_PICTURE_BOX(i) = New PictureBox()
             ID_MY_TEXTBOX(i) = New TextBox()
+            ID_MY_TEXTBOX(i).Visible = False
 
             ID_TAG_CTRL.Controls.Add(ID_TAG_PAGE(i))
 
@@ -409,45 +403,59 @@ Public Class Main_Form
             ID_TAG_PAGE(i).Name = "ID_TAG_PAGE" & i.ToString()
             ID_TAG_PAGE(i).Padding = New Padding(3)
             ID_TAG_PAGE(i).Size = New Size(800, 600)
-            ID_TAG_PAGE(i).Text = "Image" & (i + 1).ToString()
+            If i = 0 Then
+                ID_TAG_PAGE(i).Text = "Cam"
+            Else
+                ID_TAG_PAGE(i).Text = "Image" & i
+            End If
+
             ID_TAG_PAGE(i).UseVisualStyleBackColor = True
             ID_TAG_PAGE(i).Controls.Add(ID_PANEL(i))
 
             ID_PANEL(i).Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
             ID_PANEL(i).AutoScroll = True
             ID_PANEL(i).AutoSizeMode = AutoSizeMode.GrowAndShrink
-            ID_PANEL(i).BackColor = Color.Gray
+            ID_PANEL(i).BackColor = Color.Black
             ID_PANEL(i).Location = New Point(0, 1)
             ID_PANEL(i).Name = "ID_PANEL" & i.ToString()
             ID_PANEL(i).Size = New Size(800, 600)
             AddHandler ID_PANEL(i).Scroll, New ScrollEventHandler(AddressOf ID_PANEL_Scroll)
             AddHandler ID_PANEL(i).SizeChanged, New EventHandler(AddressOf ID_PANEL_SizeChanged)
             AddHandler ID_PANEL(i).MouseWheel, New MouseEventHandler(AddressOf ID_PANEL_MouseWheel)
-            ID_PANEL(i).Controls.Add(ID_PICTURE_BOX(i))
+            If i = 0 Then
+                ID_PANEL(i).Controls.Add(axMainVideoCap)
 
-            ID_PICTURE_BOX(i).BackColor = Color.Gray
-            ID_PICTURE_BOX(i).Location = New Point(0, -1)
-            ID_PICTURE_BOX(i).Name = "ID_PICTURE_BOX" & i.ToString()
-            ID_PICTURE_BOX(i).Size = New Size(800, 600)
-            ID_PICTURE_BOX(i).SizeMode = PictureBoxSizeMode.AutoSize
-            ID_PICTURE_BOX(i).TabIndex = 0
-            ID_PICTURE_BOX(i).TabStop = False
-            ID_PICTURE_BOX(i).Image = Nothing
-            AddHandler ID_PICTURE_BOX(i).MouseDown, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseDown)
-            AddHandler ID_PICTURE_BOX(i).MouseMove, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseMove)
-            AddHandler ID_PICTURE_BOX(i).MouseDoubleClick, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseDoubleClick)
-            AddHandler ID_PICTURE_BOX(i).MouseUp, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseUp)
+                axMainVideoCap.Enabled = True
+                axMainVideoCap.Location = New Point(0, -1)
+                axMainVideoCap.Name = "axMainVideoCap"
+                axMainVideoCap.Size = New Size(800, 600)
 
-            AddHandler ID_PICTURE_BOX(i).Paint, New PaintEventHandler(AddressOf ID_PICTURE_BOX_Paint)
+            Else
+                ID_PANEL(i).Controls.Add(ID_PICTURE_BOX(i))
 
-            ID_PICTURE_BOX(i).Controls.Add(ID_MY_TEXTBOX(i))
+                ID_PICTURE_BOX(i).BackColor = Color.Black
+                ID_PICTURE_BOX(i).Location = New Point(0, -1)
+                ID_PICTURE_BOX(i).Name = "ID_PICTURE_BOX" & i.ToString()
+                ID_PICTURE_BOX(i).Size = New Size(800, 600)
+                ID_PICTURE_BOX(i).SizeMode = PictureBoxSizeMode.AutoSize
+                ID_PICTURE_BOX(i).TabIndex = 0
+                ID_PICTURE_BOX(i).TabStop = False
+                ID_PICTURE_BOX(i).Image = Nothing
+                AddHandler ID_PICTURE_BOX(i).MouseDown, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseDown)
+                AddHandler ID_PICTURE_BOX(i).MouseMove, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseMove)
+                AddHandler ID_PICTURE_BOX(i).MouseDoubleClick, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseDoubleClick)
+                AddHandler ID_PICTURE_BOX(i).MouseUp, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseUp)
 
-            ID_MY_TEXTBOX(i).Name = "ID_MY_TEXTBOX"
-            ID_MY_TEXTBOX(i).Multiline = True
-            ID_MY_TEXTBOX(i).AutoSize = False
-            ID_MY_TEXTBOX(i).Visible = False
-            ID_MY_TEXTBOX(i).Font = graphFont
-            AddHandler ID_MY_TEXTBOX(i).TextChanged, New EventHandler(AddressOf ID_MY_TEXTBOX_TextChanged)
+                AddHandler ID_PICTURE_BOX(i).Paint, New PaintEventHandler(AddressOf ID_PICTURE_BOX_Paint)
+
+                ID_PICTURE_BOX(i).Controls.Add(ID_MY_TEXTBOX(i))
+
+                ID_MY_TEXTBOX(i).Name = "ID_MY_TEXTBOX"
+                ID_MY_TEXTBOX(i).Multiline = True
+                ID_MY_TEXTBOX(i).AutoSize = False
+                ID_MY_TEXTBOX(i).Font = graphFont
+                AddHandler ID_MY_TEXTBOX(i).TextChanged, New EventHandler(AddressOf ID_MY_TEXTBOX_TextChanged)
+            End If
         Next
 
         'remove unnessary tab pages
@@ -458,8 +466,7 @@ Public Class Main_Form
         Next
 
         tag_page_flag(0) = True
-        img_import_flag(0) = True
-
+        img_import_flag(0) = False
 
     End Sub
 
@@ -590,10 +597,15 @@ Public Class Main_Form
         End Try
 
         Try
-            OpenCamera()
-            SelectResolution(videoDevice, CameraResolutionsCB)
+
+            SelectResolution(AxVideoCap1, CameraResolutionsCB)
+            SelectVideoInput(AxVideoCap1, ID_COMBO_VIDEO_INPUT)
+
             If Not My.Settings.camresindex.Equals("") Then
                 CameraResolutionsCB.SelectedIndex = My.Settings.camresindex + 1
+            End If
+            If Not My.Settings.cameraname.Equals("") Then
+                ID_COMBO_VIDEO_INPUT.SelectedIndex = My.Settings.cameraname + 1
             End If
 
         Catch ex As Exception
@@ -682,10 +694,7 @@ Public Class Main_Form
     Private Sub ID_MENU_OPEN_CAM_Click(sender As Object, e As EventArgs) Handles ID_MENU_OPEN_CAM.Click
         Try
             OpenCamera()
-            SelectResolution(videoDevice, CameraResolutionsCB)
-            If Not My.Settings.camresindex.Equals("") Then
-                CameraResolutionsCB.SelectedIndex = My.Settings.camresindex + 1
-            End If
+
         Catch excpt As Exception
             MessageBox.Show(excpt.Message)
         End Try
@@ -696,7 +705,7 @@ Public Class Main_Form
         Try
             CloseCamera()
             ID_PICTURE_BOX(0).Image = Nothing
-            ID_PICTURE_BOX_CAM.Image = Nothing
+            'ID_PICTURE_BOX_CAM.Image = Nothing
         Catch excpt As Exception
             MessageBox.Show(excpt.Message)
         End Try
@@ -711,9 +720,10 @@ Public Class Main_Form
         Dim title = "Open"
 
         Dim start As Integer = tab_index
+        If start = 0 Then start = 1
         img_import_flag(tab_index) = True
 
-        Dim img_cnt = ID_PICTURE_BOX(0).LoadImageFromFiles(filter, title, origin_image, resized_image, initial_ratio, start, img_import_flag)
+        Dim img_cnt = ID_PICTURE_BOX(1).LoadImageFromFiles(filter, title, origin_image, resized_image, initial_ratio, start, img_import_flag)
 
         If img_cnt >= 1 Then
             ID_PICTURE_BOX(tab_index).Image = Nothing
@@ -960,6 +970,9 @@ Public Class Main_Form
 
     'zoom image
     Private Sub Zoom_Image()
+        If tab_index = 0 Then
+            Return
+        End If
         Dim ratio = zoom_factor(tab_index) * initial_ratio(tab_index)
         current_image(tab_index) = ZoomImage(ratio, origin_image, current_image, tab_index)
         ID_PICTURE_BOX(tab_index).Invoke(New Action(Sub() ID_PICTURE_BOX(tab_index).Image = Enumerable.ElementAt(current_image, tab_index).ToBitmap()))
@@ -1510,6 +1523,9 @@ Public Class Main_Form
     'set brightness, contrast and gamma to current image
     Private Sub ID_BTN_BRIGHTNESS_Click(sender As Object, e As EventArgs) Handles ID_BTN_BRIGHTNESS.Click
         redraw_flag = True
+        If tab_index = 0 Then
+            Return
+        End If
         Dim form As ID_FORM_BRIGHTNESS = New ID_FORM_BRIGHTNESS(ID_PICTURE_BOX(tab_index), Enumerable.ElementAt(resized_image, tab_index).ToBitmap(), brightness(tab_index), contrast(tab_index), gamma(tab_index))
         Dim image = origin_image(tab_index).Clone().ToBitmap()
         Dim InitialImage = AdjustBrightnessAndContrast(image, brightness(tab_index), contrast(tab_index), gamma(tab_index))
@@ -1642,12 +1658,7 @@ Public Class Main_Form
             ini.Save(ini_path)
         End If
 
-        If videoDevice Is Nothing Then
-        ElseIf videoDevice.IsRunning Then
-            videoDevice.SignalToStop()
-            RemoveHandler videoDevice.NewFrame, New NewFrameEventHandler(AddressOf Device_NewFrame)
-            videoDevice = Nothing
-        End If
+
         camera_state = False
     End Sub
 
@@ -1805,79 +1816,33 @@ Public Class Main_Form
 
 #Region "Webcam Methods"
 
-    'pop one frame from webcam and display it to pictureboxs
-    Public Sub Device_NewFrame(sender As Object, eventArgs As AForge.Video.NewFrameEventArgs)
-        On Error Resume Next
-
-        Me.Invoke(Sub()
-                      newImage = DirectCast(eventArgs.Frame.Clone(), Bitmap)
-
-                      If flag = False Then
-                          ID_PICTURE_BOX(0).Image = newImage.Clone()
-                      End If
-                      ID_PICTURE_BOX_CAM.Image = newImage.Clone()
-                      newImage?.Dispose()
-                  End Sub)
-
-    End Sub
 
     'open camera
     Private Sub OpenCamera()
-        Dim cameraInt As Int32 = CheckPerticularCamera(videoDevices, _devicename)
-        If (cameraInt < 0) Then
-            MessageBox.Show("Compatible Camera not found..")
-            Exit Sub
-        End If
+        AxVideoCap1.VideoInput = ID_COMBO_VIDEO_INPUT.SelectedIndex
+        AxVideoCap1.VideoFormat = CameraResolutionsCB.SelectedIndex
 
-        videoDevices = New FilterInfoCollection(FilterCategory.VideoInputDevice)
-        videoDevice = New VideoCaptureDevice(videoDevices(Convert.ToInt32(cameraInt)).MonikerString)
-        If Not My.Settings.camresindex.Equals("") Then
-            videoDevice.VideoResolution = videoDevice.VideoCapabilities(Convert.ToInt32(My.Settings.camresindex))
-        End If
-        AddHandler videoDevice.NewFrame, New NewFrameEventHandler(AddressOf Device_NewFrame)
-        videoDevice.Start()
-        camera_state = True
+        axMainVideoCap.VideoInput = ID_COMBO_VIDEO_INPUT.SelectedIndex
+        axMainVideoCap.VideoFormat = CameraResolutionsCB.SelectedIndex
+
+        Me.AxVideoCap1.Start()
+        axMainVideoCap.Start()
+
     End Sub
 
     'close camera
     Private Sub CloseCamera()
-
-        If videoDevice Is Nothing Then
-        ElseIf videoDevice.IsRunning Then
-            videoDevice.SignalToStop()
-            RemoveHandler videoDevice.NewFrame, New NewFrameEventHandler(AddressOf Device_NewFrame)
-            videoDevice.Source = Nothing
-        End If
-        camera_state = False
+        AxVideoCap1.Stop()
+        axMainVideoCap.Stop()
     End Sub
 
     'capture image and add it to ID_LISTVIEW_IMAGE
     Private Sub ID_BTN_CAPTURE_Click(sender As Object, e As EventArgs) Handles ID_BTN_CAPTURE.Click
 
         Try
-            'temp code for test
-            'For i = 1 To 4
-            '    Dim img_name As String
-            '    'img_name = Format("%d", i)
-            '    'img_name = "MyImages\\(" + img_name + ").jpg"
-            '    img_name = "MyImages\\test_" & (i) & ".jpeg"
-            '    Dim img1 As Image = Image.FromFile(img_name)
-            '    file_counter += 1
-            '    photoList.ImageSize = New Size(200, 150)
-            '    photoList.Images.Add(img1)
-            'Next
 
-            'ID_LISTVIEW_IMAGE.LargeImageList = photoList
-            'ID_LISTVIEW_IMAGE.Items.Clear()
-            'For index = 0 To photoList.Images.Count - 1
-            '    Dim item As New ListViewItem With {
-            '        .ImageIndex = index,
-            '        .Text = "MyImages\\test_" & (index) & ".jpeg"
-            '    }
-            '    ID_LISTVIEW_IMAGE.Items.Add(item)
-            'Next
-
-            Dim img1 As Image = ID_PICTURE_BOX_CAM.Image.Clone()
+            'Dim img1 As Image = ID_PICTURE_BOX_CAM.Image.Clone()
+            Dim img1 As Image = AxVideoCap1.SnapShot2Picture()
 
             Createdirectory(imagepath)
             If photoList.Images.Count <= 0 Then
@@ -1913,7 +1878,7 @@ Public Class Main_Form
         ID_LISTVIEW_IMAGE.Clear()
         ID_LISTVIEW_IMAGE.Items.Clear()
         photoList.Images.Clear()
-        ID_PICTURE_BOX_CAM.Image = Nothing
+        'ID_PICTURE_BOX_CAM.Image = Nothing
         ID_PICTURE_BOX(tab_index).Image = Nothing
         DeleteImages(imagepath)
     End Sub
@@ -1921,12 +1886,11 @@ Public Class Main_Form
     'stop camera and display the selected image to ID_PICTURE_BOX
     Private Sub ID_LISTVIEW_IMAGE_DoubleClick(sender As Object, e As EventArgs) Handles ID_LISTVIEW_IMAGE.DoubleClick
         Try
-            flag = True
 
             Dim itemSelected As Integer = GetListViewSelectedItemIndex(ID_LISTVIEW_IMAGE)
             SetListViewSelectedItem(ID_LISTVIEW_IMAGE, itemSelected)
             Dim Image As Image = Image.FromFile(ID_LISTVIEW_IMAGE.SelectedItems(0).Tag)
-            ID_PICTURE_BOX_CAM.Image = Image
+            'ID_PICTURE_BOX_CAM.Image = Image
 
             Dim page_num = tab_index
 
@@ -1980,19 +1944,7 @@ Public Class Main_Form
 
     'display property window for the video capture
     Private Sub Btn_CameraProperties_Click(sender As Object, e As EventArgs) Handles Btn_CameraProperties.Click
-
-        If videoDevice Is Nothing Then
-            MsgBox("Please start Camera First")
-
-        ElseIf videoDevice.IsRunning Then
-            videoDevice.DisplayPropertyPage(Me.Handle)
-        End If
-    End Sub
-
-    'set flag for live image so that live images can be displayed to tab
-    Private Sub btn_live_Click(sender As Object, e As EventArgs) Handles btn_live.Click
-        flag = False
-
+        AxVideoCap1.ShowVideoCapturePropertyPage(0)
     End Sub
 
     'change the resolution of webcam
@@ -2006,6 +1958,32 @@ Public Class Main_Form
             OpenCamera()
         End If
 
+    End Sub
+
+    'change the camera
+    Private Sub ID_COMBO_VIDEO_INPUT_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ID_COMBO_VIDEO_INPUT.SelectedIndexChanged
+        If ID_COMBO_VIDEO_INPUT.SelectedIndex > 0 Then
+            My.Settings.cameraname = ID_COMBO_VIDEO_INPUT.SelectedIndex - 1
+            My.Settings.Save()
+            CloseCamera()
+            Threading.Thread.Sleep(500)
+            OpenCamera()
+        End If
+    End Sub
+
+    'pause/resume camera
+    Private Sub ID_BTN_LIVE_Click(sender As Object, e As EventArgs) Handles ID_BTN_LIVE.Click
+        If live_flag = True Then
+            AxVideoCap1.Pause()
+            axMainVideoCap.Pause()
+            live_flag = False
+            ID_BTN_LIVE.Text = "Resume"
+        Else
+            AxVideoCap1.Resume()
+            axMainVideoCap.Resume()
+            live_flag = True
+            ID_BTN_LIVE.Text = "Pause"
+        End If
     End Sub
 
     'set the path of directory for captured images
