@@ -597,16 +597,16 @@ Public Class Main_Form
         End Try
 
         Try
-
-            SelectResolution(AxVideoCap1, CameraResolutionsCB)
+            SelectVideoDevice(AxVideoCap1, ID_COMBO_VIDEO_DEVICE)
             SelectVideoInput(AxVideoCap1, ID_COMBO_VIDEO_INPUT)
+            SelectResolution(AxVideoCap1, CameraResolutionsCB)
 
-            If Not My.Settings.camresindex.Equals("") Then
-                CameraResolutionsCB.SelectedIndex = My.Settings.camresindex + 1
-            End If
-            If Not My.Settings.cameraname.Equals("") Then
-                ID_COMBO_VIDEO_INPUT.SelectedIndex = My.Settings.cameraname + 1
-            End If
+            'If Not My.Settings.camresindex.Equals("") Then
+            '    CameraResolutionsCB.SelectedIndex = My.Settings.camresindex + 1
+            'End If
+            'If Not My.Settings.cameraname.Equals("") Then
+            '    ID_COMBO_VIDEO_DEVICE.SelectedIndex = My.Settings.cameraname + 1
+            'End If
 
         Catch ex As Exception
             MessageBox.Show(ex.Message)
@@ -1439,15 +1439,15 @@ Public Class Main_Form
                 ElseIf cur_measure_type = MeasureType.C_Poly Then
                     'If PolyDrawEndFlag = False Then
                     If PolyPreviousPoint Is Nothing Then
-                            PolyPreviousPoint = e.Location
-                            Dim ptF = New PointF(e.X / CSng(ID_PICTURE_BOX(tab_index).Width), e.Y / CSng(ID_PICTURE_BOX(tab_index).Height))
-                            C_PolyObj.PolyPoint(C_PolyObj.PolyPointIndx) = ptF
-                        Else
-                            If C_PolyObj.PolyPointIndx >= 1 Then
-                                DrawPolyObj(ID_PICTURE_BOX(tab_index), line_infor, C_PolyObj)
-                                DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, PolyPreviousPoint.Value, e.Location)
-                            End If
+                        PolyPreviousPoint = e.Location
+                        Dim ptF = New PointF(e.X / CSng(ID_PICTURE_BOX(tab_index).Width), e.Y / CSng(ID_PICTURE_BOX(tab_index).Height))
+                        C_PolyObj.PolyPoint(C_PolyObj.PolyPointIndx) = ptF
+                    Else
+                        If C_PolyObj.PolyPointIndx >= 1 Then
+                            DrawPolyObj(ID_PICTURE_BOX(tab_index), line_infor, C_PolyObj)
+                            DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, PolyPreviousPoint.Value, e.Location)
                         End If
+                    End If
                     'End If
                 ElseIf cur_measure_type = MeasureType.C_CuPoly Then
                     If CuPolyDrawEndFlag = False Then
@@ -1819,11 +1819,14 @@ Public Class Main_Form
 
     'open camera
     Private Sub OpenCamera()
+        AxVideoCap1.Device = ID_COMBO_VIDEO_DEVICE.SelectedIndex
         AxVideoCap1.VideoInput = ID_COMBO_VIDEO_INPUT.SelectedIndex
         AxVideoCap1.VideoFormat = CameraResolutionsCB.SelectedIndex
 
+        axMainVideoCap.Device = ID_COMBO_VIDEO_DEVICE.SelectedIndex
         axMainVideoCap.VideoInput = ID_COMBO_VIDEO_INPUT.SelectedIndex
         axMainVideoCap.VideoFormat = CameraResolutionsCB.SelectedIndex
+
 
         Me.AxVideoCap1.Start()
         axMainVideoCap.Start()
@@ -1950,8 +1953,8 @@ Public Class Main_Form
     'change the resolution of webcam
     Private Sub CameraResolutionsCB_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CameraResolutionsCB.SelectedIndexChanged
 
-        If CameraResolutionsCB.SelectedIndex > 0 Then
-            My.Settings.camresindex = CameraResolutionsCB.SelectedIndex - 1
+        If CameraResolutionsCB.SelectedIndex >= 0 Then
+            My.Settings.camresindex = CameraResolutionsCB.SelectedIndex
             My.Settings.Save()
             CloseCamera()
             Threading.Thread.Sleep(500)
@@ -1960,10 +1963,22 @@ Public Class Main_Form
 
     End Sub
 
-    'change the camera
+    'change video device
+    Private Sub ID_COMBO_VIDEO_DEVICE_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ID_COMBO_VIDEO_DEVICE.SelectedIndexChanged
+        If ID_COMBO_VIDEO_DEVICE.SelectedIndex >= 0 Then
+            AxVideoCap1.RefreshVideoDevice(ID_COMBO_VIDEO_DEVICE.SelectedIndex)
+            SelectVideoInput(AxVideoCap1, ID_COMBO_VIDEO_INPUT)
+            SelectResolution(AxVideoCap1, CameraResolutionsCB)
+            CloseCamera()
+            Threading.Thread.Sleep(500)
+            OpenCamera()
+        End If
+    End Sub
+
+    'change video input
     Private Sub ID_COMBO_VIDEO_INPUT_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ID_COMBO_VIDEO_INPUT.SelectedIndexChanged
-        If ID_COMBO_VIDEO_INPUT.SelectedIndex > 0 Then
-            My.Settings.cameraname = ID_COMBO_VIDEO_INPUT.SelectedIndex - 1
+        If ID_COMBO_VIDEO_INPUT.SelectedIndex >= 0 Then
+            My.Settings.cameraname = ID_COMBO_VIDEO_INPUT.SelectedIndex
             My.Settings.Save()
             CloseCamera()
             Threading.Thread.Sleep(500)

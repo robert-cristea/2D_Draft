@@ -100,6 +100,9 @@ Partial Class Main_Form
         Me.ID_BTN_LINE_ALIGN = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.ID_COMBO_VIDEO_INPUT = New System.Windows.Forms.ComboBox()
+        Me.ID_BTN_LIVE = New System.Windows.Forms.Button()
+        Me.ID_COMBO_VIDEO_DEVICE = New System.Windows.Forms.ComboBox()
+        Me.AxVideoCap1 = New AxVIDEOCAPLib.AxVideoCap()
         Me.Btn_CameraProperties = New System.Windows.Forms.Button()
         Me.btn_delete = New System.Windows.Forms.Button()
         Me.btn_browse = New System.Windows.Forms.Button()
@@ -138,19 +141,17 @@ Partial Class Main_Form
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ID_STATUS_LABEL = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.ID_BTN_LIVE = New System.Windows.Forms.Button()
-        Me.AxVideoCap1 = New AxVIDEOCAPLib.AxVideoCap()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.ID_GROUP_BOX_CONTROL.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        CType(Me.AxVideoCap1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         CType(Me.ID_NUM_LINE_WIDTH, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ID_NUM_DIGIT, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ID_LISTVIEW, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.StatusStrip1.SuspendLayout()
-        CType(Me.AxVideoCap1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -823,8 +824,9 @@ Partial Class Main_Form
         '
         Me.Panel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Panel2.Controls.Add(Me.ID_BTN_LIVE)
         Me.Panel2.Controls.Add(Me.ID_COMBO_VIDEO_INPUT)
+        Me.Panel2.Controls.Add(Me.ID_BTN_LIVE)
+        Me.Panel2.Controls.Add(Me.ID_COMBO_VIDEO_DEVICE)
         Me.Panel2.Controls.Add(Me.AxVideoCap1)
         Me.Panel2.Controls.Add(Me.Btn_CameraProperties)
         Me.Panel2.Controls.Add(Me.btn_delete)
@@ -844,11 +846,40 @@ Partial Class Main_Form
         '
         Me.ID_COMBO_VIDEO_INPUT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ID_COMBO_VIDEO_INPUT.FormattingEnabled = True
-        Me.ID_COMBO_VIDEO_INPUT.Location = New System.Drawing.Point(43, 20)
+        Me.ID_COMBO_VIDEO_INPUT.Location = New System.Drawing.Point(34, 53)
         Me.ID_COMBO_VIDEO_INPUT.Name = "ID_COMBO_VIDEO_INPUT"
-        Me.ID_COMBO_VIDEO_INPUT.Size = New System.Drawing.Size(150, 21)
-        Me.ID_COMBO_VIDEO_INPUT.TabIndex = 24
-        Me.ToolTip1.SetToolTip(Me.ID_COMBO_VIDEO_INPUT, "Choose video input name")
+        Me.ID_COMBO_VIDEO_INPUT.Size = New System.Drawing.Size(191, 21)
+        Me.ID_COMBO_VIDEO_INPUT.TabIndex = 26
+        Me.ToolTip1.SetToolTip(Me.ID_COMBO_VIDEO_INPUT, "Choose video input")
+        '
+        'ID_BTN_LIVE
+        '
+        Me.ID_BTN_LIVE.Location = New System.Drawing.Point(150, 122)
+        Me.ID_BTN_LIVE.Name = "ID_BTN_LIVE"
+        Me.ID_BTN_LIVE.Size = New System.Drawing.Size(75, 23)
+        Me.ID_BTN_LIVE.TabIndex = 25
+        Me.ID_BTN_LIVE.Text = "Pause"
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_LIVE, "Pause/Resume camera")
+        Me.ID_BTN_LIVE.UseVisualStyleBackColor = True
+        '
+        'ID_COMBO_VIDEO_DEVICE
+        '
+        Me.ID_COMBO_VIDEO_DEVICE.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ID_COMBO_VIDEO_DEVICE.FormattingEnabled = True
+        Me.ID_COMBO_VIDEO_DEVICE.Location = New System.Drawing.Point(34, 20)
+        Me.ID_COMBO_VIDEO_DEVICE.Name = "ID_COMBO_VIDEO_DEVICE"
+        Me.ID_COMBO_VIDEO_DEVICE.Size = New System.Drawing.Size(191, 21)
+        Me.ID_COMBO_VIDEO_DEVICE.TabIndex = 24
+        Me.ToolTip1.SetToolTip(Me.ID_COMBO_VIDEO_DEVICE, "Choose video device")
+        '
+        'AxVideoCap1
+        '
+        Me.AxVideoCap1.Enabled = True
+        Me.AxVideoCap1.Location = New System.Drawing.Point(29, 227)
+        Me.AxVideoCap1.Name = "AxVideoCap1"
+        Me.AxVideoCap1.OcxState = CType(resources.GetObject("AxVideoCap1.OcxState"), System.Windows.Forms.AxHost.State)
+        Me.AxVideoCap1.Size = New System.Drawing.Size(196, 172)
+        Me.AxVideoCap1.TabIndex = 15
         '
         'Btn_CameraProperties
         '
@@ -883,7 +914,7 @@ Partial Class Main_Form
         '
         'btn_setpath
         '
-        Me.btn_setpath.Location = New System.Drawing.Point(150, 148)
+        Me.btn_setpath.Location = New System.Drawing.Point(150, 158)
         Me.btn_setpath.Name = "btn_setpath"
         Me.btn_setpath.Size = New System.Drawing.Size(75, 23)
         Me.btn_setpath.TabIndex = 20
@@ -893,7 +924,7 @@ Partial Class Main_Form
         '
         'txtbx_imagepath
         '
-        Me.txtbx_imagepath.Location = New System.Drawing.Point(29, 151)
+        Me.txtbx_imagepath.Location = New System.Drawing.Point(29, 161)
         Me.txtbx_imagepath.Name = "txtbx_imagepath"
         Me.txtbx_imagepath.ReadOnly = True
         Me.txtbx_imagepath.Size = New System.Drawing.Size(100, 20)
@@ -903,9 +934,9 @@ Partial Class Main_Form
         '
         Me.CameraResolutionsCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CameraResolutionsCB.FormattingEnabled = True
-        Me.CameraResolutionsCB.Location = New System.Drawing.Point(43, 64)
+        Me.CameraResolutionsCB.Location = New System.Drawing.Point(34, 86)
         Me.CameraResolutionsCB.Name = "CameraResolutionsCB"
-        Me.CameraResolutionsCB.Size = New System.Drawing.Size(150, 21)
+        Me.CameraResolutionsCB.Size = New System.Drawing.Size(191, 21)
         Me.CameraResolutionsCB.TabIndex = 18
         Me.ToolTip1.SetToolTip(Me.CameraResolutionsCB, "Choose video resolution")
         '
@@ -933,7 +964,7 @@ Partial Class Main_Form
         '
         'ID_BTN_CAPTURE
         '
-        Me.ID_BTN_CAPTURE.Location = New System.Drawing.Point(29, 112)
+        Me.ID_BTN_CAPTURE.Location = New System.Drawing.Point(29, 122)
         Me.ID_BTN_CAPTURE.Name = "ID_BTN_CAPTURE"
         Me.ID_BTN_CAPTURE.Size = New System.Drawing.Size(75, 23)
         Me.ID_BTN_CAPTURE.TabIndex = 11
@@ -1187,25 +1218,6 @@ Partial Class Main_Form
         Me.ID_STATUS_LABEL.Name = "ID_STATUS_LABEL"
         Me.ID_STATUS_LABEL.Size = New System.Drawing.Size(0, 17)
         '
-        'ID_BTN_LIVE
-        '
-        Me.ID_BTN_LIVE.Location = New System.Drawing.Point(150, 112)
-        Me.ID_BTN_LIVE.Name = "ID_BTN_LIVE"
-        Me.ID_BTN_LIVE.Size = New System.Drawing.Size(75, 23)
-        Me.ID_BTN_LIVE.TabIndex = 25
-        Me.ID_BTN_LIVE.Text = "Pause"
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_LIVE, "Pause/Resume camera")
-        Me.ID_BTN_LIVE.UseVisualStyleBackColor = True
-        '
-        'AxVideoCap1
-        '
-        Me.AxVideoCap1.Enabled = True
-        Me.AxVideoCap1.Location = New System.Drawing.Point(29, 227)
-        Me.AxVideoCap1.Name = "AxVideoCap1"
-        Me.AxVideoCap1.OcxState = CType(resources.GetObject("AxVideoCap1.OcxState"), System.Windows.Forms.AxHost.State)
-        Me.AxVideoCap1.Size = New System.Drawing.Size(196, 172)
-        Me.AxVideoCap1.TabIndex = 15
-        '
         'Main_Form
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1229,6 +1241,7 @@ Partial Class Main_Form
         Me.ID_GROUP_BOX_CONTROL.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        CType(Me.AxVideoCap1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
         CType(Me.ID_NUM_LINE_WIDTH, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1236,7 +1249,6 @@ Partial Class Main_Form
         CType(Me.ID_LISTVIEW, System.ComponentModel.ISupportInitialize).EndInit()
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
-        CType(Me.AxVideoCap1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1356,6 +1368,7 @@ End Sub
     Friend WithEvents StatusStrip1 As StatusStrip
     Friend WithEvents ID_STATUS_LABEL As ToolStripStatusLabel
     Friend WithEvents AxVideoCap1 As AxVIDEOCAPLib.AxVideoCap
-    Friend WithEvents ID_COMBO_VIDEO_INPUT As ComboBox
+    Friend WithEvents ID_COMBO_VIDEO_DEVICE As ComboBox
     Friend WithEvents ID_BTN_LIVE As Button
+    Friend WithEvents ID_COMBO_VIDEO_INPUT As ComboBox
 End Class

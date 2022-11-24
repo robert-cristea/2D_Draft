@@ -38,15 +38,47 @@ Public Module WebCam
         If videoDevice IsNot Nothing Then
             CameraResolutionsCB.Items.Clear()
             CameraResolutionsCB.Enabled = True
-            CameraResolutionsCB.Items.Add("Choose Resolution")
+            'CameraResolutionsCB.Items.Add("Choose Resolution")
 
             For i = 0 To videoDevice.GetVideoFormatCount - 1
                 CameraResolutionsCB.Items.Add(videoDevice.GetVideoFormatName(i))
             Next
 
-            If CameraResolutionsCB.Items.Count > 1 Then
-                CameraResolutionsCB.SelectedIndex = 1
-            Else
+            'If CameraResolutionsCB.Items.Count > 1 Then
+            '    CameraResolutionsCB.SelectedIndex = 1
+            'Else
+            '    CameraResolutionsCB.SelectedIndex = 0
+            'End If
+            If CameraResolutionsCB.Items.Count > 0 Then
+                CameraResolutionsCB.SelectedIndex = 0
+            End If
+        Else
+            CameraResolutionsCB.Enabled = False
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' set the list of usable video input 
+    ''' </summary>
+    ''' <paramname="videoDevice">the device is connected.</param>
+    ''' <paramname="CameraResolutionsCB">the combobox whose items are the usable resolutions of videoDevice.</param>
+    Public Sub SelectVideoDevice(ByVal videoDevice As AxVIDEOCAPLib.AxVideoCap, ByRef CameraResolutionsCB As ComboBox)
+
+        If videoDevice IsNot Nothing Then
+            CameraResolutionsCB.Items.Clear()
+            CameraResolutionsCB.Enabled = True
+            'CameraResolutionsCB.Items.Add("Choose Video Device")
+
+            For i = 0 To videoDevice.GetDeviceCount - 1
+                CameraResolutionsCB.Items.Add(videoDevice.GetDeviceName(i))
+            Next
+
+            'If CameraResolutionsCB.Items.Count > 1 Then
+            '    CameraResolutionsCB.SelectedIndex = 1
+            'Else
+            '    CameraResolutionsCB.SelectedIndex = 0
+            'End If
+            If CameraResolutionsCB.Items.Count > 0 Then
                 CameraResolutionsCB.SelectedIndex = 0
             End If
         Else
@@ -64,15 +96,18 @@ Public Module WebCam
         If videoDevice IsNot Nothing Then
             CameraResolutionsCB.Items.Clear()
             CameraResolutionsCB.Enabled = True
-            CameraResolutionsCB.Items.Add("Choose Video")
+            'CameraResolutionsCB.Items.Add("Choose Video Input")
 
             For i = 0 To videoDevice.GetVideoInputCount - 1
                 CameraResolutionsCB.Items.Add(videoDevice.GetVideoInputName(i))
             Next
 
-            If CameraResolutionsCB.Items.Count > 1 Then
-                CameraResolutionsCB.SelectedIndex = 1
-            Else
+            'If CameraResolutionsCB.Items.Count > 1 Then
+            '    CameraResolutionsCB.SelectedIndex = 1
+            'Else
+            '    CameraResolutionsCB.SelectedIndex = 0
+            'End If
+            If CameraResolutionsCB.Items.Count > 0 Then
                 CameraResolutionsCB.SelectedIndex = 0
             End If
         Else
