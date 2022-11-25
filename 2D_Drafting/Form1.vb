@@ -583,7 +583,7 @@ Public Class Main_Form
     'check license information when main dialog is loading
     Private Sub Main_Form_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
-            'Init()
+            Init()
             Initialize_Button_Colors()
             Timer1.Interval = 30
             Timer1.Start()
@@ -601,12 +601,12 @@ Public Class Main_Form
             SelectVideoInput(AxVideoCap1, ID_COMBO_VIDEO_INPUT)
             SelectResolution(AxVideoCap1, CameraResolutionsCB)
 
-            'If Not My.Settings.camresindex.Equals("") Then
-            '    CameraResolutionsCB.SelectedIndex = My.Settings.camresindex + 1
-            'End If
-            'If Not My.Settings.cameraname.Equals("") Then
-            '    ID_COMBO_VIDEO_DEVICE.SelectedIndex = My.Settings.cameraname + 1
-            'End If
+            If Not My.Settings.camresindex.Equals("") Then
+                CameraResolutionsCB.SelectedIndex = My.Settings.camresindex
+            End If
+            If Not My.Settings.cameraname.Equals("") Then
+                ID_COMBO_VIDEO_DEVICE.SelectedIndex = My.Settings.cameraname
+            End If
 
         Catch ex As Exception
             MessageBox.Show(ex.Message)
@@ -704,8 +704,7 @@ Public Class Main_Form
     Private Sub ID_MENU_CLOSE_CAM_Click(sender As Object, e As EventArgs) Handles ID_MENU_CLOSE_CAM.Click
         Try
             CloseCamera()
-            ID_PICTURE_BOX(0).Image = Nothing
-            'ID_PICTURE_BOX_CAM.Image = Nothing
+
         Catch excpt As Exception
             MessageBox.Show(excpt.Message)
         End Try
@@ -1309,25 +1308,27 @@ Public Class Main_Form
             AddCurveToList()
             C_PointObj.Refresh()
         ElseIf cur_measure_type = MeasureType.C_Line Then
-            LinePreviousPoint = Nothing
-            C_LineObj.LDrawPos = LGetPos(C_LineObj)
-            Dim tempObj = CloneLineObj(C_LineObj)
-            obj_selected.curve_object = New CurveObject()
-            obj_selected.curve_object.LineItem.Add(tempObj)
-            obj_selected.name = "L" & cur_obj_num(tab_index)
-            AddCurveToList()
-            C_LineObj.Refresh()
+            If C_LineObj.SecndPointOfLine.X <> 0 And C_LineObj.SecndPointOfLine.Y <> 0 Then
+                LinePreviousPoint = Nothing
+                C_LineObj.LDrawPos = LGetPos(C_LineObj)
+                Dim tempObj = CloneLineObj(C_LineObj)
+                obj_selected.curve_object = New CurveObject()
+                obj_selected.curve_object.LineItem.Add(tempObj)
+                obj_selected.name = "L" & cur_obj_num(tab_index)
+                AddCurveToList()
+                C_LineObj.Refresh()
+            End If
         ElseIf cur_measure_type = MeasureType.C_Curve Then
-            CurvePreviousPoint = Nothing
-            C_CurveObj.CDrawPos = CGetPos(C_CurveObj)
-            Dim tempObj = CloneCurveObj(C_CurveObj)
-            obj_selected.curve_object = New CurveObject()
-            obj_selected.curve_object.CurveItem.Add(tempObj)
-            obj_selected.name = "C" & cur_obj_num(tab_index)
-            AddCurveToList()
-            C_CurveObj.Refresh()
-        ElseIf cur_measure_type = MeasureType.C_CuPoly Then
-            CuPolyPreviousPoint = Nothing
+                CurvePreviousPoint = Nothing
+                C_CurveObj.CDrawPos = CGetPos(C_CurveObj)
+                Dim tempObj = CloneCurveObj(C_CurveObj)
+                obj_selected.curve_object = New CurveObject()
+                obj_selected.curve_object.CurveItem.Add(tempObj)
+                obj_selected.name = "C" & cur_obj_num(tab_index)
+                AddCurveToList()
+                C_CurveObj.Refresh()
+            ElseIf cur_measure_type = MeasureType.C_CuPoly Then
+                CuPolyPreviousPoint = Nothing
         End If
     End Sub
 
@@ -1836,7 +1837,9 @@ Public Class Main_Form
     'close camera
     Private Sub CloseCamera()
         AxVideoCap1.Stop()
+        AxVideoCap1.Unload()
         axMainVideoCap.Stop()
+        axMainVideoCap.Unload()
     End Sub
 
     'capture image and add it to ID_LISTVIEW_IMAGE
@@ -1854,6 +1857,9 @@ Public Class Main_Form
                 file_counter = Convert.ToInt32(IO.Path.GetFileNameWithoutExtension(photoList.Images.Keys.Item(photoList.Images.Count - 1).ToString()).Split("_")(1)) + 1
             End If
 
+            If img1 Is Nothing Then
+                Return
+            End If
             img1.Save(imagepath & "\\test_" & (file_counter) & ".jpeg", Imaging.ImageFormat.Jpeg)
             photoList.ImageSize = New Size(160, 120)
             photoList.Images.Add("\\test_" & (file_counter) & ".jpeg", img1)
