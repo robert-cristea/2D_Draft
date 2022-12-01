@@ -224,6 +224,7 @@ Public Class Main_Form
     Private cur_measure_type_prev As Integer                            'backup of current measurement type
     Private cur_obj_num As Integer() = New Integer(24) {}               'the number of current object
     Private obj_selected As MeasureObject = New MeasureObject()         'current measurement object
+    Private obj_selected2 As MeasureObject = New MeasureObject()         'current measurement object
     Private object_list As List(Of List(Of MeasureObject)) = New List(Of List(Of MeasureObject))()        'the list of measurement objects
     Private ID_MY_TEXTBOX As TextBox() = New TextBox(24) {}             'textbox for editing annotation
     Private left_top As Point = New Point()                             'the position left top cornor of picture control in panel
@@ -350,11 +351,15 @@ Public Class Main_Form
     Private C_CuPolyObj As C_CuPolyObject = New C_CuPolyObject()
     Private C_CurveObj As C_CurveObject = New C_CurveObject()
     Private curve_sel_index As Integer
+    Private move_line As Boolean
+    Private StartPtOfMove As PointF = New PointF()
+    Private EndPtOfMove As PointF = New PointF()
 
     'member variables for edge detection
     Private EdgeRegionDrawReady As Boolean
     Private FirstPtOfEdge As Point = New Point()
     Private SecondPtOfEdge As Point = New Point()
+
 
 
     Public Sub New()
@@ -631,55 +636,55 @@ Public Class Main_Form
             Initialize_Button_Colors()
             cur_measure_type_prev = cur_measure_type
             Select Case cur_measure_type
-                Case 0
+                Case MeasureType.line_align
                     If menu_click = False Then ID_BTN_LINE_ALIGN.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates a line through two input points."
-                Case 1
+                Case MeasureType.line_horizontal
                     If menu_click = False Then ID_BTN_LINE_HOR.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates a horizontal line through two input points."
-                Case 2
+                Case MeasureType.line_vertical
                     If menu_click = False Then ID_BTN_LINE_VER.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates a vertical line through two input points."
-                Case 3
+                Case MeasureType.angle
                     If menu_click = False Then ID_BTN_ARC.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates angle through three points in degree."
-                Case 4
+                Case MeasureType.radius
                     If menu_click = False Then ID_BTN_RADIUS.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates a arc through three input points."
-                Case 5
+                Case MeasureType.annotation
                     If menu_click = False Then ID_BTN_ANNOTATION.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Add a annotation."
-                Case 6
+                Case MeasureType.angle_far
                     If menu_click = False Then ID_BTN_ANGLE.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates angle through two lines in degree."
-                Case 7
+                Case MeasureType.line_para
                     If menu_click = False Then ID_BTN_LINE_PARA.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates a line through two parallel lines."
-                Case 8
+                Case MeasureType.draw_line
                     If menu_click = False Then ID_BTN_PENCIL.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Draw a line through two input points."
-                Case 9
+                Case MeasureType.pt_line
                     If menu_click = False Then ID_BTN_P_LINE.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates a line between a point and a line."
-                Case 10
+                Case MeasureType.measure_scale
                     If menu_click = False Then ID_BTN_SCALE.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Insert a measuring scale."
-                Case 11
+                Case MeasureType.C_Line
                     If menu_click = False Then ID_BTN_C_LINE.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Draw a line."
-                Case 12
+                Case MeasureType.C_Poly
                     If menu_click = False Then ID_BTN_C_POLY.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Draw a polygen."
-                Case 13
+                Case MeasureType.C_Point
                     If menu_click = False Then ID_BTN_C_POINT.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Draw a point."
-                Case 14
+                Case MeasureType.C_Curve
                     If menu_click = False Then ID_BTN_C_CURVE.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Draw a curve."
-                Case 15
+                Case MeasureType.C_CuPoly
                     If menu_click = False Then ID_BTN_C_CUPOLY.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Draw a curve&polygen."
-                Case 16
+                Case MeasureType.C_Sel
                     If menu_click = False Then ID_BTN_C_SEL.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "select objects."
             End Select
@@ -968,12 +973,13 @@ Public Class Main_Form
 
     End Sub
 
+    'set current measurement type as circle_fixed
     Private Sub ANGLEOFFIXEDDIAMETERToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ANGLEOFFIXEDDIAMETERToolStripMenuItem.Click
         menu_click = True
         cur_measure_type = MeasureType.circle_fixed
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
-
+        ID_STATUS_LABEL.Text = "Drawing a circle which has fixed radius"
         Dim form = New Form3()
         If form.ShowDialog() = DialogResult.OK Then
             obj_selected.scale_object.length = CSng(form.ID_TEXT_FIXED.Text)
@@ -981,12 +987,13 @@ Public Class Main_Form
         End If
     End Sub
 
+    'set current measurement type as line_fixed
     Private Sub LINEOFFIXEDLENGTHToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LINEOFFIXEDLENGTHToolStripMenuItem.Click
         menu_click = True
         cur_measure_type = MeasureType.line_fixed
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
-
+        ID_STATUS_LABEL.Text = "Drawing a line which has fixed length"
         Dim form = New Form3()
         If form.ShowDialog() = DialogResult.OK Then
             obj_selected.scale_object.length = CSng(form.ID_TEXT_FIXED.Text)
@@ -994,16 +1001,23 @@ Public Class Main_Form
         End If
     End Sub
 
+    'set current measurement type as angle_fixed
     Private Sub FIXEDANGLEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FIXEDANGLEToolStripMenuItem.Click
         menu_click = True
         cur_measure_type = MeasureType.angle_fixed
         obj_selected.measure_type = cur_measure_type
         obj_selected.Refresh()
-
+        ID_STATUS_LABEL.Text = "Drawing a angle which has fixed angle"
         Dim form = New Form3()
         If form.ShowDialog() = DialogResult.OK Then
             obj_selected.angle = CSng(form.ID_TEXT_FIXED.Text)
         End If
+    End Sub
+
+    'set move_line to ture so that you can move curves line object
+    Private Sub MOVELINEOBJECTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MOVELINEOBJECTToolStripMenuItem.Click
+        move_line = True
+        ID_STATUS_LABEL.Text = "Duplicating Curve Line Object"
     End Sub
 
     'zoom image
@@ -1323,6 +1337,17 @@ Public Class Main_Form
             If EdgeRegionDrawReady = True Then
                 FirstPtOfEdge = m_pt2
             End If
+
+            If move_line = True And curve_sel_index >= 0 Then
+                Dim obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index)
+                If obj.measure_type = MeasureType.C_Line Then
+                    StartPtOfMove = m_pt
+                    C_LineObj.Refresh()
+                    C_LineObj = CloneLineObj(obj.curve_object.LineItem(0))
+                    obj_selected2.Refresh()
+                    InitializeLineObj(obj_selected2, C_LineObj.LDrawPos, line_infor, font_infor)
+                End If
+            End If
         Else    'right click
             If cur_measure_type = MeasureType.C_Poly Then
                 PolyPreviousPoint = Nothing
@@ -1387,16 +1412,42 @@ Public Class Main_Form
 
         If EdgeRegionDrawReady = True And SecondPtOfEdge.X <> 0 And SecondPtOfEdge.Y <> 0 Then
             'run code for detect edge
-            Dim img = Canny(ID_PICTURE_BOX(tab_index).Image, FirstPtOfEdge, SecondPtOfEdge)
-            ID_PICTURE_BOX(tab_index).Image = img
+            Dim input As Image = resized_image(tab_index).ToBitmap()
+            Dim img = Canny(input, FirstPtOfEdge, SecondPtOfEdge)
             Dim Mat = GetMatFromSDImage(img)
             Dim sz As Size = New Size(ID_PICTURE_BOX(tab_index).Width, Convert.ToInt32(img.Height * ID_PICTURE_BOX(tab_index).Width / img.Width))
             CvInvoke.Resize(Mat, resized_image(tab_index), sz)
+
+            Dim Adjusted = AdjustBrightnessAndContrast(img, brightness(tab_index), contrast(tab_index), gamma(tab_index))
+            ID_PICTURE_BOX(tab_index).Image = Adjusted
+            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
             EdgeRegionDrawReady = False
             FirstPtOfEdge.X = 0
             FirstPtOfEdge.Y = 0
             SecondPtOfEdge.X = 0
             SecondPtOfEdge.Y = 0
+        End If
+
+        If move_line = True And EndPtOfMove.X <> 0 And EndPtOfMove.Y <> 0 Then
+            obj_selected2.obj_num = cur_obj_num(tab_index)
+            object_list(tab_index).Add(obj_selected2)
+            obj_selected2.Refresh()
+            cur_measure_type = -1
+            cur_obj_num(tab_index) += 1
+            If undo_num < 2 Then undo_num += 1
+
+            C_LineObj.LDrawPos = LGetPos(C_LineObj)
+            Dim tempObj = CloneLineObj(C_LineObj)
+            obj_selected.curve_object = New CurveObject()
+            obj_selected.curve_object.LineItem.Add(tempObj)
+            obj_selected.name = "L" & cur_obj_num(tab_index)
+            AddCurveToList()
+            C_LineObj.Refresh()
+            StartPtOfMove.X = 0
+            StartPtOfMove.Y = 0
+            EndPtOfMove.X = 0
+            EndPtOfMove.Y = 0
+            move_line = False
         End If
     End Sub
 
@@ -1501,6 +1552,20 @@ Public Class Main_Form
                 ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
                 ID_PICTURE_BOX(tab_index).DrawRectangle(FirstPtOfEdge, SecondPtOfEdge)
             End If
+
+            If move_line = True And curve_sel_index >= 0 And StartPtOfMove.X <> 0 And StartPtOfMove.Y <> 0 Then
+                EndPtOfMove = m_pt
+                Dim Obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index).curve_object.LineItem(0)
+                C_LineObj.FirstPointOfLine.X = (EndPtOfMove.X - StartPtOfMove.X) + Obj.FirstPointOfLine.X
+                C_LineObj.FirstPointOfLine.Y = (EndPtOfMove.Y - StartPtOfMove.Y) + Obj.FirstPointOfLine.Y
+                C_LineObj.SecndPointOfLine.X = (EndPtOfMove.X - StartPtOfMove.X) + Obj.SecndPointOfLine.X
+                C_LineObj.SecndPointOfLine.Y = (EndPtOfMove.Y - StartPtOfMove.Y) + Obj.SecndPointOfLine.Y
+                ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                DrawLineObject(ID_PICTURE_BOX(tab_index), C_LineObj)
+                Dim Delta = GetNormalFromPointToLine(New Point(Obj.FirstPointOfLine.X * ID_PICTURE_BOX(tab_index).Width, Obj.FirstPointOfLine.Y * ID_PICTURE_BOX(tab_index).Height),
+                                                     New Point(Obj.SecndPointOfLine.X * ID_PICTURE_BOX(tab_index).Width, Obj.SecndPointOfLine.Y * ID_PICTURE_BOX(tab_index).Height), m_pt2)
+                DrawLengthBetweenLines(ID_PICTURE_BOX(tab_index), obj_selected2, CDbl(Delta.Width / ID_PICTURE_BOX(tab_index).Width), CDbl(Delta.Height / ID_PICTURE_BOX(tab_index).Height), origin_image(tab_index).Width, origin_image(tab_index).Height, digit, CF)
+            End If
         Else    'mouse is not clicked
 
             If sel_index >= 0 Then
@@ -1553,6 +1618,14 @@ Public Class Main_Form
                 End If
             End If
 
+            If move_line Then
+                curve_sel_index = CheckCurveItemInPos(ID_PICTURE_BOX(tab_index), m_pt, object_list.ElementAt(tab_index))
+                If curve_sel_index >= 0 Then
+                    Dim obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index)
+                    ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                    DrawCurveObjSelected(ID_PICTURE_BOX(tab_index), obj, digit, CF)
+                End If
+            End If
         End If
     End Sub
 

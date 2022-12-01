@@ -150,6 +150,21 @@ Public Module C_ControlMethods
     End Sub
 
     ''' <summary>
+    ''' draw C_Line Object.
+    ''' </summary>
+    ''' <paramname="pictureBox">The pictureBox control in which you want to draw object list.</param>
+    ''' <paramname="LineObj">The C_LineObject you are going to draw.</param>
+    Public Sub DrawLineObject(ByVal pictureBox As PictureBox, ByVal LineObj As C_LineObject)
+        Dim graph As Graphics = pictureBox.CreateGraphics()
+        Dim graphPen = New Pen(Color.Red, 2)
+        Dim startPt = New Point(LineObj.FirstPointOfLine.X * pictureBox.Width, LineObj.FirstPointOfLine.Y * pictureBox.Height)
+        Dim EndPt = New Point(LineObj.SecndPointOfLine.X * pictureBox.Width, LineObj.SecndPointOfLine.Y * pictureBox.Height)
+        graph.DrawLine(graphPen, startPt, EndPt)
+        graphPen.Dispose()
+        graph.Dispose()
+    End Sub
+
+    ''' <summary>
     ''' draw line between two points.
     ''' </summary>
     ''' <paramname="pictureBox">The pictureBox control in which you want to draw object list.</param>

@@ -2,6 +2,7 @@
 Imports System.Runtime.CompilerServices
 Imports AForge.Video.DirectShow
 Imports ClosedXML.Excel
+Imports DocumentFormat.OpenXml.Drawing.Wordprocessing
 Imports Emgu.CV
 Imports Emgu.CV.CvEnum
 Imports GeometRi
@@ -483,16 +484,16 @@ Public Module ControlsMethods
                 End If
 
             ElseIf cur_measure_type = MeasureType.annotation Then
-                    If obj_selected.item_set = 0 Then
-                        obj_selected.start_point = m_pt
-                        obj_selected.item_set += 1
-                    ElseIf obj_selected.item_set = 1 Then
-                        obj_selected.draw_point = m_pt
-                        obj_selected.item_set += 1
-                    End If
-                    'correct code
-                ElseIf cur_measure_type = MeasureType.angle_far Then
-                    If obj_selected.item_set = 0 Then
+                If obj_selected.item_set = 0 Then
+                    obj_selected.start_point = m_pt
+                    obj_selected.item_set += 1
+                ElseIf obj_selected.item_set = 1 Then
+                    obj_selected.draw_point = m_pt
+                    obj_selected.item_set += 1
+                End If
+
+            ElseIf cur_measure_type = MeasureType.angle_far Then
+                If obj_selected.item_set = 0 Then
                     obj_selected.start_point = m_pt
                     obj_selected.item_set += 1
                 ElseIf obj_selected.item_set = 1 Then
@@ -811,6 +812,93 @@ Public Module ControlsMethods
     End Sub
 
     ''' <summary>
+    ''' Intialize CLine Object when you are movin C_Line.
+    ''' </summary>
+    ''' <paramname="Obj">The measureObject.</param>
+    ''' <paramname="m_pt">The start point of Line Object.</param>
+    Public Sub InitializeLineObj(ByRef Obj As MeasureObject, m_pt As PointF, ByVal line_infor As LineStyle, ByVal font_infor As FontInfor)
+        Obj.start_point = m_pt
+        Obj.end_point = m_pt
+        Obj.line_object.nor_pt1 = m_pt
+        Obj.line_object.nor_pt2 = m_pt
+        Obj.line_object.nor_pt3 = m_pt
+        Obj.line_object.nor_pt4 = m_pt
+        Obj.line_object.nor_pt5 = m_pt
+        Obj.line_object.nor_pt6 = m_pt
+        Obj.line_object.nor_pt7 = m_pt
+        Obj.line_object.nor_pt8 = m_pt
+        Obj.measure_type = MeasureType.line_align
+        Obj.line_infor.line_style = line_infor.line_style
+        Obj.line_infor.line_width = line_infor.line_width
+        Obj.line_infor.line_color = line_infor.line_color
+        Obj.font_infor.font_color = font_infor.font_color
+        Obj.font_infor.text_font = font_infor.text_font
+
+    End Sub
+
+    ''' <summary>
+    ''' Intialize Line Object when you are moving C_Line.
+    ''' </summary>
+    ''' <paramname="Obj">The measureObject.</param>
+    ''' <paramname="dx">the offset of X-axis.</param>
+    ''' <paramname="dy">the offset of Y-axis.</param>
+    ''' <paramname="width">the width of Original Image.</param>
+    ''' <paramname="height">the height of Original Image.</param>
+    Public Sub DrawLengthBetweenLines(pictureBox As PictureBox, ByRef Obj As MeasureObject, dx As Double, dy As Double, width As Integer, height As Integer, digit As Integer, CF As Double)
+        Obj.end_point.X = Obj.start_point.X - dx
+        Obj.end_point.Y = Obj.start_point.Y - dy
+        Obj.line_object.nor_pt2.X = Obj.start_point.X - dx
+        Obj.line_object.nor_pt2.Y = Obj.start_point.Y - dy
+        Obj.line_object.nor_pt4.X = Obj.start_point.X - dx
+        Obj.line_object.nor_pt4.Y = Obj.start_point.Y - dy
+
+        Dim nor_point3 = New Point(Obj.line_object.nor_pt3.X * pictureBox.Width, Obj.line_object.nor_pt3.Y * pictureBox.Height)
+        Dim nor_point4 = New Point(Obj.line_object.nor_pt4.X * pictureBox.Width, Obj.line_object.nor_pt4.Y * pictureBox.Height)
+        Dim n_dist As Integer = CalcDistBetweenPoints(nor_point3, nor_point4)
+        n_dist /= 10
+        n_dist = Math.Max(n_dist, 5)
+        Dim arr_points = New Point(1) {}
+        Dim arr_points2 = New Point(1) {}
+        arr_points = GetArrowPoints3(nor_point3, nor_point4, n_dist)
+        arr_points2 = GetArrowPoints3(nor_point4, nor_point3, n_dist)
+        Dim draw_pt = New Point((nor_point3.X + nor_point4.X) / 2, (nor_point3.Y + nor_point4.Y) / 2)
+        If dx <> 0 Or dy <> 0 Then
+            draw_pt.X += dy / Math.Sqrt(dx * dx + dy * dy) * 10
+            draw_pt.X += dx / Math.Sqrt(dx * dx + dy * dy) * 10
+        End If
+
+        Dim angle As Double = 0
+        If nor_point3.Y >= nor_point4.Y Then
+            angle = CalcAngleBetweenTwoLines(nor_point4, nor_point3, New Point(nor_point3.X + 10, nor_point3.Y))
+        Else
+            angle = CalcAngleBetweenTwoLines(nor_point3, nor_point4, New Point(nor_point4.X + 10, nor_point4.Y))
+        End If
+
+        Obj.angle = angle * 360 / Math.PI / 2
+
+        Dim ang_tran As Integer = Obj.angle
+        Dim attri = -1
+        If Obj.angle > 90 Then
+            ang_tran = 180 - ang_tran
+            attri = 1
+        End If
+        Obj.line_object.nor_pt5 = New PointF(CSng(arr_points(0).X) / pictureBox.Width, CSng(arr_points(0).Y) / pictureBox.Height)
+        Obj.line_object.nor_pt6 = New PointF(CSng(arr_points(1).X) / pictureBox.Width, CSng(arr_points(1).Y) / pictureBox.Height)
+        Obj.line_object.nor_pt7 = New PointF(CSng(arr_points2(0).X) / pictureBox.Width, CSng(arr_points2(0).Y) / pictureBox.Height)
+        Obj.line_object.nor_pt8 = New PointF(CSng(arr_points2(1).X) / pictureBox.Width, CSng(arr_points2(1).Y) / pictureBox.Height)
+        Obj.line_object.draw_pt = New PointF(CSng(draw_pt.X) / pictureBox.Width, CSng(draw_pt.Y) / pictureBox.Height)
+        Obj.line_object.side_drag = Obj.line_object.nor_pt4
+        Obj.line_object.trans_angle = Convert.ToInt32(attri * ang_tran)
+        Obj.length = Math.Sqrt(Math.Pow(Obj.start_point.X * width - Obj.end_point.X * width, 2) + Math.Pow(Obj.start_point.Y * height - Obj.end_point.Y * height, 2))
+
+        Dim graph As Graphics = pictureBox.CreateGraphics()
+        Main_Form.show_legend = True
+        DrawObjItem(graph, pictureBox, Obj, digit, CF)
+        Main_Form.show_legend = False
+        graph.Dispose()
+    End Sub
+
+    ''' <summary>
     ''' draw object list to picture box control.
     ''' </summary>
     ''' <paramname="pictureBox">The pictureBox control in which you want to draw object list.</param>
@@ -921,11 +1009,11 @@ Public Module ControlsMethods
             If Main_Form.show_legend = True Then
                 Dim output = item.name + " " + length_decimal.ToString()
                 Dim textSize As SizeF = graph.MeasureString(output, graphFont)
-                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
             Else
                 Dim output = item.name
                 Dim textSize As SizeF = graph.MeasureString(output, graphFont)
-                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
             End If
 
             graph.RotateTransform(-1 * item.line_object.trans_angle)
@@ -968,11 +1056,11 @@ Public Module ControlsMethods
             If Main_Form.show_legend = True Then
                 Dim output = item.name + " " + length_decimal.ToString()
                 Dim textSize As SizeF = graph.MeasureString(output, graphFont)
-                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
             Else
                 Dim output = item.name
                 Dim textSize As SizeF = graph.MeasureString(output, graphFont)
-                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
             End If
             graph.RotateTransform(-1 * item.angle_object.trans_angle)
         ElseIf item.measure_type = MeasureType.radius Then
@@ -1053,11 +1141,11 @@ Public Module ControlsMethods
                 If Main_Form.show_legend = True Then
                     Dim output = item.name + " " + length_decimal.ToString()
                     Dim textSize As SizeF = graph.MeasureString(output, graphFont)
-                    graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+                    graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
                 Else
                     Dim output = item.name
                     Dim textSize As SizeF = graph.MeasureString(output, graphFont)
-                    graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+                    graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
                 End If
                 graph.RotateTransform(-1 * trans_angle)
             End If
@@ -1163,11 +1251,11 @@ Public Module ControlsMethods
             If Main_Form.show_legend = True Then
                 Dim output = item.name + " " + length_decimal.ToString()
                 Dim textSize As SizeF = graph.MeasureString(output, graphFont)
-                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
             Else
                 Dim output = item.name
                 Dim textSize As SizeF = graph.MeasureString(output, graphFont)
-                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
             End If
             graph.RotateTransform(-1 * trans_angle)
         Else
@@ -1749,20 +1837,20 @@ Public Module ControlsMethods
             'Initialize line objects
 
             If obj_selected.measure_type = MeasureType.line_fixed Then
-                    obj_selected.line_object.nor_pt1 = New PointF(CSng(nor_point1.X) / pictureBox.Width, CSng(nor_point1.Y) / pictureBox.Height)
-                    obj_selected.line_object.nor_pt3 = New PointF(CSng(nor_point3.X) / pictureBox.Width, CSng(nor_point3.Y) / pictureBox.Height)
-                    obj_selected.line_object.nor_pt5 = New PointF(CSng(arr_points(0).X) / pictureBox.Width, CSng(arr_points(0).Y) / pictureBox.Height)
-                    obj_selected.line_object.nor_pt6 = New PointF(CSng(arr_points(1).X) / pictureBox.Width, CSng(arr_points(1).Y) / pictureBox.Height)
-                    Dim deltaX = obj_selected.line_object.nor_pt1.X
-                    Dim deltaY = obj_selected.line_object.nor_pt1.Y
-                    obj_selected.line_object.nor_pt2 = New PointF((CSng(nor_point2.X) / pictureBox.Width - deltaX) * CF, (CSng(nor_point2.Y) / pictureBox.Height - deltaY) * CF)
-                    deltaX = obj_selected.line_object.nor_pt3.X
-                    deltaY = obj_selected.line_object.nor_pt3.Y
-                    obj_selected.line_object.nor_pt4 = New PointF((CSng(nor_point4.X) / pictureBox.Width - deltaX) * CF, (CSng(nor_point4.Y) / pictureBox.Height - deltaY) * CF)
-                    obj_selected.line_object.nor_pt7 = New PointF((CSng(arr_points2(0).X) / pictureBox.Width - deltaX), (CSng(arr_points2(0).Y) / pictureBox.Height - deltaY))
-                    obj_selected.line_object.nor_pt8 = New PointF((CSng(arr_points2(1).X) / pictureBox.Width - deltaX), (CSng(arr_points2(1).Y) / pictureBox.Height - deltaY))
-                    obj_selected.line_object.draw_pt = New PointF((CSng(draw_pt.X) / pictureBox.Width - deltaX) * CF, (CSng(draw_pt.Y) / pictureBox.Height - deltaY) * CF)
-                    obj_selected.line_object.trans_angle = Convert.ToInt32(attri * ang_tran)
+                obj_selected.line_object.nor_pt1 = New PointF(CSng(nor_point1.X) / pictureBox.Width, CSng(nor_point1.Y) / pictureBox.Height)
+                obj_selected.line_object.nor_pt3 = New PointF(CSng(nor_point3.X) / pictureBox.Width, CSng(nor_point3.Y) / pictureBox.Height)
+                obj_selected.line_object.nor_pt5 = New PointF(CSng(arr_points(0).X) / pictureBox.Width, CSng(arr_points(0).Y) / pictureBox.Height)
+                obj_selected.line_object.nor_pt6 = New PointF(CSng(arr_points(1).X) / pictureBox.Width, CSng(arr_points(1).Y) / pictureBox.Height)
+                Dim deltaX = obj_selected.line_object.nor_pt1.X
+                Dim deltaY = obj_selected.line_object.nor_pt1.Y
+                obj_selected.line_object.nor_pt2 = New PointF((CSng(nor_point2.X) / pictureBox.Width - deltaX) * CF, (CSng(nor_point2.Y) / pictureBox.Height - deltaY) * CF)
+                deltaX = obj_selected.line_object.nor_pt3.X
+                deltaY = obj_selected.line_object.nor_pt3.Y
+                obj_selected.line_object.nor_pt4 = New PointF((CSng(nor_point4.X) / pictureBox.Width - deltaX) * CF, (CSng(nor_point4.Y) / pictureBox.Height - deltaY) * CF)
+                obj_selected.line_object.nor_pt7 = New PointF((CSng(arr_points2(0).X) / pictureBox.Width - deltaX), (CSng(arr_points2(0).Y) / pictureBox.Height - deltaY))
+                obj_selected.line_object.nor_pt8 = New PointF((CSng(arr_points2(1).X) / pictureBox.Width - deltaX), (CSng(arr_points2(1).Y) / pictureBox.Height - deltaY))
+                obj_selected.line_object.draw_pt = New PointF((CSng(draw_pt.X) / pictureBox.Width - deltaX) * CF, (CSng(draw_pt.Y) / pictureBox.Height - deltaY) * CF)
+                obj_selected.line_object.trans_angle = Convert.ToInt32(attri * ang_tran)
                     obj_selected.line_object.side_drag = New PointF((CSng(Side_pt.X) / pictureBox.Width - deltaX) * CF, (CSng(Side_pt.Y) / pictureBox.Height - deltaY) * CF)
                 Else
                     obj_selected.line_object.nor_pt1 = New PointF(CSng(nor_point1.X) / pictureBox.Width, CSng(nor_point1.Y) / pictureBox.Height)

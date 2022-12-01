@@ -262,23 +262,24 @@ Public Module Utils
 
         Dim v_offset As Size = New Size(end_point.X - start_point.X, end_point.Y - start_point.Y)
         Dim v_length = Math.Sqrt(v_offset.Width * v_offset.Width + v_offset.Height * v_offset.Height)
-        v_offset.Width = Convert.ToInt32(v_offset.Width * length / v_length)
-        v_offset.Height = Convert.ToInt32(v_offset.Height * length / v_length)
+        If v_length <> 0 Then
+            v_offset.Width = Convert.ToInt32(v_offset.Width * length / v_length)
+            v_offset.Height = Convert.ToInt32(v_offset.Height * length / v_length)
 
-        Dim h_offset As Size = New Size()
-        Dim a = end_point.Y - start_point.Y
-        Dim b = start_point.X - end_point.X
+            Dim h_offset As Size = New Size()
+            Dim a = end_point.Y - start_point.Y
+            Dim b = start_point.X - end_point.X
 
-        If a <> 0 OrElse b <> 0 Then
-            h_offset.Width = Convert.ToInt32(a / Math.Sqrt(a * a + b * b) * length / 3)
-            h_offset.Height = Convert.ToInt32(b / Math.Sqrt(a * a + b * b) * length / 3)
+            If a <> 0 OrElse b <> 0 Then
+                h_offset.Width = Convert.ToInt32(a / Math.Sqrt(a * a + b * b) * length / 3)
+                h_offset.Height = Convert.ToInt32(b / Math.Sqrt(a * a + b * b) * length / 3)
 
-            arr_points(0).X = start_point.X + v_offset.Width + h_offset.Width
-            arr_points(0).Y = start_point.Y + v_offset.Height + h_offset.Height
-            arr_points(1).X = start_point.X + v_offset.Width - h_offset.Width
-            arr_points(1).Y = start_point.Y + v_offset.Height - h_offset.Height
+                arr_points(0).X = start_point.X + v_offset.Width + h_offset.Width
+                arr_points(0).Y = start_point.Y + v_offset.Height + h_offset.Height
+                arr_points(1).X = start_point.X + v_offset.Width - h_offset.Width
+                arr_points(1).Y = start_point.Y + v_offset.Height - h_offset.Height
+            End If
         End If
-
         Return arr_points
 
     End Function

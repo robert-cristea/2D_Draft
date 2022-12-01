@@ -46,6 +46,9 @@ Partial Class Main_Form
         Me.ARCToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ANNOTATIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LINEOFFIXEDLENGTHToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FIXEDANGLEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TOOLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.UNDOToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RESELECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -58,6 +61,7 @@ Partial Class Main_Form
         Me.CURVEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CURVEPOLYGENToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SELECTOBJECTSToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EDGEDETECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HELPToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ID_MENU_ACTIVATE = New System.Windows.Forms.ToolStripMenuItem()
         Me.ID_MENU_LICENSE_INFO = New System.Windows.Forms.ToolStripMenuItem()
@@ -138,10 +142,7 @@ Partial Class Main_Form
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ID_STATUS_LABEL = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.EDGEDETECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.LINEOFFIXEDLENGTHToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FIXEDANGLEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MOVELINEOBJECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -316,9 +317,27 @@ Partial Class Main_Form
         Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
         Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem.Text = "DISTANCE FROM POINT TO LINE"
         '
+        'ANGLEOFFIXEDDIAMETERToolStripMenuItem
+        '
+        Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem.Name = "ANGLEOFFIXEDDIAMETERToolStripMenuItem"
+        Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem.Text = "CIRCLE OF FIXED DIAMETER"
+        '
+        'LINEOFFIXEDLENGTHToolStripMenuItem
+        '
+        Me.LINEOFFIXEDLENGTHToolStripMenuItem.Name = "LINEOFFIXEDLENGTHToolStripMenuItem"
+        Me.LINEOFFIXEDLENGTHToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.LINEOFFIXEDLENGTHToolStripMenuItem.Text = "LINE OF FIXED LENGTH"
+        '
+        'FIXEDANGLEToolStripMenuItem
+        '
+        Me.FIXEDANGLEToolStripMenuItem.Name = "FIXEDANGLEToolStripMenuItem"
+        Me.FIXEDANGLEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.FIXEDANGLEToolStripMenuItem.Text = "FIXED ANGLE"
+        '
         'TOOLToolStripMenuItem
         '
-        Me.TOOLToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UNDOToolStripMenuItem, Me.RESELECTToolStripMenuItem, Me.ADDTAGToolStripMenuItem, Me.REMOVETAGToolStripMenuItem, Me.DRAWOBJECTSToolStripMenuItem, Me.SELECTOBJECTSToolStripMenuItem, Me.EDGEDETECTToolStripMenuItem})
+        Me.TOOLToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UNDOToolStripMenuItem, Me.RESELECTToolStripMenuItem, Me.ADDTAGToolStripMenuItem, Me.REMOVETAGToolStripMenuItem, Me.DRAWOBJECTSToolStripMenuItem, Me.SELECTOBJECTSToolStripMenuItem, Me.EDGEDETECTToolStripMenuItem, Me.MOVELINEOBJECTToolStripMenuItem})
         Me.TOOLToolStripMenuItem.Name = "TOOLToolStripMenuItem"
         Me.TOOLToolStripMenuItem.Size = New System.Drawing.Size(48, 20)
         Me.TOOLToolStripMenuItem.Text = "TOOL"
@@ -362,35 +381,35 @@ Partial Class Main_Form
         '
         Me.LINEToolStripMenuItem1.Image = Global._2D_Drafting.My.Resources.Resources.menu_c_line
         Me.LINEToolStripMenuItem1.Name = "LINEToolStripMenuItem1"
-        Me.LINEToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
+        Me.LINEToolStripMenuItem1.Size = New System.Drawing.Size(161, 22)
         Me.LINEToolStripMenuItem1.Text = "LINE"
         '
         'POLYGENToolStripMenuItem
         '
         Me.POLYGENToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_poly
         Me.POLYGENToolStripMenuItem.Name = "POLYGENToolStripMenuItem"
-        Me.POLYGENToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.POLYGENToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.POLYGENToolStripMenuItem.Text = "POLYGEN"
         '
         'POINTToolStripMenuItem
         '
         Me.POINTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_point
         Me.POINTToolStripMenuItem.Name = "POINTToolStripMenuItem"
-        Me.POINTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.POINTToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.POINTToolStripMenuItem.Text = "POINT"
         '
         'CURVEToolStripMenuItem
         '
         Me.CURVEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_curve
         Me.CURVEToolStripMenuItem.Name = "CURVEToolStripMenuItem"
-        Me.CURVEToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CURVEToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.CURVEToolStripMenuItem.Text = "CURVE"
         '
         'CURVEPOLYGENToolStripMenuItem
         '
         Me.CURVEPOLYGENToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_CuPoly
         Me.CURVEPOLYGENToolStripMenuItem.Name = "CURVEPOLYGENToolStripMenuItem"
-        Me.CURVEPOLYGENToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CURVEPOLYGENToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.CURVEPOLYGENToolStripMenuItem.Text = "CURVE&POLYGEN"
         '
         'SELECTOBJECTSToolStripMenuItem
@@ -398,6 +417,12 @@ Partial Class Main_Form
         Me.SELECTOBJECTSToolStripMenuItem.Name = "SELECTOBJECTSToolStripMenuItem"
         Me.SELECTOBJECTSToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.SELECTOBJECTSToolStripMenuItem.Text = "SELECT OBJECTS"
+        '
+        'EDGEDETECTToolStripMenuItem
+        '
+        Me.EDGEDETECTToolStripMenuItem.Name = "EDGEDETECTToolStripMenuItem"
+        Me.EDGEDETECTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.EDGEDETECTToolStripMenuItem.Text = "EDGE DETECT"
         '
         'HELPToolStripMenuItem
         '
@@ -1186,29 +1211,11 @@ Partial Class Main_Form
         Me.ID_STATUS_LABEL.Name = "ID_STATUS_LABEL"
         Me.ID_STATUS_LABEL.Size = New System.Drawing.Size(0, 17)
         '
-        'EDGEDETECTToolStripMenuItem
+        'MOVELINEOBJECTToolStripMenuItem
         '
-        Me.EDGEDETECTToolStripMenuItem.Name = "EDGEDETECTToolStripMenuItem"
-        Me.EDGEDETECTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.EDGEDETECTToolStripMenuItem.Text = "EDGE DETECT"
-        '
-        'ANGLEOFFIXEDDIAMETERToolStripMenuItem
-        '
-        Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem.Name = "ANGLEOFFIXEDDIAMETERToolStripMenuItem"
-        Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
-        Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem.Text = "CIRCLE OF FIXED DIAMETER"
-        '
-        'LINEOFFIXEDLENGTHToolStripMenuItem
-        '
-        Me.LINEOFFIXEDLENGTHToolStripMenuItem.Name = "LINEOFFIXEDLENGTHToolStripMenuItem"
-        Me.LINEOFFIXEDLENGTHToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
-        Me.LINEOFFIXEDLENGTHToolStripMenuItem.Text = "LINE OF FIXED LENGTH"
-        '
-        'FIXEDANGLEToolStripMenuItem
-        '
-        Me.FIXEDANGLEToolStripMenuItem.Name = "FIXEDANGLEToolStripMenuItem"
-        Me.FIXEDANGLEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
-        Me.FIXEDANGLEToolStripMenuItem.Text = "FIXED ANGLE"
+        Me.MOVELINEOBJECTToolStripMenuItem.Name = "MOVELINEOBJECTToolStripMenuItem"
+        Me.MOVELINEOBJECTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.MOVELINEOBJECTToolStripMenuItem.Text = "MOVE LINE OBJECT"
         '
         'Main_Form
         '
@@ -1365,4 +1372,5 @@ End Sub
     Friend WithEvents ANGLEOFFIXEDDIAMETERToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents LINEOFFIXEDLENGTHToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents FIXEDANGLEToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MOVELINEOBJECTToolStripMenuItem As ToolStripMenuItem
 End Class
