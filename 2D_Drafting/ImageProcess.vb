@@ -1,5 +1,6 @@
 ﻿Imports System.IO
 Imports Emgu.CV
+Imports Emgu.CV.Face
 Imports Emgu.CV.Structure
 Imports Image = System.Drawing.Image
 
@@ -67,6 +68,56 @@ Public Module ImageProcess
         Next
 
 
+        Dim array As Byte() = colorImage.ToJpegData()
+
+        colorImage.Dispose()
+        Dim stream As MemoryStream = New MemoryStream(array)
+        Dim img = Image.FromStream(stream)
+
+        Return img
+    End Function
+
+    ''' <summary>
+    ''' detect edge of selected region
+    ''' </summary>
+    ''' <paramname="src">The source image.</param>
+    ''' <paramname="FirstPtOfEdge">The left top cornor of selected region.</param>
+    ''' <paramname="SecondPtOfEdge">The right bottom cornor of selected region.</param>
+    Public Function Canny(ByVal scr As Image, ByVal FirstPtOfEdge As Point, ByVal SecondPtOfEdge As Point) As Image
+        Dim bmpImage As Bitmap = New Bitmap(scr)
+        Dim grayImage As Emgu.CV.Image(Of Gray, Byte) = bmpImage.ToImage(Of Gray, Byte)()
+        Dim colorImage As Emgu.CV.Image(Of Bgr, Byte) = bmpImage.ToImage(Of Bgr, Byte)()
+        bmpImage.Dispose()
+
+        Dim Width = scr.Width
+        Dim Height = scr.Height
+        Dim CropWidth = SecondPtOfEdge.X - FirstPtOfEdge.X
+        Dim CropHeight = SecondPtOfEdge.Y - FirstPtOfEdge.Y
+        Dim Region As Rectangle = New Rectangle(FirstPtOfEdge.X, FirstPtOfEdge.Y, CropWidth, CropHeight)
+        grayImage.ROI = Region
+
+        Dim cropped = grayImage.Copy()
+        Dim tempimg As Emgu.CV.Image(Of Emgu.CV.Structure.Gray, Byte) = cropped
+        CvInvoke.Canny(cropped, tempimg, 100, 200)
+
+        Dim Data = colorImage.Data
+        Dim Edge = tempimg.Data
+
+        For x = 0 To CropWidth - 1
+            For y = 0 To CropHeight - 1
+                Dim OriX = FirstPtOfEdge.X + x
+                Dim OriY = FirstPtOfEdge.Y + y
+
+                If Edge(y, x, 0) <> 0 Then
+                    Data(OriY, OriX, 0) = 0
+                    Data(OriY, OriX, 1) = 0
+                    Data(OriY, OriX, 2) = 255
+                End If
+
+            Next
+        Next
+
+        'Emgu.CV.CvInvoke.Imshow("original image", colorImage)
         Dim array As Byte() = colorImage.ToJpegData()
 
         colorImage.Dispose()

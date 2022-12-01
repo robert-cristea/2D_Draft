@@ -23,7 +23,6 @@ Partial Class Main_Form
     <System.Diagnostics.DebuggerStepThrough()> 
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main_Form))
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FILEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ID_MENU_OPEN_CAM = New System.Windows.Forms.ToolStripMenuItem()
@@ -99,18 +98,16 @@ Partial Class Main_Form
         Me.ID_BTN_LINE_HOR = New System.Windows.Forms.Button()
         Me.ID_BTN_LINE_ALIGN = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.ID_COMBO_VIDEO_INPUT = New System.Windows.Forms.ComboBox()
-        Me.ID_BTN_LIVE = New System.Windows.Forms.Button()
-        Me.ID_COMBO_VIDEO_DEVICE = New System.Windows.Forms.ComboBox()
-        Me.AxVideoCap1 = New AxVIDEOCAPLib.AxVideoCap()
         Me.Btn_CameraProperties = New System.Windows.Forms.Button()
         Me.btn_delete = New System.Windows.Forms.Button()
         Me.btn_browse = New System.Windows.Forms.Button()
         Me.btn_setpath = New System.Windows.Forms.Button()
         Me.txtbx_imagepath = New System.Windows.Forms.TextBox()
         Me.CameraResolutionsCB = New System.Windows.Forms.ComboBox()
+        Me.btn_live = New System.Windows.Forms.Button()
         Me.ID_BTN_CLEAR_ALL = New System.Windows.Forms.Button()
         Me.ID_LISTVIEW_IMAGE = New System.Windows.Forms.ListView()
+        Me.ID_PICTURE_BOX_CAM = New System.Windows.Forms.PictureBox()
         Me.ID_BTN_CAPTURE = New System.Windows.Forms.Button()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.ID_COMBOBOX_CF = New System.Windows.Forms.ComboBox()
@@ -141,12 +138,16 @@ Partial Class Main_Form
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ID_STATUS_LABEL = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.EDGEDETECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LINEOFFIXEDLENGTHToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FIXEDANGLEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.ID_GROUP_BOX_CONTROL.SuspendLayout()
         Me.Panel2.SuspendLayout()
-        CType(Me.AxVideoCap1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ID_PICTURE_BOX_CAM, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         CType(Me.ID_NUM_LINE_WIDTH, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ID_NUM_DIGIT, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -174,54 +175,54 @@ Partial Class Main_Form
         '
         Me.ID_MENU_OPEN_CAM.Image = Global._2D_Drafting.My.Resources.Resources.import_camera
         Me.ID_MENU_OPEN_CAM.Name = "ID_MENU_OPEN_CAM"
-        Me.ID_MENU_OPEN_CAM.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_OPEN_CAM.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_OPEN_CAM.Text = "OPEN CAMERA"
         '
         'ID_MENU_CLOSE_CAM
         '
         Me.ID_MENU_CLOSE_CAM.Image = Global._2D_Drafting.My.Resources.Resources.close_camera
         Me.ID_MENU_CLOSE_CAM.Name = "ID_MENU_CLOSE_CAM"
-        Me.ID_MENU_CLOSE_CAM.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_CLOSE_CAM.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_CLOSE_CAM.Text = "CLOSE CAMERA"
         '
         'ID_MENU_OPEN
         '
         Me.ID_MENU_OPEN.Image = Global._2D_Drafting.My.Resources.Resources.import_image
         Me.ID_MENU_OPEN.Name = "ID_MENU_OPEN"
-        Me.ID_MENU_OPEN.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_OPEN.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_OPEN.Text = "IMPORT IMAGE"
         '
         'ID_MENU_SAVE
         '
         Me.ID_MENU_SAVE.Image = Global._2D_Drafting.My.Resources.Resources.export_report
         Me.ID_MENU_SAVE.Name = "ID_MENU_SAVE"
-        Me.ID_MENU_SAVE.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_SAVE.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_SAVE.Text = "EXPORT IMAGE"
         '
         'ID_MENU_SAVE_XLSX
         '
         Me.ID_MENU_SAVE_XLSX.Image = Global._2D_Drafting.My.Resources.Resources.export_xlsx
         Me.ID_MENU_SAVE_XLSX.Name = "ID_MENU_SAVE_XLSX"
-        Me.ID_MENU_SAVE_XLSX.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_SAVE_XLSX.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_SAVE_XLSX.Text = "EXPORT XLSX"
         '
         'ID_MENU_EXPORT_REPORT
         '
         Me.ID_MENU_EXPORT_REPORT.Image = Global._2D_Drafting.My.Resources.Resources.export_xlsx
         Me.ID_MENU_EXPORT_REPORT.Name = "ID_MENU_EXPORT_REPORT"
-        Me.ID_MENU_EXPORT_REPORT.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_EXPORT_REPORT.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_EXPORT_REPORT.Text = "EXPORT REPORT"
         '
         'ID_MENU_TO_CURVES
         '
         Me.ID_MENU_TO_CURVES.Name = "ID_MENU_TO_CURVES"
-        Me.ID_MENU_TO_CURVES.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_TO_CURVES.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_TO_CURVES.Text = "TO CURVES"
         '
         'ID_MENU_EXIT
         '
         Me.ID_MENU_EXIT.Name = "ID_MENU_EXIT"
-        Me.ID_MENU_EXIT.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_EXIT.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_EXIT.Text = "EXIT"
         '
         'VIEWToolStripMenuItem
@@ -235,19 +236,19 @@ Partial Class Main_Form
         '
         Me.ZOOMINToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_zoom_in
         Me.ZOOMINToolStripMenuItem.Name = "ZOOMINToolStripMenuItem"
-        Me.ZOOMINToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+        Me.ZOOMINToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ZOOMINToolStripMenuItem.Text = "ZOOM IN"
         '
         'ZOOMOUTToolStripMenuItem
         '
         Me.ZOOMOUTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_zoom_out
         Me.ZOOMOUTToolStripMenuItem.Name = "ZOOMOUTToolStripMenuItem"
-        Me.ZOOMOUTToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+        Me.ZOOMOUTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ZOOMOUTToolStripMenuItem.Text = "ZOOM OUT"
         '
         'MEASUREToolStripMenuItem
         '
-        Me.MEASUREToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LINEToolStripMenuItem, Me.HORIZONTALLINEToolStripMenuItem, Me.VERTICALLINEToolStripMenuItem, Me.PARALLELLINEToolStripMenuItem, Me.ANGLETHROUGHTHREEPOINTSToolStripMenuItem, Me.ANGLETHROUGHTWOLINESToolStripMenuItem, Me.ARCToolStripMenuItem, Me.ANNOTATIONToolStripMenuItem, Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem})
+        Me.MEASUREToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LINEToolStripMenuItem, Me.HORIZONTALLINEToolStripMenuItem, Me.VERTICALLINEToolStripMenuItem, Me.PARALLELLINEToolStripMenuItem, Me.ANGLETHROUGHTHREEPOINTSToolStripMenuItem, Me.ANGLETHROUGHTWOLINESToolStripMenuItem, Me.ARCToolStripMenuItem, Me.ANNOTATIONToolStripMenuItem, Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem, Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem, Me.LINEOFFIXEDLENGTHToolStripMenuItem, Me.FIXEDANGLEToolStripMenuItem})
         Me.MEASUREToolStripMenuItem.Name = "MEASUREToolStripMenuItem"
         Me.MEASUREToolStripMenuItem.Size = New System.Drawing.Size(71, 20)
         Me.MEASUREToolStripMenuItem.Text = "MEASURE"
@@ -317,7 +318,7 @@ Partial Class Main_Form
         '
         'TOOLToolStripMenuItem
         '
-        Me.TOOLToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UNDOToolStripMenuItem, Me.RESELECTToolStripMenuItem, Me.ADDTAGToolStripMenuItem, Me.REMOVETAGToolStripMenuItem, Me.DRAWOBJECTSToolStripMenuItem, Me.SELECTOBJECTSToolStripMenuItem})
+        Me.TOOLToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UNDOToolStripMenuItem, Me.RESELECTToolStripMenuItem, Me.ADDTAGToolStripMenuItem, Me.REMOVETAGToolStripMenuItem, Me.DRAWOBJECTSToolStripMenuItem, Me.SELECTOBJECTSToolStripMenuItem, Me.EDGEDETECTToolStripMenuItem})
         Me.TOOLToolStripMenuItem.Name = "TOOLToolStripMenuItem"
         Me.TOOLToolStripMenuItem.Size = New System.Drawing.Size(48, 20)
         Me.TOOLToolStripMenuItem.Text = "TOOL"
@@ -326,76 +327,76 @@ Partial Class Main_Form
         '
         Me.UNDOToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_undo
         Me.UNDOToolStripMenuItem.Name = "UNDOToolStripMenuItem"
-        Me.UNDOToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.UNDOToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.UNDOToolStripMenuItem.Text = "UNDO"
         '
         'RESELECTToolStripMenuItem
         '
         Me.RESELECTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_reset
         Me.RESELECTToolStripMenuItem.Name = "RESELECTToolStripMenuItem"
-        Me.RESELECTToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.RESELECTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.RESELECTToolStripMenuItem.Text = "RESELECT"
         '
         'ADDTAGToolStripMenuItem
         '
         Me.ADDTAGToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_tab_add
         Me.ADDTAGToolStripMenuItem.Name = "ADDTAGToolStripMenuItem"
-        Me.ADDTAGToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
-        Me.ADDTAGToolStripMenuItem.Text = "ADD TAG"
+        Me.ADDTAGToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ADDTAGToolStripMenuItem.Text = "ADD TAB"
         '
         'REMOVETAGToolStripMenuItem
         '
         Me.REMOVETAGToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_tab_remove
         Me.REMOVETAGToolStripMenuItem.Name = "REMOVETAGToolStripMenuItem"
-        Me.REMOVETAGToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
-        Me.REMOVETAGToolStripMenuItem.Text = "REMOVE TAG"
+        Me.REMOVETAGToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.REMOVETAGToolStripMenuItem.Text = "REMOVE TAB"
         '
         'DRAWOBJECTSToolStripMenuItem
         '
         Me.DRAWOBJECTSToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LINEToolStripMenuItem1, Me.POLYGENToolStripMenuItem, Me.POINTToolStripMenuItem, Me.CURVEToolStripMenuItem, Me.CURVEPOLYGENToolStripMenuItem})
         Me.DRAWOBJECTSToolStripMenuItem.Name = "DRAWOBJECTSToolStripMenuItem"
-        Me.DRAWOBJECTSToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.DRAWOBJECTSToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.DRAWOBJECTSToolStripMenuItem.Text = "DRAW OBJECTS"
         '
         'LINEToolStripMenuItem1
         '
         Me.LINEToolStripMenuItem1.Image = Global._2D_Drafting.My.Resources.Resources.menu_c_line
         Me.LINEToolStripMenuItem1.Name = "LINEToolStripMenuItem1"
-        Me.LINEToolStripMenuItem1.Size = New System.Drawing.Size(161, 22)
+        Me.LINEToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
         Me.LINEToolStripMenuItem1.Text = "LINE"
         '
         'POLYGENToolStripMenuItem
         '
         Me.POLYGENToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_poly
         Me.POLYGENToolStripMenuItem.Name = "POLYGENToolStripMenuItem"
-        Me.POLYGENToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.POLYGENToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.POLYGENToolStripMenuItem.Text = "POLYGEN"
         '
         'POINTToolStripMenuItem
         '
         Me.POINTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_point
         Me.POINTToolStripMenuItem.Name = "POINTToolStripMenuItem"
-        Me.POINTToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.POINTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.POINTToolStripMenuItem.Text = "POINT"
         '
         'CURVEToolStripMenuItem
         '
         Me.CURVEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_curve
         Me.CURVEToolStripMenuItem.Name = "CURVEToolStripMenuItem"
-        Me.CURVEToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.CURVEToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.CURVEToolStripMenuItem.Text = "CURVE"
         '
         'CURVEPOLYGENToolStripMenuItem
         '
         Me.CURVEPOLYGENToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_CuPoly
         Me.CURVEPOLYGENToolStripMenuItem.Name = "CURVEPOLYGENToolStripMenuItem"
-        Me.CURVEPOLYGENToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.CURVEPOLYGENToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.CURVEPOLYGENToolStripMenuItem.Text = "CURVE&POLYGEN"
         '
         'SELECTOBJECTSToolStripMenuItem
         '
         Me.SELECTOBJECTSToolStripMenuItem.Name = "SELECTOBJECTSToolStripMenuItem"
-        Me.SELECTOBJECTSToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.SELECTOBJECTSToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.SELECTOBJECTSToolStripMenuItem.Text = "SELECT OBJECTS"
         '
         'HELPToolStripMenuItem
@@ -408,25 +409,25 @@ Partial Class Main_Form
         'ID_MENU_ACTIVATE
         '
         Me.ID_MENU_ACTIVATE.Name = "ID_MENU_ACTIVATE"
-        Me.ID_MENU_ACTIVATE.Size = New System.Drawing.Size(148, 22)
+        Me.ID_MENU_ACTIVATE.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_ACTIVATE.Text = "ACTIVATE"
         '
         'ID_MENU_LICENSE_INFO
         '
         Me.ID_MENU_LICENSE_INFO.Name = "ID_MENU_LICENSE_INFO"
-        Me.ID_MENU_LICENSE_INFO.Size = New System.Drawing.Size(148, 22)
+        Me.ID_MENU_LICENSE_INFO.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_LICENSE_INFO.Text = "LICENSE INFO"
         '
         'ID_MENU_SETTING_INFO
         '
         Me.ID_MENU_SETTING_INFO.Name = "ID_MENU_SETTING_INFO"
-        Me.ID_MENU_SETTING_INFO.Size = New System.Drawing.Size(148, 22)
+        Me.ID_MENU_SETTING_INFO.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_SETTING_INFO.Text = "SETTING INFO"
         '
         'ID_MENU_ABOUT
         '
         Me.ID_MENU_ABOUT.Name = "ID_MENU_ABOUT"
-        Me.ID_MENU_ABOUT.Size = New System.Drawing.Size(148, 22)
+        Me.ID_MENU_ABOUT.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_ABOUT.Text = "ABOUT"
         '
         'ContextMenuStrip1
@@ -822,73 +823,29 @@ Partial Class Main_Form
         '
         'Panel2
         '
-        Me.Panel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Panel2.Controls.Add(Me.ID_COMBO_VIDEO_INPUT)
-        Me.Panel2.Controls.Add(Me.ID_BTN_LIVE)
-        Me.Panel2.Controls.Add(Me.ID_COMBO_VIDEO_DEVICE)
-        Me.Panel2.Controls.Add(Me.AxVideoCap1)
         Me.Panel2.Controls.Add(Me.Btn_CameraProperties)
         Me.Panel2.Controls.Add(Me.btn_delete)
         Me.Panel2.Controls.Add(Me.btn_browse)
         Me.Panel2.Controls.Add(Me.btn_setpath)
         Me.Panel2.Controls.Add(Me.txtbx_imagepath)
         Me.Panel2.Controls.Add(Me.CameraResolutionsCB)
+        Me.Panel2.Controls.Add(Me.btn_live)
         Me.Panel2.Controls.Add(Me.ID_BTN_CLEAR_ALL)
         Me.Panel2.Controls.Add(Me.ID_LISTVIEW_IMAGE)
+        Me.Panel2.Controls.Add(Me.ID_PICTURE_BOX_CAM)
         Me.Panel2.Controls.Add(Me.ID_BTN_CAPTURE)
         Me.Panel2.Location = New System.Drawing.Point(0, 165)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(256, 699)
         Me.Panel2.TabIndex = 3
         '
-        'ID_COMBO_VIDEO_INPUT
-        '
-        Me.ID_COMBO_VIDEO_INPUT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ID_COMBO_VIDEO_INPUT.FormattingEnabled = True
-        Me.ID_COMBO_VIDEO_INPUT.Location = New System.Drawing.Point(34, 53)
-        Me.ID_COMBO_VIDEO_INPUT.Name = "ID_COMBO_VIDEO_INPUT"
-        Me.ID_COMBO_VIDEO_INPUT.Size = New System.Drawing.Size(191, 21)
-        Me.ID_COMBO_VIDEO_INPUT.TabIndex = 26
-        Me.ToolTip1.SetToolTip(Me.ID_COMBO_VIDEO_INPUT, "Choose video input")
-        '
-        'ID_BTN_LIVE
-        '
-        Me.ID_BTN_LIVE.Location = New System.Drawing.Point(150, 122)
-        Me.ID_BTN_LIVE.Name = "ID_BTN_LIVE"
-        Me.ID_BTN_LIVE.Size = New System.Drawing.Size(75, 23)
-        Me.ID_BTN_LIVE.TabIndex = 25
-        Me.ID_BTN_LIVE.Text = "Pause"
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_LIVE, "Pause/Resume camera")
-        Me.ID_BTN_LIVE.UseVisualStyleBackColor = True
-        '
-        'ID_COMBO_VIDEO_DEVICE
-        '
-        Me.ID_COMBO_VIDEO_DEVICE.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ID_COMBO_VIDEO_DEVICE.FormattingEnabled = True
-        Me.ID_COMBO_VIDEO_DEVICE.Location = New System.Drawing.Point(34, 20)
-        Me.ID_COMBO_VIDEO_DEVICE.Name = "ID_COMBO_VIDEO_DEVICE"
-        Me.ID_COMBO_VIDEO_DEVICE.Size = New System.Drawing.Size(191, 21)
-        Me.ID_COMBO_VIDEO_DEVICE.TabIndex = 24
-        Me.ToolTip1.SetToolTip(Me.ID_COMBO_VIDEO_DEVICE, "Choose video device")
-        '
-        'AxVideoCap1
-        '
-        Me.AxVideoCap1.Enabled = True
-        Me.AxVideoCap1.Location = New System.Drawing.Point(29, 227)
-        Me.AxVideoCap1.Name = "AxVideoCap1"
-        Me.AxVideoCap1.OcxState = CType(resources.GetObject("AxVideoCap1.OcxState"), System.Windows.Forms.AxHost.State)
-        Me.AxVideoCap1.Size = New System.Drawing.Size(196, 172)
-        Me.AxVideoCap1.TabIndex = 15
-        '
         'Btn_CameraProperties
         '
-        Me.Btn_CameraProperties.Location = New System.Drawing.Point(29, 193)
+        Me.Btn_CameraProperties.Location = New System.Drawing.Point(32, 143)
         Me.Btn_CameraProperties.Name = "Btn_CameraProperties"
         Me.Btn_CameraProperties.Size = New System.Drawing.Size(112, 21)
         Me.Btn_CameraProperties.TabIndex = 23
         Me.Btn_CameraProperties.Text = "Capture Properties"
-        Me.ToolTip1.SetToolTip(Me.Btn_CameraProperties, "ShowVideoCapturePropertyPage")
         Me.Btn_CameraProperties.UseVisualStyleBackColor = True
         '
         'btn_delete
@@ -899,32 +856,29 @@ Partial Class Main_Form
         Me.btn_delete.Size = New System.Drawing.Size(64, 23)
         Me.btn_delete.TabIndex = 22
         Me.btn_delete.Text = "Delete"
-        Me.ToolTip1.SetToolTip(Me.btn_delete, "Delete captured images")
         Me.btn_delete.UseVisualStyleBackColor = True
         '
         'btn_browse
         '
-        Me.btn_browse.Location = New System.Drawing.Point(150, 192)
+        Me.btn_browse.Location = New System.Drawing.Point(150, 142)
         Me.btn_browse.Name = "btn_browse"
         Me.btn_browse.Size = New System.Drawing.Size(75, 23)
         Me.btn_browse.TabIndex = 21
         Me.btn_browse.Text = "Browse"
-        Me.ToolTip1.SetToolTip(Me.btn_browse, "Show dialog to open captured image")
         Me.btn_browse.UseVisualStyleBackColor = True
         '
         'btn_setpath
         '
-        Me.btn_setpath.Location = New System.Drawing.Point(150, 158)
+        Me.btn_setpath.Location = New System.Drawing.Point(150, 98)
         Me.btn_setpath.Name = "btn_setpath"
         Me.btn_setpath.Size = New System.Drawing.Size(75, 23)
         Me.btn_setpath.TabIndex = 20
         Me.btn_setpath.Text = "Set"
-        Me.ToolTip1.SetToolTip(Me.btn_setpath, "Set the path where captured images are saved")
         Me.btn_setpath.UseVisualStyleBackColor = True
         '
         'txtbx_imagepath
         '
-        Me.txtbx_imagepath.Location = New System.Drawing.Point(29, 161)
+        Me.txtbx_imagepath.Location = New System.Drawing.Point(29, 101)
         Me.txtbx_imagepath.Name = "txtbx_imagepath"
         Me.txtbx_imagepath.ReadOnly = True
         Me.txtbx_imagepath.Size = New System.Drawing.Size(100, 20)
@@ -934,11 +888,19 @@ Partial Class Main_Form
         '
         Me.CameraResolutionsCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CameraResolutionsCB.FormattingEnabled = True
-        Me.CameraResolutionsCB.Location = New System.Drawing.Point(34, 86)
+        Me.CameraResolutionsCB.Location = New System.Drawing.Point(29, 12)
         Me.CameraResolutionsCB.Name = "CameraResolutionsCB"
-        Me.CameraResolutionsCB.Size = New System.Drawing.Size(191, 21)
+        Me.CameraResolutionsCB.Size = New System.Drawing.Size(196, 21)
         Me.CameraResolutionsCB.TabIndex = 18
-        Me.ToolTip1.SetToolTip(Me.CameraResolutionsCB, "Choose video resolution")
+        '
+        'btn_live
+        '
+        Me.btn_live.Location = New System.Drawing.Point(150, 54)
+        Me.btn_live.Name = "btn_live"
+        Me.btn_live.Size = New System.Drawing.Size(75, 23)
+        Me.btn_live.TabIndex = 17
+        Me.btn_live.Text = "Live"
+        Me.btn_live.UseVisualStyleBackColor = True
         '
         'ID_BTN_CLEAR_ALL
         '
@@ -948,7 +910,6 @@ Partial Class Main_Form
         Me.ID_BTN_CLEAR_ALL.Size = New System.Drawing.Size(64, 23)
         Me.ID_BTN_CLEAR_ALL.TabIndex = 16
         Me.ID_BTN_CLEAR_ALL.Text = "Clear All"
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_CLEAR_ALL, "Clear listview")
         Me.ID_BTN_CLEAR_ALL.UseVisualStyleBackColor = True
         '
         'ID_LISTVIEW_IMAGE
@@ -956,25 +917,33 @@ Partial Class Main_Form
         Me.ID_LISTVIEW_IMAGE.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.ID_LISTVIEW_IMAGE.HideSelection = False
-        Me.ID_LISTVIEW_IMAGE.Location = New System.Drawing.Point(29, 406)
+        Me.ID_LISTVIEW_IMAGE.Location = New System.Drawing.Point(29, 378)
         Me.ID_LISTVIEW_IMAGE.Name = "ID_LISTVIEW_IMAGE"
-        Me.ID_LISTVIEW_IMAGE.Size = New System.Drawing.Size(196, 245)
+        Me.ID_LISTVIEW_IMAGE.Size = New System.Drawing.Size(196, 273)
         Me.ID_LISTVIEW_IMAGE.TabIndex = 13
         Me.ID_LISTVIEW_IMAGE.UseCompatibleStateImageBehavior = False
         '
+        'ID_PICTURE_BOX_CAM
+        '
+        Me.ID_PICTURE_BOX_CAM.BackColor = System.Drawing.Color.Gray
+        Me.ID_PICTURE_BOX_CAM.Location = New System.Drawing.Point(29, 180)
+        Me.ID_PICTURE_BOX_CAM.Name = "ID_PICTURE_BOX_CAM"
+        Me.ID_PICTURE_BOX_CAM.Size = New System.Drawing.Size(196, 186)
+        Me.ID_PICTURE_BOX_CAM.TabIndex = 12
+        Me.ID_PICTURE_BOX_CAM.TabStop = False
+        '
         'ID_BTN_CAPTURE
         '
-        Me.ID_BTN_CAPTURE.Location = New System.Drawing.Point(29, 122)
+        Me.ID_BTN_CAPTURE.Location = New System.Drawing.Point(29, 54)
         Me.ID_BTN_CAPTURE.Name = "ID_BTN_CAPTURE"
         Me.ID_BTN_CAPTURE.Size = New System.Drawing.Size(75, 23)
         Me.ID_BTN_CAPTURE.TabIndex = 11
         Me.ID_BTN_CAPTURE.Text = "Capture"
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_CAPTURE, "Capture frame from webcam")
         Me.ID_BTN_CAPTURE.UseVisualStyleBackColor = True
         '
         'Panel3
         '
-        Me.Panel3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel3.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Panel3.Controls.Add(Me.ID_COMBOBOX_CF)
         Me.Panel3.Controls.Add(Me.ID_BTN_TEXT_FONT)
         Me.Panel3.Controls.Add(Me.ID_BTN_TEXT_COL_PICKER)
@@ -1144,8 +1113,7 @@ Partial Class Main_Form
         '
         'ID_TAG_CTRL
         '
-        Me.ID_TAG_CTRL.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.ID_TAG_CTRL.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ID_TAG_CTRL.Location = New System.Drawing.Point(262, 165)
         Me.ID_TAG_CTRL.Name = "ID_TAG_CTRL"
@@ -1218,6 +1186,30 @@ Partial Class Main_Form
         Me.ID_STATUS_LABEL.Name = "ID_STATUS_LABEL"
         Me.ID_STATUS_LABEL.Size = New System.Drawing.Size(0, 17)
         '
+        'EDGEDETECTToolStripMenuItem
+        '
+        Me.EDGEDETECTToolStripMenuItem.Name = "EDGEDETECTToolStripMenuItem"
+        Me.EDGEDETECTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.EDGEDETECTToolStripMenuItem.Text = "EDGE DETECT"
+        '
+        'ANGLEOFFIXEDDIAMETERToolStripMenuItem
+        '
+        Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem.Name = "ANGLEOFFIXEDDIAMETERToolStripMenuItem"
+        Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem.Text = "CIRCLE OF FIXED DIAMETER"
+        '
+        'LINEOFFIXEDLENGTHToolStripMenuItem
+        '
+        Me.LINEOFFIXEDLENGTHToolStripMenuItem.Name = "LINEOFFIXEDLENGTHToolStripMenuItem"
+        Me.LINEOFFIXEDLENGTHToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.LINEOFFIXEDLENGTHToolStripMenuItem.Text = "LINE OF FIXED LENGTH"
+        '
+        'FIXEDANGLEToolStripMenuItem
+        '
+        Me.FIXEDANGLEToolStripMenuItem.Name = "FIXEDANGLEToolStripMenuItem"
+        Me.FIXEDANGLEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.FIXEDANGLEToolStripMenuItem.Text = "FIXED ANGLE"
+        '
         'Main_Form
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1241,7 +1233,7 @@ Partial Class Main_Form
         Me.ID_GROUP_BOX_CONTROL.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
-        CType(Me.AxVideoCap1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ID_PICTURE_BOX_CAM, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
         CType(Me.ID_NUM_LINE_WIDTH, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1289,6 +1281,7 @@ End Sub
     Friend WithEvents Panel2 As Panel
     Friend WithEvents ID_BTN_CLEAR_ALL As Button
     Friend WithEvents ID_LISTVIEW_IMAGE As ListView
+    Friend WithEvents ID_PICTURE_BOX_CAM As PictureBox
     Friend WithEvents ID_BTN_CAPTURE As Button
     Friend WithEvents Panel3 As Panel
     Friend WithEvents ID_TAG_CTRL As TabControl
@@ -1311,6 +1304,7 @@ End Sub
     Friend WithEvents ID_BTN_TAB_REMOVE As Button
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents CameraResolutionsCB As ComboBox
+    Friend WithEvents btn_live As Button
     Friend WithEvents ID_LISTVIEW As DataGridView
     Friend WithEvents Item As DataGridViewComboBoxColumn
     Friend WithEvents Length As DataGridViewTextBoxColumn
@@ -1367,8 +1361,8 @@ End Sub
     Friend WithEvents ID_CHECK_SHOW_LEGEND As CheckBox
     Friend WithEvents StatusStrip1 As StatusStrip
     Friend WithEvents ID_STATUS_LABEL As ToolStripStatusLabel
-    Friend WithEvents AxVideoCap1 As AxVIDEOCAPLib.AxVideoCap
-    Friend WithEvents ID_COMBO_VIDEO_DEVICE As ComboBox
-    Friend WithEvents ID_BTN_LIVE As Button
-    Friend WithEvents ID_COMBO_VIDEO_INPUT As ComboBox
+    Friend WithEvents EDGEDETECTToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ANGLEOFFIXEDDIAMETERToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents LINEOFFIXEDLENGTHToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents FIXEDANGLEToolStripMenuItem As ToolStripMenuItem
 End Class

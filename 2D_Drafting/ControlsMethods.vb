@@ -25,7 +25,7 @@ Public Module ControlsMethods
         Dim s As Size = New Size(Convert.ToInt32(ori_img.Width * zoom_factor), Convert.ToInt32(ori_img.Height * zoom_factor))
         Dim cur_img = cur.ElementAt(tab_index)
         Dim dst_img As Mat = New Mat()
-        CvInvoke.Resize(cur_img, dst_img, s)
+        CvInvoke.Resize(ori_img, dst_img, s)
         Return dst_img
     End Function
 
@@ -82,6 +82,11 @@ Public Module ControlsMethods
                     x_high = x_low + 0.01F
                     x_low -= 0.01F
                 End If
+            ElseIf item.measure_type = MeasureType.circle_fixed Then
+                x_low = item.start_point.X - item.scale_object.length / (CF * width)
+                x_high = item.start_point.X + item.scale_object.length / (CF * width)
+                y_low = item.start_point.Y - item.scale_object.length / (CF * width)
+                y_high = item.start_point.Y + item.scale_object.length / (CF * width)
             End If
 
             If m_pt.X > x_low AndAlso m_pt.X < x_high AndAlso m_pt.Y > y_low AndAlso m_pt.Y < y_high Then Return item.obj_num
@@ -167,6 +172,11 @@ Public Module ControlsMethods
                 x_high = x_low + 0.02F
                 x_low -= 0.02F
             End If
+        ElseIf item.measure_type = MeasureType.circle_fixed Then
+            x_low = item.start_point.X - item.scale_object.length / (CF * width)
+            x_high = item.start_point.X + item.scale_object.length / (CF * width)
+            y_low = item.start_point.Y - item.scale_object.length / (CF * width)
+            y_high = item.start_point.Y + item.scale_object.length / (CF * width)
         End If
 
         Dim x As Integer = x_low * width
@@ -287,7 +297,16 @@ Public Module ControlsMethods
             obj_selected.line_object.nor_pt7.Y += dy
             obj_selected.line_object.nor_pt8.X += dx
             obj_selected.line_object.nor_pt8.Y += dy
-        ElseIf obj_selected.measure_type = MeasureType.angle OrElse obj_selected.measure_type = MeasureType.angle_far Then
+        ElseIf obj_selected.measure_type = MeasureType.line_fixed Then
+            obj_selected.line_object.nor_pt1.X += dx
+            obj_selected.line_object.nor_pt1.Y += dy
+            obj_selected.line_object.nor_pt3.X += dx
+            obj_selected.line_object.nor_pt3.Y += dy
+            obj_selected.line_object.nor_pt5.X += dx
+            obj_selected.line_object.nor_pt5.Y += dy
+            obj_selected.line_object.nor_pt6.X += dx
+            obj_selected.line_object.nor_pt6.Y += dy
+        ElseIf obj_selected.measure_type = MeasureType.angle OrElse obj_selected.measure_type = MeasureType.angle_far OrElse obj_selected.measure_type = MeasureType.angle_fixed Then
             obj_selected.angle_object.draw_pt.X += dx
             obj_selected.angle_object.draw_pt.Y += dy
             obj_selected.angle_object.side_drag.X += dx
@@ -323,6 +342,9 @@ Public Module ControlsMethods
             obj_selected.radius_object.arr_pt4.Y += dy
             obj_selected.radius_object.circle_pt.X += dx
             obj_selected.radius_object.circle_pt.Y += dy
+            obj_selected.radius_object.center_pt.X += dx
+            obj_selected.radius_object.center_pt.Y += dy
+        ElseIf obj_selected.measure_type = MeasureType.circle_fixed Then
             obj_selected.radius_object.center_pt.X += dx
             obj_selected.radius_object.center_pt.Y += dy
         ElseIf obj_selected.measure_type = MeasureType.annotation Then
@@ -394,11 +416,11 @@ Public Module ControlsMethods
         obj_selected.intialized = True
 
         Dim item_set_limit = 0
-        If cur_measure_type = MeasureType.line_align OrElse cur_measure_type = MeasureType.line_horizontal OrElse cur_measure_type = MeasureType.line_vertical Then
+        If cur_measure_type = MeasureType.line_align OrElse cur_measure_type = MeasureType.line_horizontal OrElse cur_measure_type = MeasureType.line_vertical OrElse cur_measure_type = MeasureType.line_fixed OrElse cur_measure_type = MeasureType.angle_fixed Then
             item_set_limit = 3
         ElseIf cur_measure_type = MeasureType.angle OrElse cur_measure_type = MeasureType.radius OrElse cur_measure_type = MeasureType.line_para OrElse cur_measure_type = MeasureType.pt_line Then
             item_set_limit = 4
-        ElseIf cur_measure_type = MeasureType.annotation OrElse cur_measure_type = MeasureType.draw_line Then
+        ElseIf cur_measure_type = MeasureType.annotation OrElse cur_measure_type = MeasureType.draw_line OrElse cur_measure_type = MeasureType.circle_fixed Then
             item_set_limit = 2
         ElseIf cur_measure_type = MeasureType.angle_far Then
             item_set_limit = 5
@@ -407,7 +429,7 @@ Public Module ControlsMethods
         End If
 
         If obj_selected.item_set < item_set_limit Then
-            If cur_measure_type = MeasureType.line_align OrElse cur_measure_type = MeasureType.line_horizontal OrElse cur_measure_type = MeasureType.line_vertical OrElse cur_measure_type = MeasureType.measure_scale OrElse cur_measure_type = MeasureType.draw_line Then
+            If cur_measure_type = MeasureType.line_align OrElse cur_measure_type = MeasureType.line_horizontal OrElse cur_measure_type = MeasureType.line_vertical OrElse cur_measure_type = MeasureType.measure_scale OrElse cur_measure_type = MeasureType.draw_line OrElse cur_measure_type = MeasureType.line_fixed Then
                 If obj_selected.item_set = 0 Then
                     obj_selected.start_point = m_pt
                     obj_selected.item_set += 1
@@ -423,7 +445,7 @@ Public Module ControlsMethods
                     obj_selected.draw_point = m_pt
                     obj_selected.item_set += 1
                 End If
-            ElseIf cur_measure_type = MeasureType.angle OrElse cur_measure_type = MeasureType.radius OrElse cur_measure_type = MeasureType.line_para OrElse cur_measure_type = MeasureType.pt_line Then
+            ElseIf cur_measure_type = MeasureType.angle OrElse cur_measure_type = MeasureType.radius OrElse cur_measure_type = MeasureType.line_para OrElse cur_measure_type = MeasureType.pt_line OrElse cur_measure_type = MeasureType.angle_fixed Then
                 If obj_selected.item_set = 0 Then
                     obj_selected.start_point = m_pt
                     obj_selected.item_set += 1
@@ -431,8 +453,13 @@ Public Module ControlsMethods
                     obj_selected.middle_point = m_pt
                     obj_selected.item_set += 1
                 ElseIf obj_selected.item_set = 2 Then
-                    obj_selected.end_point = m_pt
-                    obj_selected.item_set += 1
+                    If cur_measure_type = MeasureType.angle_fixed Then
+                        obj_selected.draw_point = m_pt
+                        obj_selected.item_set += 1
+                    Else
+                        obj_selected.end_point = m_pt
+                        obj_selected.item_set += 1
+                    End If
 
                     If cur_measure_type = MeasureType.radius OrElse cur_measure_type = MeasureType.pt_line OrElse cur_measure_type = MeasureType.line_para Then
                         Dim x_set = {obj_selected.start_point.X, obj_selected.middle_point.X, obj_selected.end_point.X}
@@ -446,7 +473,7 @@ Public Module ControlsMethods
                     obj_selected.draw_point = m_pt
                     obj_selected.item_set += 1
                 End If
-            ElseIf cur_measure_type = MeasureType.annotation Then
+            ElseIf cur_measure_type = MeasureType.circle_fixed Then
                 If obj_selected.item_set = 0 Then
                     obj_selected.start_point = m_pt
                     obj_selected.item_set += 1
@@ -454,9 +481,18 @@ Public Module ControlsMethods
                     obj_selected.draw_point = m_pt
                     obj_selected.item_set += 1
                 End If
-                'correct code
-            ElseIf cur_measure_type = MeasureType.angle_far Then
-                If obj_selected.item_set = 0 Then
+
+            ElseIf cur_measure_type = MeasureType.annotation Then
+                    If obj_selected.item_set = 0 Then
+                        obj_selected.start_point = m_pt
+                        obj_selected.item_set += 1
+                    ElseIf obj_selected.item_set = 1 Then
+                        obj_selected.draw_point = m_pt
+                        obj_selected.item_set += 1
+                    End If
+                    'correct code
+                ElseIf cur_measure_type = MeasureType.angle_far Then
+                    If obj_selected.item_set = 0 Then
                     obj_selected.start_point = m_pt
                     obj_selected.item_set += 1
                 ElseIf obj_selected.item_set = 1 Then
@@ -499,8 +535,19 @@ Public Module ControlsMethods
             last_point.Y = CInt(obj_selected.last_point.Y * height)
 
             If obj_selected.item_set = item_set_limit - 1 Then
-                If cur_measure_type = MeasureType.line_align Then
-                    obj_selected.length = Math.Sqrt(Math.Pow(end_point.X - start_point.X, 2) + Math.Pow(end_point.Y - start_point.Y, 2))
+                If cur_measure_type = MeasureType.line_align OrElse cur_measure_type = MeasureType.line_fixed Then
+                    If cur_measure_type = MeasureType.line_align Then
+                        obj_selected.length = Math.Sqrt(Math.Pow(end_point.X - start_point.X, 2) + Math.Pow(end_point.Y - start_point.Y, 2))
+                    Else
+                        Dim length = Math.Sqrt(Math.Pow(end_point.X - start_point.X, 2) + Math.Pow(end_point.Y - start_point.Y, 2)) * CF
+                        obj_selected.end_point.X = obj_selected.start_point.X + (obj_selected.end_point.X - obj_selected.start_point.X) / length * obj_selected.length * width
+                        obj_selected.end_point.Y = obj_selected.start_point.Y + (obj_selected.end_point.Y - obj_selected.start_point.Y) / length * obj_selected.length * height
+
+                        obj_selected.left_top.X = Math.Min(obj_selected.start_point.X, obj_selected.end_point.X)
+                        obj_selected.left_top.Y = Math.Min(obj_selected.start_point.Y, obj_selected.end_point.Y)
+                        obj_selected.right_bottom.X = Math.Max(obj_selected.start_point.X, obj_selected.end_point.X)
+                        obj_selected.right_bottom.Y = Math.Max(obj_selected.start_point.Y, obj_selected.end_point.Y)
+                    End If
 
                     Dim angle As Double = 0
 
@@ -580,8 +627,11 @@ Public Module ControlsMethods
                         obj_selected.common_point = New PointF(CSng(inter_pt.X) / width, CSng(inter_pt.Y) / height)
                     End If
                     obj_selected.name = "angle"
+                ElseIf cur_measure_type = MeasureType.angle_fixed Then
+                    obj_selected.name = "angle"
+                ElseIf cur_measure_type = MeasureType.circle_fixed Then
+                    obj_selected.name = "circle"
                 End If
-
             End If
 
             obj_selected.line_infor.line_style = line_infor.line_style
@@ -609,7 +659,6 @@ Public Module ControlsMethods
                 obj_selected.end_point = New PointF(end_point.X / CSng(width), end_point.Y / CSng(height))
                 obj_selected.name = "scale"
             End If
-
 
             If obj_selected.item_set = item_set_limit Then
                 If cur_measure_type = MeasureType.angle Then
@@ -815,18 +864,42 @@ Public Module ControlsMethods
         last_point.X = CInt(item.last_point.X * pictureBox.Width)
         last_point.Y = CInt(item.last_point.Y * pictureBox.Height)
 
-        If item.measure_type = MeasureType.line_align OrElse item.measure_type = MeasureType.line_horizontal OrElse item.measure_type = MeasureType.line_vertical OrElse item.measure_type = MeasureType.line_para OrElse item.measure_type = MeasureType.pt_line Then
+        If item.measure_type = MeasureType.line_align OrElse item.measure_type = MeasureType.line_horizontal OrElse item.measure_type = MeasureType.line_vertical OrElse item.measure_type = MeasureType.line_para OrElse item.measure_type = MeasureType.pt_line OrElse item.measure_type = MeasureType.line_fixed Then
             'graph.DrawLine(graphPen, start_point, end_point);
             If item.measure_type = MeasureType.line_para Then end_point = last_point
-            Dim nor_pt1 As Point = New Point(item.line_object.nor_pt1.X * pictureBox.Width, item.line_object.nor_pt1.Y * pictureBox.Height)
-            Dim nor_pt2 As Point = New Point(item.line_object.nor_pt2.X * pictureBox.Width, item.line_object.nor_pt2.Y * pictureBox.Height)
-            Dim nor_pt3 As Point = New Point(item.line_object.nor_pt3.X * pictureBox.Width, item.line_object.nor_pt3.Y * pictureBox.Height)
-            Dim nor_pt4 As Point = New Point(item.line_object.nor_pt4.X * pictureBox.Width, item.line_object.nor_pt4.Y * pictureBox.Height)
-            Dim nor_pt5 As Point = New Point(item.line_object.nor_pt5.X * pictureBox.Width, item.line_object.nor_pt5.Y * pictureBox.Height)
-            Dim nor_pt6 As Point = New Point(item.line_object.nor_pt6.X * pictureBox.Width, item.line_object.nor_pt6.Y * pictureBox.Height)
-            Dim nor_pt7 As Point = New Point(item.line_object.nor_pt7.X * pictureBox.Width, item.line_object.nor_pt7.Y * pictureBox.Height)
-            Dim nor_pt8 As Point = New Point(item.line_object.nor_pt8.X * pictureBox.Width, item.line_object.nor_pt8.Y * pictureBox.Height)
-            Dim side_pt As Point = New Point(item.line_object.side_drag.X * pictureBox.Width, item.line_object.side_drag.Y * pictureBox.Height)
+            Dim nor_pt1, nor_pt2, nor_pt3, nor_pt4, nor_pt5, nor_pt6, nor_pt7, nor_pt8, side_pt, draw_pt As Point
+            If item.measure_type = MeasureType.line_fixed Then
+                Dim length = Math.Sqrt(Math.Pow(end_point.X - start_point.X, 2) + Math.Pow(end_point.Y - start_point.Y, 2)) * CF
+                end_point.X = start_point.X + (end_point.X - start_point.X) / length * item.length * pictureBox.Width
+                end_point.Y = start_point.Y + (end_point.Y - start_point.Y) / length * item.length * pictureBox.Width
+
+                nor_pt1 = New Point(item.line_object.nor_pt1.X * pictureBox.Width, item.line_object.nor_pt1.Y * pictureBox.Height)
+                nor_pt3 = New Point(item.line_object.nor_pt3.X * pictureBox.Width, item.line_object.nor_pt3.Y * pictureBox.Height)
+                nor_pt5 = New Point(item.line_object.nor_pt5.X * pictureBox.Width, item.line_object.nor_pt5.Y * pictureBox.Height)
+                nor_pt6 = New Point(item.line_object.nor_pt6.X * pictureBox.Width, item.line_object.nor_pt6.Y * pictureBox.Height)
+                Dim deltaX = item.line_object.nor_pt1.X
+                Dim deltaY = item.line_object.nor_pt1.Y
+                nor_pt2 = New Point((item.line_object.nor_pt2.X / CF + deltaX) * pictureBox.Width, (item.line_object.nor_pt2.Y / CF + deltaY) * pictureBox.Height)
+                deltaX = item.line_object.nor_pt3.X
+                deltaY = item.line_object.nor_pt3.Y
+                nor_pt4 = New Point((item.line_object.nor_pt4.X / CF + deltaX) * pictureBox.Width, (item.line_object.nor_pt4.Y / CF + deltaY) * pictureBox.Height)
+                nor_pt7 = New Point(nor_pt4.X - (nor_pt5.X - nor_pt3.X), nor_pt4.Y - (nor_pt5.Y - nor_pt3.Y))
+                nor_pt8 = New Point(nor_pt4.X - (nor_pt6.X - nor_pt3.X), nor_pt4.Y - (nor_pt6.Y - nor_pt3.Y))
+                side_pt = New Point((item.line_object.side_drag.X / CF + deltaX) * pictureBox.Width, (item.line_object.side_drag.Y / CF + deltaY) * pictureBox.Height)
+                draw_pt = New Point((item.line_object.draw_pt.X / CF + deltaX) * pictureBox.Width, (item.line_object.draw_pt.Y / CF + deltaY) * pictureBox.Height)
+            Else
+                nor_pt1 = New Point(item.line_object.nor_pt1.X * pictureBox.Width, item.line_object.nor_pt1.Y * pictureBox.Height)
+                nor_pt2 = New Point(item.line_object.nor_pt2.X * pictureBox.Width, item.line_object.nor_pt2.Y * pictureBox.Height)
+                nor_pt3 = New Point(item.line_object.nor_pt3.X * pictureBox.Width, item.line_object.nor_pt3.Y * pictureBox.Height)
+                nor_pt4 = New Point(item.line_object.nor_pt4.X * pictureBox.Width, item.line_object.nor_pt4.Y * pictureBox.Height)
+                nor_pt5 = New Point(item.line_object.nor_pt5.X * pictureBox.Width, item.line_object.nor_pt5.Y * pictureBox.Height)
+                nor_pt6 = New Point(item.line_object.nor_pt6.X * pictureBox.Width, item.line_object.nor_pt6.Y * pictureBox.Height)
+                nor_pt7 = New Point(item.line_object.nor_pt7.X * pictureBox.Width, item.line_object.nor_pt7.Y * pictureBox.Height)
+                nor_pt8 = New Point(item.line_object.nor_pt8.X * pictureBox.Width, item.line_object.nor_pt8.Y * pictureBox.Height)
+                side_pt = New Point(item.line_object.side_drag.X * pictureBox.Width, item.line_object.side_drag.Y * pictureBox.Height)
+                draw_pt = New Point(item.line_object.draw_pt.X * pictureBox.Width, item.line_object.draw_pt.Y * pictureBox.Height)
+            End If
+
 
             graph.DrawLine(graphPen2, start_point, nor_pt1)
             graph.DrawLine(graphPen2, end_point, nor_pt2)
@@ -838,19 +911,28 @@ Public Module ControlsMethods
             graph.DrawLine(graphPen2, nor_pt4, side_pt)
 
             graph.RotateTransform(item.line_object.trans_angle)
-            Dim draw_pt As Point = New Point(item.line_object.draw_pt.X * pictureBox.Width, item.line_object.draw_pt.Y * pictureBox.Height)
             Dim trans_pt = GetRotationTransform(draw_pt, item.line_object.trans_angle)
 
             Dim length_decimal = GetDecimalNumber(item.length, digit, CF)
-            Dim textSize As SizeF = graph.MeasureString(length_decimal.ToString(), graphFont)
-            If Main_Form.show_legend = True Then
-                graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
+            If item.measure_type = MeasureType.line_fixed Then
+                length_decimal = item.scale_object.length
             End If
-            graph.RotateTransform(-1 * item.line_object.trans_angle)
-        ElseIf item.measure_type = MeasureType.angle OrElse item.measure_type = MeasureType.angle_far Then
 
-            Dim st_pt As Point = New Point(item.start_point.X * pictureBox.Width, item.start_point.Y * pictureBox.Height)
-            Dim end_pt As Point = New Point(item.end_point.X * pictureBox.Width, item.end_point.Y * pictureBox.Height)
+            If Main_Form.show_legend = True Then
+                Dim output = item.name + " " + length_decimal.ToString()
+                Dim textSize As SizeF = graph.MeasureString(output, graphFont)
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+            Else
+                Dim output = item.name
+                Dim textSize As SizeF = graph.MeasureString(output, graphFont)
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+            End If
+
+            graph.RotateTransform(-1 * item.line_object.trans_angle)
+        ElseIf item.measure_type = MeasureType.angle OrElse item.measure_type = MeasureType.angle_far OrElse item.measure_type = MeasureType.angle_fixed Then
+
+            Dim st_pt As Point = New Point(item.angle_object.start_pt.X * pictureBox.Width, item.angle_object.start_pt.Y * pictureBox.Height)
+            Dim end_pt As Point = New Point(item.angle_object.end_pt.X * pictureBox.Width, item.angle_object.end_pt.Y * pictureBox.Height)
             Dim nor_pt1 As Point = New Point(item.angle_object.nor_pt1.X * pictureBox.Width, item.angle_object.nor_pt1.Y * pictureBox.Height)
             Dim nor_pt2 As Point = New Point(item.angle_object.nor_pt2.X * pictureBox.Width, item.angle_object.nor_pt2.Y * pictureBox.Height)
             Dim nor_pt3 As Point = New Point(item.angle_object.nor_pt3.X * pictureBox.Width, item.angle_object.nor_pt3.Y * pictureBox.Height)
@@ -864,7 +946,7 @@ Public Module ControlsMethods
             Dim radius = Convert.ToInt32(item.angle_object.radius * pictureBox.Width)
             graph.DrawArc(graphPen2, New Rectangle(middle_point.X - radius, middle_point.Y - radius, radius * 2, radius * 2), CSng(start_angle), CSng(sweep_angle))
 
-            If item.measure_type = MeasureType.angle Then
+            If item.measure_type = MeasureType.angle OrElse item.measure_type = MeasureType.angle_fixed Then
                 graph.DrawLine(graphPen2, middle_point, st_pt)
                 graph.DrawLine(graphPen2, middle_point, end_pt)
             End If
@@ -882,9 +964,15 @@ Public Module ControlsMethods
             Dim draw_pt As Point = New Point(item.angle_object.draw_pt.X * pictureBox.Width, item.angle_object.draw_pt.Y * pictureBox.Height)
             Dim trans_pt = GetRotationTransform(draw_pt, item.angle_object.trans_angle)
             Dim length_decimal = GetDecimalNumber(Math.Abs(item.angle_object.sweep_angle), digit, 1)
-            Dim textSize As SizeF = graph.MeasureString(length_decimal.ToString(), graphFont)
+
             If Main_Form.show_legend = True Then
-                graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
+                Dim output = item.name + " " + length_decimal.ToString()
+                Dim textSize As SizeF = graph.MeasureString(output, graphFont)
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+            Else
+                Dim output = item.name
+                Dim textSize As SizeF = graph.MeasureString(output, graphFont)
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
             End If
             graph.RotateTransform(-1 * item.angle_object.trans_angle)
         ElseIf item.measure_type = MeasureType.radius Then
@@ -962,9 +1050,14 @@ Public Module ControlsMethods
 
                 Dim length_decimal = GetDecimalNumber(item.radius, digit, CF)
 
-                Dim textSize As SizeF = graph.MeasureString(length_decimal.ToString(), graphFont)
                 If Main_Form.show_legend = True Then
-                    graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
+                    Dim output = item.name + " " + length_decimal.ToString()
+                    Dim textSize As SizeF = graph.MeasureString(output, graphFont)
+                    graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+                Else
+                    Dim output = item.name
+                    Dim textSize As SizeF = graph.MeasureString(output, graphFont)
+                    graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
                 End If
                 graph.RotateTransform(-1 * trans_angle)
             End If
@@ -1018,9 +1111,9 @@ Public Module ControlsMethods
             Dim draw_pt As Point = New Point((start_point.X + end_point.X) / 2, (start_point.Y + end_point.Y) / 2)
 
             If Equals(item.scale_object.style, "horizontal") Then
-                draw_pt.Y += 10
+                draw_pt.Y += 20
             Else
-                draw_pt.X += 10
+                draw_pt.X += 20
             End If
             graph.DrawLine(graphPen2, start_point, end_point)
             graph.DrawLine(graphPen2, nor_pt1, nor_pt2)
@@ -1030,16 +1123,55 @@ Public Module ControlsMethods
             Dim trans_pt = GetRotationTransform(draw_pt, trans_angle)
 
             Dim length_decimal = GetDecimalNumber(item.length, digit, CF)
-            Dim textSize As SizeF = graph.MeasureString(length_decimal.ToString(), graphFont)
-
             If Main_Form.show_legend = True Then
-                graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
+                Dim output = item.name + " " + length_decimal.ToString()
+                Dim textSize As SizeF = graph.MeasureString(output, graphFont)
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
+            Else
+                Dim output = item.name
+                Dim textSize As SizeF = graph.MeasureString(output, graphFont)
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
             End If
 
             graph.RotateTransform(-1 * trans_angle)
+        ElseIf item.measure_type = MeasureType.circle_fixed Then
+            Dim center_pt As Point = New Point(item.radius_object.center_pt.X * pictureBox.Width, item.radius_object.center_pt.Y * pictureBox.Height)
+            Dim deltaX = item.radius_object.center_pt.X
+            Dim deltaY = item.radius_object.center_pt.Y
+            Dim circle_pt As Point = New Point((item.radius_object.circle_pt.X / CF + deltaX) * pictureBox.Width, (item.radius_object.circle_pt.Y / CF + deltaY) * pictureBox.Height)
+            Dim draw_pt As Point = New Point((item.radius_object.draw_pt.X / CF + deltaX) * pictureBox.Width, (item.radius_object.draw_pt.Y / CF + deltaY) * pictureBox.Height)
+            Dim arr_pt1 As Point = New Point((item.radius_object.arr_pt1.X / CF + deltaX) * pictureBox.Width, (item.radius_object.arr_pt1.Y / CF + deltaY) * pictureBox.Height)
+            Dim arr_pt2 As Point = New Point((item.radius_object.arr_pt2.X / CF + deltaX) * pictureBox.Width, (item.radius_object.arr_pt2.Y / CF + deltaY) * pictureBox.Height)
+            Dim arr_pt3 As Point = New Point((item.radius_object.arr_pt3.X / CF + deltaX) * pictureBox.Width, (item.radius_object.arr_pt3.Y / CF + deltaY) * pictureBox.Height)
+            Dim arr_pt4 As Point = New Point((item.radius_object.arr_pt4.X / CF + deltaX) * pictureBox.Width, (item.radius_object.arr_pt4.Y / CF + deltaY) * pictureBox.Height)
+            Dim trans_angle As Single = item.radius_object.trans_angle
 
+            Dim radius = CInt(item.radius / CF * pictureBox.Width)
+            graph.DrawArc(graphPen2, New Rectangle(center_pt.X - radius, center_pt.Y - radius, radius * 2, radius * 2), 0, 360)
+
+            graph.DrawLine(graphPen2, center_pt, circle_pt)
+            graph.DrawLine(graphPen2, center_pt, arr_pt1)
+            graph.DrawLine(graphPen2, center_pt, arr_pt2)
+            graph.DrawLine(graphPen2, circle_pt, arr_pt3)
+            graph.DrawLine(graphPen2, circle_pt, arr_pt4)
+
+            graph.RotateTransform(trans_angle)
+            Dim trans_pt = GetRotationTransform(draw_pt, trans_angle)
+
+            Dim length_decimal = item.scale_object.length
+
+            If Main_Form.show_legend = True Then
+                Dim output = item.name + " " + length_decimal.ToString()
+                Dim textSize As SizeF = graph.MeasureString(output, graphFont)
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+            Else
+                Dim output = item.name
+                Dim textSize As SizeF = graph.MeasureString(output, graphFont)
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height, textSize.Width, textSize.Height))
+            End If
+            graph.RotateTransform(-1 * trans_angle)
         Else
-            DrawCurveObjItem(graph, pictureBox, item, False)
+            DrawCurveObjItem(graph, pictureBox, item, digit, CF, False)
         End If
 
         graphPen2.Dispose()
@@ -1096,16 +1228,16 @@ Public Module ControlsMethods
         Dim radius = 2
 
         For i = 0 To obj_selected.item_set - 1
-            If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_horizontal OrElse obj_selected.measure_type = MeasureType.line_vertical OrElse obj_selected.measure_type = MeasureType.draw_line OrElse obj_selected.measure_type = MeasureType.measure_scale Then
+            If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_horizontal OrElse obj_selected.measure_type = MeasureType.line_vertical OrElse obj_selected.measure_type = MeasureType.draw_line OrElse obj_selected.measure_type = MeasureType.measure_scale OrElse obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.circle_fixed Then
                 If i = 0 Then
                     graph.DrawArc(graphPen, New Rectangle(start_point.X - radius, start_point.Y - radius, radius * 2, radius * 2), 0, 360)
                     If obj_selected.measure_type = MeasureType.measure_scale Then
                         graph.DrawArc(graphPen, New Rectangle(end_point.X - radius, end_point.Y - radius, radius * 2, radius * 2), 0, 360)
                     End If
-                ElseIf i = 1 Then
+                ElseIf i = 1 And obj_selected.measure_type <> MeasureType.circle_fixed Then
                     graph.DrawArc(graphPen, New Rectangle(end_point.X - radius, end_point.Y - radius, radius * 2, radius * 2), 0, 360)
                 End If
-            ElseIf obj_selected.measure_type = MeasureType.angle OrElse obj_selected.measure_type = MeasureType.radius OrElse obj_selected.measure_type = MeasureType.angle_far OrElse obj_selected.measure_type = MeasureType.line_para OrElse obj_selected.measure_type = MeasureType.pt_line Then
+            ElseIf obj_selected.measure_type = MeasureType.angle OrElse obj_selected.measure_type = MeasureType.radius OrElse obj_selected.measure_type = MeasureType.angle_far OrElse obj_selected.measure_type = MeasureType.line_para OrElse obj_selected.measure_type = MeasureType.pt_line OrElse obj_selected.measure_type = MeasureType.angle_fixed Then
                 If i = 0 Then
                     graph.DrawArc(graphPen, New Rectangle(start_point.X - radius, start_point.Y - radius, radius * 2, radius * 2), 0, 360)
                 ElseIf i = 1 Then
@@ -1300,6 +1432,63 @@ Public Module ControlsMethods
     End Function
 
     ''' <summary>
+    ''' calculate start angle sweep angle between two lines
+    ''' </summary>
+    ''' <paramname="obj_selected">the object currently used.</param>
+    ''' <paramname="start_point">The start point of the line.</param>
+    ''' <paramname="middle_point">The middle point of the line.</param>
+    ''' <paramname="end_point">The end point of the line.</param>
+    ''' <paramname="target_point">The point of mouse cursor.</param>
+    Public Function CalcStartAndSweepAngleFixed(ByVal obj_selected As MeasureObject, ByVal start_point As Point, ByVal middle_point As Point, ByVal target_point As Point) As Double()
+        'to calcuate the angle between x-axis and start_point-middle_point line
+        Dim basis_pt As Point = New Point(middle_point.X + 10, middle_point.Y)
+        Dim flag = CheckPointOnLine(start_point, middle_point, target_point)
+        Dim angle2 = CalcAngleBetweenTwoLines(basis_pt, middle_point, start_point)
+        angle2 = angle2 * 360 / Math.PI / 2
+
+        Dim centerpt = middle_point
+        Dim radius = Convert.ToInt32(Math.Sqrt(Math.Pow(target_point.X - middle_point.X, 2) + Math.Pow(target_point.Y - middle_point.Y, 2)))
+        Dim radius2 = If(radius - 10 > 1, radius - 10, 1)
+        Dim clockwise = True
+        Dim downbasis = CheckAngleDirection(basis_pt, middle_point, start_point)
+        Dim start_angle, sweep_angle As Double
+        Dim angle_direction As Integer
+
+        If clockwise Then
+            angle_direction = 1
+        Else
+            angle_direction = -1
+        End If
+
+        If flag = 0 Or flag = 1 Then
+            If downbasis Then
+                start_angle = angle2
+                sweep_angle = obj_selected.angle
+            Else
+                start_angle = 360 - angle2
+                sweep_angle = obj_selected.angle
+            End If
+        ElseIf flag = -1 Then
+
+            If downbasis Then
+                start_angle = angle2
+                sweep_angle = -1 * (obj_selected.angle)
+            Else
+                start_angle = 360 - angle2
+                sweep_angle = -1 * (obj_selected.angle)
+            End If
+        End If
+        Dim ang_dirc As Integer
+        If flag >= 0 Then
+            ang_dirc = 1
+        Else
+            ang_dirc = 2
+        End If
+        Dim angles = {start_angle, sweep_angle, ang_dirc}
+        Return angles
+    End Function
+
+    ''' <summary>
     ''' draw temporal line when you are finializing current object.
     ''' </summary>
     ''' <paramname="pictureBox">The pictureBox control in which you want to draw object list.</param>
@@ -1340,14 +1529,14 @@ Public Module ControlsMethods
         inter_pt.X = CInt(obj_selected.common_point.X * pictureBox.Width)
         inter_pt.Y = CInt(obj_selected.common_point.Y * pictureBox.Height)
 
-        If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_horizontal OrElse obj_selected.measure_type = MeasureType.line_vertical OrElse obj_selected.measure_type = MeasureType.line_para OrElse obj_selected.measure_type = MeasureType.pt_line Then
+        If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_horizontal OrElse obj_selected.measure_type = MeasureType.line_vertical OrElse obj_selected.measure_type = MeasureType.line_para OrElse obj_selected.measure_type = MeasureType.pt_line OrElse obj_selected.measure_type = MeasureType.line_fixed Then
             If (obj_selected.measure_type = MeasureType.line_para OrElse obj_selected.measure_type = MeasureType.pt_line) AndAlso obj_selected.item_set < 3 Then Return
             If obj_selected.item_set < 2 Then Return
             'pictureBox.Refresh();
 
             Dim nor_point1 As Point = New Point()
             Dim nor_point2 As Point = New Point()
-            If obj_selected.measure_type = MeasureType.line_align Then
+            If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_fixed Then
                 offset = GetNormalFromPointToLine(start_point, end_point, target_point)
                 nor_point1.X = start_point.X - offset.Width
                 nor_point1.Y = start_point.Y - offset.Height
@@ -1384,7 +1573,7 @@ Public Module ControlsMethods
 
             Dim nor_point3 As Point = New Point()
             Dim nor_point4 As Point = New Point()
-            If obj_selected.measure_type = MeasureType.line_align Then
+            If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_fixed Then
                 offset2 = GetNormalToLineFixedLen(start_point, end_point, target_point, 10, True)
 
                 nor_point3.X = nor_point1.X + offset2.Width
@@ -1483,8 +1672,8 @@ Public Module ControlsMethods
             Dim draw_pt = target_point
             If obj_selected.measure_type = MeasureType.line_para Then
                 Dim dist = CalcDistBetweenPoints(start_point, nor_point1)
-                draw_pt.X += CInt((nor_point1.X - start_point.X) / dist * 10)
-                draw_pt.Y += CInt((nor_point1.Y - start_point.Y) / dist * 10)
+                draw_pt.X += CInt((nor_point1.X - start_point.X) / dist * 20)
+                draw_pt.Y += CInt((nor_point1.Y - start_point.Y) / dist * 20)
                 Dim X_min = Math.Min(Math.Min(Math.Min(start_point.X, last_point.X), nor_point1.X), nor_point2.X)
                 Dim X_max = Math.Max(Math.Max(Math.Max(start_point.X, last_point.X), nor_point1.X), nor_point2.X)
                 Dim Y_min = Math.Min(Math.Min(Math.Min(start_point.Y, last_point.Y), nor_point1.Y), nor_point2.Y)
@@ -1550,29 +1739,56 @@ Public Module ControlsMethods
                 graph.RotateTransform(attri * ang_tran)
                 Dim trans_pt = GetRotationTransform(draw_pt, attri * ang_tran)
                 Dim length_decimal = GetDecimalNumber(obj_selected.length, digit, CF)
+                If obj_selected.measure_type = MeasureType.line_fixed Then
+                    length_decimal = obj_selected.scale_object.length
+                End If
                 Dim textSize As SizeF = graph.MeasureString(length_decimal.ToString(), graphFont)
                 graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
             End If
 
-
             'Initialize line objects
-            obj_selected.line_object.nor_pt1 = New PointF(CSng(nor_point1.X) / pictureBox.Width, CSng(nor_point1.Y) / pictureBox.Height)
-            obj_selected.line_object.nor_pt2 = New PointF(CSng(nor_point2.X) / pictureBox.Width, CSng(nor_point2.Y) / pictureBox.Height)
-            obj_selected.line_object.nor_pt3 = New PointF(CSng(nor_point3.X) / pictureBox.Width, CSng(nor_point3.Y) / pictureBox.Height)
-            obj_selected.line_object.nor_pt4 = New PointF(CSng(nor_point4.X) / pictureBox.Width, CSng(nor_point4.Y) / pictureBox.Height)
-            obj_selected.line_object.nor_pt5 = New PointF(CSng(arr_points(0).X) / pictureBox.Width, CSng(arr_points(0).Y) / pictureBox.Height)
-            obj_selected.line_object.nor_pt6 = New PointF(CSng(arr_points(1).X) / pictureBox.Width, CSng(arr_points(1).Y) / pictureBox.Height)
-            obj_selected.line_object.nor_pt7 = New PointF(CSng(arr_points2(0).X) / pictureBox.Width, CSng(arr_points2(0).Y) / pictureBox.Height)
-            obj_selected.line_object.nor_pt8 = New PointF(CSng(arr_points2(1).X) / pictureBox.Width, CSng(arr_points2(1).Y) / pictureBox.Height)
-            obj_selected.line_object.draw_pt = New PointF(CSng(draw_pt.X) / pictureBox.Width, CSng(draw_pt.Y) / pictureBox.Height)
-            obj_selected.line_object.trans_angle = Convert.ToInt32(attri * ang_tran)
-            obj_selected.line_object.side_drag = New PointF(CSng(Side_pt.X) / pictureBox.Width, CSng(Side_pt.Y) / pictureBox.Height)
-        ElseIf obj_selected.measure_type = MeasureType.angle Then
-            If obj_selected.item_set < 3 Then Return
-            'pictureBox.Refresh();
-            'graph.DrawArc(graphPen, new Rectangle(target_point.X - 2, target_point.Y - 2, 4, 4), 0, 360);
 
-            Dim angles = CalcStartAndSweepAngle(obj_selected, start_point, middle_point, end_point, target_point)
+            If obj_selected.measure_type = MeasureType.line_fixed Then
+                    obj_selected.line_object.nor_pt1 = New PointF(CSng(nor_point1.X) / pictureBox.Width, CSng(nor_point1.Y) / pictureBox.Height)
+                    obj_selected.line_object.nor_pt3 = New PointF(CSng(nor_point3.X) / pictureBox.Width, CSng(nor_point3.Y) / pictureBox.Height)
+                    obj_selected.line_object.nor_pt5 = New PointF(CSng(arr_points(0).X) / pictureBox.Width, CSng(arr_points(0).Y) / pictureBox.Height)
+                    obj_selected.line_object.nor_pt6 = New PointF(CSng(arr_points(1).X) / pictureBox.Width, CSng(arr_points(1).Y) / pictureBox.Height)
+                    Dim deltaX = obj_selected.line_object.nor_pt1.X
+                    Dim deltaY = obj_selected.line_object.nor_pt1.Y
+                    obj_selected.line_object.nor_pt2 = New PointF((CSng(nor_point2.X) / pictureBox.Width - deltaX) * CF, (CSng(nor_point2.Y) / pictureBox.Height - deltaY) * CF)
+                    deltaX = obj_selected.line_object.nor_pt3.X
+                    deltaY = obj_selected.line_object.nor_pt3.Y
+                    obj_selected.line_object.nor_pt4 = New PointF((CSng(nor_point4.X) / pictureBox.Width - deltaX) * CF, (CSng(nor_point4.Y) / pictureBox.Height - deltaY) * CF)
+                    obj_selected.line_object.nor_pt7 = New PointF((CSng(arr_points2(0).X) / pictureBox.Width - deltaX), (CSng(arr_points2(0).Y) / pictureBox.Height - deltaY))
+                    obj_selected.line_object.nor_pt8 = New PointF((CSng(arr_points2(1).X) / pictureBox.Width - deltaX), (CSng(arr_points2(1).Y) / pictureBox.Height - deltaY))
+                    obj_selected.line_object.draw_pt = New PointF((CSng(draw_pt.X) / pictureBox.Width - deltaX) * CF, (CSng(draw_pt.Y) / pictureBox.Height - deltaY) * CF)
+                    obj_selected.line_object.trans_angle = Convert.ToInt32(attri * ang_tran)
+                    obj_selected.line_object.side_drag = New PointF((CSng(Side_pt.X) / pictureBox.Width - deltaX) * CF, (CSng(Side_pt.Y) / pictureBox.Height - deltaY) * CF)
+                Else
+                    obj_selected.line_object.nor_pt1 = New PointF(CSng(nor_point1.X) / pictureBox.Width, CSng(nor_point1.Y) / pictureBox.Height)
+                obj_selected.line_object.nor_pt2 = New PointF(CSng(nor_point2.X) / pictureBox.Width, CSng(nor_point2.Y) / pictureBox.Height)
+                obj_selected.line_object.nor_pt3 = New PointF(CSng(nor_point3.X) / pictureBox.Width, CSng(nor_point3.Y) / pictureBox.Height)
+                obj_selected.line_object.nor_pt4 = New PointF(CSng(nor_point4.X) / pictureBox.Width, CSng(nor_point4.Y) / pictureBox.Height)
+                obj_selected.line_object.nor_pt5 = New PointF(CSng(arr_points(0).X) / pictureBox.Width, CSng(arr_points(0).Y) / pictureBox.Height)
+                obj_selected.line_object.nor_pt6 = New PointF(CSng(arr_points(1).X) / pictureBox.Width, CSng(arr_points(1).Y) / pictureBox.Height)
+                obj_selected.line_object.nor_pt7 = New PointF(CSng(arr_points2(0).X) / pictureBox.Width, CSng(arr_points2(0).Y) / pictureBox.Height)
+                obj_selected.line_object.nor_pt8 = New PointF(CSng(arr_points2(1).X) / pictureBox.Width, CSng(arr_points2(1).Y) / pictureBox.Height)
+                obj_selected.line_object.draw_pt = New PointF(CSng(draw_pt.X) / pictureBox.Width, CSng(draw_pt.Y) / pictureBox.Height)
+                obj_selected.line_object.trans_angle = Convert.ToInt32(attri * ang_tran)
+                obj_selected.line_object.side_drag = New PointF(CSng(Side_pt.X) / pictureBox.Width, CSng(Side_pt.Y) / pictureBox.Height)
+            End If
+
+        ElseIf obj_selected.measure_type = MeasureType.angle OrElse obj_selected.measure_type = MeasureType.angle_fixed Then
+            If obj_selected.measure_type = MeasureType.angle And obj_selected.item_set < 3 Then Return
+            If obj_selected.measure_type = MeasureType.angle_fixed And obj_selected.item_set < 2 Then Return
+
+            Dim angles As Double()
+            If obj_selected.measure_type = MeasureType.angle Then
+                angles = CalcStartAndSweepAngle(obj_selected, start_point, middle_point, end_point, target_point)
+            Else
+                angles = CalcStartAndSweepAngleFixed(obj_selected, start_point, middle_point, target_point)
+            End If
+
             Dim start_angle, sweep_angle As Double
             start_angle = angles(0)
             sweep_angle = angles(1)
@@ -1588,15 +1804,8 @@ Public Module ControlsMethods
             Dim radius2 = If(radius - 10 > 1, radius - 10, 1)
             Dim centerpt = middle_point
 
-            'graph.DrawArc(graphPen, new Rectangle(centerpt.X - radius2, centerpt.Y - radius2, radius2 * 2, radius2 * 2),
-            '                            (float)start_angle, (float)sweep_angle);
-            'draw arrows
             Dim first_point = CalcPositionInCircle(centerpt, radius, start_angle)
             Dim second_point = CalcPositionInCircle(centerpt, radius, start_angle + sweep_angle)
-            'graph.DrawLine(graphPen, centerpt, first_point);
-            'graph.DrawLine(graphPen, centerpt, second_point);
-            'graph.DrawLine(graphPen, centerpt, start_point);
-            'graph.DrawLine(graphPen, centerpt, end_point);
 
             Dim nor_point1 = CalcPositionInCircle(centerpt, radius2, start_angle)
             Dim nor_point4 = CalcPositionInCircle(centerpt, radius2, start_angle + sweep_angle)
@@ -1615,13 +1824,6 @@ Public Module ControlsMethods
                 arr_points2 = GetArrowPoints2(second_point, centerpt, nor_point4, dist)
             End If
 
-            'graph.DrawLine(graphPen, nor_point1, arr_points[0]);
-            'graph.DrawLine(graphPen, nor_point1, arr_points[1]);
-
-            'graph.DrawLine(graphPen, nor_point4, arr_points2[0]);
-            'graph.DrawLine(graphPen, nor_point4, arr_points2[1]);
-
-            'side dragging
             Dim Side_pt = nor_point1
             Dim side_index = 1
             Dim draw_pt = CorrectDisplayPosition(target_point, start_point, middle_point, clockwise)
@@ -1641,8 +1843,8 @@ Public Module ControlsMethods
                     angle3 = CalcAngleBetweenTwoLines(New Point(middle_point.X + 10, middle_point.Y), middle_point, nor_point4)
                     draw_pt = Side_pt
                     offset4 = GetUnitVector(middle_point, nor_point4)
-                    draw_pt.X += CInt(offset4.Width * 10)
-                    draw_pt.Y += CInt(offset4.Height * 10)
+                    draw_pt.X += CInt(offset4.Width * 15)
+                    draw_pt.Y += CInt(offset4.Height * 15)
                     side_index = 4
                 Else
                     offset3 = GetNormalFromPointToLine(first_point, middle_point, target_point, 50)
@@ -1652,8 +1854,8 @@ Public Module ControlsMethods
                     angle3 = CalcAngleBetweenTwoLines(New Point(middle_point.X + 10, middle_point.Y), middle_point, nor_point1)
                     draw_pt = Side_pt
                     offset4 = GetUnitVector(middle_point, nor_point1)
-                    draw_pt.X += CInt(offset4.Width * 10)
-                    draw_pt.Y += CInt(offset4.Height * 10)
+                    draw_pt.X += CInt(offset4.Width * 15)
+                    draw_pt.Y += CInt(offset4.Height * 15)
                 End If
 
             End If
@@ -1708,6 +1910,9 @@ Public Module ControlsMethods
             'obj_selected.angle = sweep_angle;
             obj_selected.angle_object.start_pt = New PointF(CSng(first_point.X) / pictureBox.Width, CSng(first_point.Y) / pictureBox.Height)
             obj_selected.angle_object.end_pt = New PointF(CSng(second_point.X) / pictureBox.Width, CSng(second_point.Y) / pictureBox.Height)
+            If obj_selected.measure_type = MeasureType.angle_fixed Then
+                obj_selected.end_point = obj_selected.angle_object.end_pt
+            End If
             obj_selected.angle_object.nor_pt1 = New PointF(CSng(nor_point1.X) / pictureBox.Width, CSng(nor_point1.Y) / pictureBox.Height)
             obj_selected.angle_object.nor_pt4 = New PointF(CSng(nor_point4.X) / pictureBox.Width, CSng(nor_point4.Y) / pictureBox.Height)
             obj_selected.angle_object.nor_pt2 = New PointF(CSng(arr_points(0).X) / pictureBox.Width, CSng(arr_points(0).Y) / pictureBox.Height)
@@ -1856,6 +2061,76 @@ Public Module ControlsMethods
                 obj_selected.radius_object.draw_pt = New PointF(CSng(draw_pt.X) / pictureBox.Width, CSng(draw_pt.Y) / pictureBox.Height)
                 obj_selected.radius_object.trans_angle = attri * angle_mpt_deg
             End If
+        ElseIf obj_selected.measure_type = MeasureType.circle_fixed Then
+            If obj_selected.item_set < 1 Then Return
+
+            Dim centerpt = start_point
+            Dim basis_pt As Point = New Point(centerpt.X + 10, centerpt.Y)
+            Dim angle_mpt = CalcAngleBetweenTwoLines(basis_pt, centerpt, target_point)
+            Dim angle_mpt_deg = Convert.ToInt32(angle_mpt * 360 / Math.PI / 2)
+
+            Dim clockwise = CheckAngleDirection(basis_pt, centerpt, target_point)
+            If Not clockwise Then angle_mpt_deg = -1 * angle_mpt_deg
+            Dim radius = CInt(obj_selected.radius / CF * pictureBox.Width)
+            Dim pt_circle = CalcPositionInCircle(centerpt, radius, angle_mpt_deg)
+            Dim draw_pt = CalcPositionInCircle(centerpt, radius + 15, angle_mpt_deg)
+
+            Dim dist As Integer = radius / 5
+            dist = Math.Min(Math.Max(dist, 5), 20)
+            Dim arr_points = GetArrowPoints3(centerpt, pt_circle, dist)
+            Dim arr_points2 = GetArrowPoints3(pt_circle, centerpt, dist)
+
+            Dim attri = -1
+            If clockwise Then
+                If angle_mpt > Math.PI / 2 Then
+                    angle_mpt -= Math.PI / 2
+                    attri = 1
+                Else
+                    angle_mpt = Math.PI / 2 - angle_mpt
+                    attri = -1
+                End If
+            Else
+                If angle_mpt > Math.PI / 2 Then
+                    angle_mpt -= Math.PI / 2
+                    attri = -1
+                Else
+                    angle_mpt = Math.PI / 2 - angle_mpt
+                    attri = 1
+                End If
+            End If
+
+
+            If draw_flag Then
+                graph.DrawArc(graphPen, New Rectangle(centerpt.X - radius, centerpt.Y - radius, radius * 2, radius * 2), 0, 360)
+
+                graph.DrawLine(graphPen, centerpt, pt_circle)
+                graph.DrawLine(graphPen, centerpt, arr_points(0))
+                graph.DrawLine(graphPen, centerpt, arr_points(1))
+                graph.DrawLine(graphPen, pt_circle, arr_points2(0))
+                graph.DrawLine(graphPen, pt_circle, arr_points2(1))
+
+                angle_mpt_deg = Convert.ToInt32(angle_mpt * 360 / (2 * Math.PI))
+                graph.RotateTransform(attri * angle_mpt_deg)
+                Dim trans_pt = GetRotationTransform(draw_pt, attri * angle_mpt_deg)
+
+                Dim length_decimal = GetDecimalNumber(radius, digit, CF)
+                Dim textSize As SizeF = graph.MeasureString(length_decimal.ToString(), graphFont)
+                graph.DrawString(length_decimal.ToString(), graphFont, graphBrush, trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2)
+            End If
+
+
+            'initialize the radius object
+            obj_selected.radius_object.center_pt = New PointF(CSng(centerpt.X) / pictureBox.Width, CSng(centerpt.Y) / pictureBox.Height)
+            Dim deltaX = obj_selected.radius_object.center_pt.X
+            Dim deltaY = obj_selected.radius_object.center_pt.Y
+            obj_selected.radius_object.circle_pt = New PointF((CSng(pt_circle.X) / pictureBox.Width - deltaX) * CF, (CSng(pt_circle.Y) / pictureBox.Height - deltaY) * CF)
+            obj_selected.radius_object.arr_pt1 = New PointF((CSng(arr_points(0).X) / pictureBox.Width - deltaX) * CF, (CSng(arr_points(0).Y) / pictureBox.Height - deltaY) * CF)
+            obj_selected.radius_object.arr_pt2 = New PointF((CSng(arr_points(1).X) / pictureBox.Width - deltaX) * CF, (CSng(arr_points(1).Y) / pictureBox.Height - deltaY) * CF)
+            obj_selected.radius_object.arr_pt3 = New PointF((CSng(arr_points2(0).X) / pictureBox.Width - deltaX) * CF, (CSng(arr_points2(0).Y) / pictureBox.Height - deltaY) * CF)
+            obj_selected.radius_object.arr_pt4 = New PointF((CSng(arr_points2(1).X) / pictureBox.Width - deltaX) * CF, (CSng(arr_points2(1).Y) / pictureBox.Height - deltaY) * CF)
+            obj_selected.radius_object.draw_pt = New PointF((CSng(draw_pt.X) / pictureBox.Width - deltaX) * CF, (CSng(draw_pt.Y) / pictureBox.Height - deltaY) * CF)
+            obj_selected.radius_object.trans_angle = attri * angle_mpt_deg
+
         ElseIf obj_selected.measure_type = MeasureType.annotation Then
             If obj_selected.item_set < 1 Then Return
             graph.DrawString(obj_selected.annotation, graphFont, graphBrush, target_point.X, target_point.Y)
@@ -2038,6 +2313,22 @@ Public Module ControlsMethods
         graphPen.Dispose()
     End Sub
 
+    ''' <summary>
+    ''' draw dotted rectangle.
+    ''' </summary>
+    ''' <paramname="pictureBox">The pictureBox control in which you want to draw object list.</param>
+    ''' <paramname="FirstPtOfEdge">The left top corner of selected region.</param>
+    ''' <paramname="SecondPtOfEdge">The right bottom corner of selected region.</param>
+    <Extension()>
+    Public Sub DrawRectangle(ByVal pictureBox As PictureBox, ByVal FirstPtOfEdge As Point, ByVal SecondPtOfEdge As Point)
+        Dim graph As Graphics = pictureBox.CreateGraphics()
+        Dim graphPen As Pen = New Pen(Color.Black, 1)
+
+        graph.DrawRectangle(graphPen, New Rectangle(FirstPtOfEdge.X, FirstPtOfEdge.Y, SecondPtOfEdge.X - FirstPtOfEdge.X, SecondPtOfEdge.Y - FirstPtOfEdge.Y))
+
+        graphPen.Dispose()
+        graph.Dispose()
+    End Sub
 #End Region
 
 #Region "DataGrid Methods"
@@ -2131,6 +2422,18 @@ Public Module ControlsMethods
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
+                    Case MeasureType.line_fixed
+                        length = item.scale_object.length
+                        str_item(1) = length.ToString()
+                        str_item(4) = unit
+                    Case MeasureType.circle_fixed
+                        length = item.scale_object.length
+                        str_item(3) = length.ToString()
+                        str_item(4) = unit
+                    Case MeasureType.angle_fixed
+                        length = item.scale_object.length
+                        str_item(2) = length.ToString()
+                        str_item(4) = "degree"
                 End Select
 
                 listView.Rows.Add(str_item)
@@ -2211,6 +2514,18 @@ Public Module ControlsMethods
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
+                    Case MeasureType.line_fixed
+                        length = item.scale_object.length
+                        str_item(1) = length.ToString()
+                        str_item(4) = unit
+                    Case MeasureType.circle_fixed
+                        length = item.scale_object.length
+                        str_item(3) = length.ToString()
+                        str_item(4) = unit
+                    Case MeasureType.angle_fixed
+                        length = item.scale_object.length
+                        str_item(2) = length.ToString()
+                        str_item(4) = "degree"
                 End Select
 
                 Dim listViewItem = New ListViewItem(str_item)

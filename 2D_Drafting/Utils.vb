@@ -322,6 +322,30 @@ Public Module Utils
     End Function
 
     ''' <summary>
+    ''' check whether target point is above on the line or not.
+    ''' </summary>
+    ''' <paramname="start_point">The start point of line.</param>
+    ''' <paramname="middle_point">The point you are going to check.</param>
+    ''' <paramname="end_point">The end point of line.</param>
+    Public Function CheckPointOnLine(ByVal start_point As Point, ByVal middle_point As Point, ByVal end_point As Point) As Integer
+        Dim a = middle_point.Y - start_point.Y
+        Dim b = start_point.X - middle_point.X
+        Dim c = middle_point.X * start_point.Y - middle_point.Y * start_point.X
+
+        If a <> 0 OrElse b <> 0 Then
+            Dim dist = a * end_point.X + b * end_point.Y + c
+            If dist > 0 Then
+                Return 1
+            ElseIf dist = 0 Then
+                Return 0
+            Else
+                Return -1
+            End If
+        End If
+        Return 10
+    End Function
+
+    ''' <summary>
     ''' calculate angle between two lines.
     ''' </summary>
     ''' <paramname="start_point">The start point of first line.</param>
@@ -339,6 +363,9 @@ Public Module Utils
             val = -1
         ElseIf val > 1 Then
             val = 1
+        End If
+        If Double.IsNaN(val) Then
+            Return 0
         End If
         Dim theta = Math.Acos(val)
         Return theta

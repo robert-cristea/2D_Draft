@@ -20,8 +20,10 @@ Public Module C_ControlMethods
     ''' <paramname="graph">The graphics for drawing object list.</param>
     ''' <paramname="pictureBox">The pictureBox control in which you want to draw object list.</param>
     ''' <paramname="item">The object which you are going to draw.</param>
+    ''' <paramname="digit">The digit of decimal numbers.</param>
+    ''' <paramname="CF">The factor of measuring scale.</param>
     ''' <paramname="flag">The flag specifies whether the item is selected or not.</param>
-    Public Sub DrawCurveObjItem(ByVal graph As Graphics, ByVal pictureBox As PictureBox, ByVal item As MeasureObject, ByVal flag As Boolean)
+    Public Sub DrawCurveObjItem(ByVal graph As Graphics, ByVal pictureBox As PictureBox, ByVal item As MeasureObject, digit As Integer, CF As Double, ByVal flag As Boolean)
         Dim graphPen As Pen
         If flag = True Then
             graphPen = New Pen(Color.Red, item.line_infor.line_width)
@@ -45,9 +47,8 @@ Public Module C_ControlMethods
 
             'draw label
             Dim DrawPt = New Point(CInt(obj.LDrawPos.X * pictureBox.Width), CInt(obj.LDrawPos.Y * pictureBox.Height))
-            If Main_Form.show_legend = True Then
-                graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 30, 20))
-            End If
+            Dim textSize As SizeF = graph.MeasureString(item.name, graphFont)
+            graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
         ElseIf item.measure_type = MeasureType.C_Point Then
             Dim obj = item.curve_object.PointItem(0)
@@ -58,9 +59,8 @@ Public Module C_ControlMethods
                 graph.DrawEllipse(graphPen, New Rectangle(PointPt.X, PointPt.Y, 2, 2))
             End If
             Dim DrawPt = New Point(CInt(obj.PDrawPos.X * pictureBox.Width), CInt(obj.PDrawPos.Y * pictureBox.Height))
-            If Main_Form.show_legend = True Then
-                graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 30, 20))
-            End If
+            Dim textSize As SizeF = graph.MeasureString(item.name, graphFont)
+            graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
         ElseIf item.measure_type = MeasureType.C_Poly Then
             Dim obj = item.curve_object.PolyItem(0)
@@ -74,9 +74,8 @@ Public Module C_ControlMethods
                 End If
             Next
             Dim DrawPt = New Point(CInt(obj.PolyDrawPos.X * pictureBox.Width), CInt(obj.PolyDrawPos.Y * pictureBox.Height))
-            If Main_Form.show_legend = True Then
-                graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 40, 20))
-            End If
+            Dim textSize As SizeF = graph.MeasureString(item.name, graphFont)
+            graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
 
         ElseIf item.measure_type = MeasureType.C_Curve Then
@@ -91,9 +90,8 @@ Public Module C_ControlMethods
                 End If
             Next
             Dim DrawPt = New Point(CInt(obj.CDrawPos.X * pictureBox.Width), CInt(obj.CDrawPos.Y * pictureBox.Height))
-            If Main_Form.show_legend = True Then
-                graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 30, 20))
-            End If
+            Dim textSize As SizeF = graph.MeasureString(item.name, graphFont)
+            graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
         ElseIf item.measure_type = MeasureType.C_CuPoly Then
             Dim obj = item.curve_object.CuPolyItem(0)
@@ -122,9 +120,8 @@ Public Module C_ControlMethods
                 End If
             Next
             Dim DrawPt = New Point(CInt(obj.CuPolyDrawPos.X * pictureBox.Width), CInt(obj.CuPolyDrawPos.Y * pictureBox.Height))
-            If Main_Form.show_legend = True Then
-                graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, 30, 20))
-            End If
+            Dim textSize As SizeF = graph.MeasureString(item.name, graphFont)
+            graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
         ElseIf item.measure_type = MeasureType.C_MinMax Then
             Dim startPt = New Point(item.start_point.X * pictureBox.Width, item.start_point.Y * pictureBox.Height)
@@ -134,6 +131,17 @@ Public Module C_ControlMethods
                 Dim MidPt = New Point(item.middle_point.X * pictureBox.Width, item.middle_point.Y * pictureBox.Height)
                 graphPen.DashStyle = Drawing2D.DashStyle.Dot
                 graph.DrawLine(graphPen, CInt(startPt.X), CInt(startPt.Y), CInt(MidPt.X), CInt(MidPt.Y))
+            End If
+            Dim DrawPt = New Point((startPt.X + EndPt.X) / 2, (startPt.Y + EndPt.Y) / 2)
+            Dim length = GetDecimalNumber(item.length, digit, CF)
+            If Main_Form.show_legend = True Then
+                Dim output = item.name + " " + length.ToString()
+                Dim textSize As SizeF = graph.MeasureString(output, graphFont)
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
+            Else
+                Dim output = item.name
+                Dim textSize As SizeF = graph.MeasureString(output, graphFont)
+                graph.DrawString(output, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
             End If
         End If
         PenRed.Dispose()
@@ -294,9 +302,9 @@ Public Module C_ControlMethods
     ''' </summary>
     ''' <paramname="pictureBox">The pictureBox control in which you want to draw object list.</param>
     ''' <paramname="item">The object which you are going to draw.</param>
-    Public Sub DrawCurveObjSelected(ByVal pictureBox As PictureBox, ByVal item As MeasureObject)
+    Public Sub DrawCurveObjSelected(ByVal pictureBox As PictureBox, ByVal item As MeasureObject, digit As Integer, CF As Double)
         Dim graph As Graphics = pictureBox.CreateGraphics()
-        DrawCurveObjItem(graph, pictureBox, item, True)
+        DrawCurveObjItem(graph, pictureBox, item, digit, CF, True)
         graph.Dispose()
     End Sub
 

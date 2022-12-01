@@ -4,6 +4,7 @@ Imports System.Windows.Interop
 Imports AForge.Video
 Imports AForge.Video.DirectShow
 Imports Emgu.CV
+Imports Emgu.CV.Ocl
 Imports Color = System.Drawing.Color
 Imports ComboBox = System.Windows.Forms.ComboBox
 Imports Font = System.Drawing.Font
@@ -22,14 +23,17 @@ Public Enum MeasureType
     draw_line = 8
     pt_line = 9
     measure_scale = 10
-    C_Line = 11
-    C_Poly = 12
-    C_Point = 13
-    C_Curve = 14
-    C_CuPoly = 15
-    C_Sel = 16
-    C_MinMax = 17
-    Curves = 18
+    circle_fixed = 11
+    line_fixed = 12
+    angle_fixed = 13
+    C_Line = 14
+    C_Poly = 15
+    C_Point = 16
+    C_Curve = 17
+    C_CuPoly = 18
+    C_Sel = 19
+    C_MinMax = 20
+    Curves = 21
 End Enum
 
 'structure for drawing line
@@ -258,13 +262,20 @@ Public Class Main_Form
     Private menu_click As Boolean = False                               'specify whether the menu item is clicked
 
     'member variable for webcam
-
+    Private videoDevices As FilterInfoCollection                        'usable video devices
+    Private videoDevice As VideoCaptureDevice                           'video device currently used 
+    Private snapshotCapabilities As VideoCapabilities()
+    Private ReadOnly listCamera As ArrayList = New ArrayList()
+    Private Shared needSnapshot As Boolean = False
+    Private newImage As Bitmap = Nothing                                'used for capturing frame of webcam
+    Private ReadOnly _devicename As String = "MultitekHDCam"            'device name
+    'Private ReadOnly _devicename As String = "USB Camera"
+    'Private ReadOnly _devicename As String = "Lenovo FHD Webcam"
     Private ReadOnly photoList As New System.Windows.Forms.ImageList    'list of captured images
     Private file_counter As Integer = 0                                 'the count of captured images
     Private camera_state As Boolean = False                             'the state of camera is opened or not
     Public imagepath As String = ""                                     'path of folder storing captured images
-    Private live_flag As Boolean = True                                 'flag specify the statue of pause/resume of camera
-    Private axMainVideoCap As AxVIDEOCAPLib.AxVideoCap = New AxVIDEOCAPLib.AxVideoCap()
+    Private flag As Boolean = False                                     'flag for live image
 
     'member variable for keygen
     Dim licState As licState                                            'the state of this program is licensed or not
@@ -340,6 +351,12 @@ Public Class Main_Form
     Private C_CurveObj As C_CurveObject = New C_CurveObject()
     Private curve_sel_index As Integer
 
+    'member variables for edge detection
+    Private EdgeRegionDrawReady As Boolean
+    Private FirstPtOfEdge As Point = New Point()
+    Private SecondPtOfEdge As Point = New Point()
+
+
     Public Sub New()
         InitializeComponent()
         InitializeCustomeComeponent()
@@ -395,7 +412,6 @@ Public Class Main_Form
             ID_PANEL(i) = New Panel()
             ID_PICTURE_BOX(i) = New PictureBox()
             ID_MY_TEXTBOX(i) = New TextBox()
-            ID_MY_TEXTBOX(i).Visible = False
 
             ID_TAG_CTRL.Controls.Add(ID_TAG_PAGE(i))
 
@@ -403,59 +419,45 @@ Public Class Main_Form
             ID_TAG_PAGE(i).Name = "ID_TAG_PAGE" & i.ToString()
             ID_TAG_PAGE(i).Padding = New Padding(3)
             ID_TAG_PAGE(i).Size = New Size(800, 600)
-            If i = 0 Then
-                ID_TAG_PAGE(i).Text = "Cam"
-            Else
-                ID_TAG_PAGE(i).Text = "Image" & i
-            End If
-
+            ID_TAG_PAGE(i).Text = "Image" & (i + 1).ToString()
             ID_TAG_PAGE(i).UseVisualStyleBackColor = True
             ID_TAG_PAGE(i).Controls.Add(ID_PANEL(i))
 
             ID_PANEL(i).Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
             ID_PANEL(i).AutoScroll = True
             ID_PANEL(i).AutoSizeMode = AutoSizeMode.GrowAndShrink
-            ID_PANEL(i).BackColor = Color.Black
+            ID_PANEL(i).BackColor = Color.Gray
             ID_PANEL(i).Location = New Point(0, 1)
             ID_PANEL(i).Name = "ID_PANEL" & i.ToString()
             ID_PANEL(i).Size = New Size(800, 600)
             AddHandler ID_PANEL(i).Scroll, New ScrollEventHandler(AddressOf ID_PANEL_Scroll)
             AddHandler ID_PANEL(i).SizeChanged, New EventHandler(AddressOf ID_PANEL_SizeChanged)
             AddHandler ID_PANEL(i).MouseWheel, New MouseEventHandler(AddressOf ID_PANEL_MouseWheel)
-            If i = 0 Then
-                ID_PANEL(i).Controls.Add(axMainVideoCap)
+            ID_PANEL(i).Controls.Add(ID_PICTURE_BOX(i))
 
-                axMainVideoCap.Enabled = True
-                axMainVideoCap.Location = New Point(0, -1)
-                axMainVideoCap.Name = "axMainVideoCap"
-                axMainVideoCap.Size = New Size(800, 600)
+            ID_PICTURE_BOX(i).BackColor = Color.Gray
+            ID_PICTURE_BOX(i).Location = New Point(0, -1)
+            ID_PICTURE_BOX(i).Name = "ID_PICTURE_BOX" & i.ToString()
+            ID_PICTURE_BOX(i).Size = New Size(800, 600)
+            ID_PICTURE_BOX(i).SizeMode = PictureBoxSizeMode.AutoSize
+            ID_PICTURE_BOX(i).TabIndex = 0
+            ID_PICTURE_BOX(i).TabStop = False
+            ID_PICTURE_BOX(i).Image = Nothing
+            AddHandler ID_PICTURE_BOX(i).MouseDown, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseDown)
+            AddHandler ID_PICTURE_BOX(i).MouseMove, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseMove)
+            AddHandler ID_PICTURE_BOX(i).MouseDoubleClick, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseDoubleClick)
+            AddHandler ID_PICTURE_BOX(i).MouseUp, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseUp)
 
-            Else
-                ID_PANEL(i).Controls.Add(ID_PICTURE_BOX(i))
+            AddHandler ID_PICTURE_BOX(i).Paint, New PaintEventHandler(AddressOf ID_PICTURE_BOX_Paint)
 
-                ID_PICTURE_BOX(i).BackColor = Color.Black
-                ID_PICTURE_BOX(i).Location = New Point(0, -1)
-                ID_PICTURE_BOX(i).Name = "ID_PICTURE_BOX" & i.ToString()
-                ID_PICTURE_BOX(i).Size = New Size(800, 600)
-                ID_PICTURE_BOX(i).SizeMode = PictureBoxSizeMode.AutoSize
-                ID_PICTURE_BOX(i).TabIndex = 0
-                ID_PICTURE_BOX(i).TabStop = False
-                ID_PICTURE_BOX(i).Image = Nothing
-                AddHandler ID_PICTURE_BOX(i).MouseDown, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseDown)
-                AddHandler ID_PICTURE_BOX(i).MouseMove, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseMove)
-                AddHandler ID_PICTURE_BOX(i).MouseDoubleClick, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseDoubleClick)
-                AddHandler ID_PICTURE_BOX(i).MouseUp, New MouseEventHandler(AddressOf ID_PICTURE_BOX_MouseUp)
+            ID_PICTURE_BOX(i).Controls.Add(ID_MY_TEXTBOX(i))
 
-                AddHandler ID_PICTURE_BOX(i).Paint, New PaintEventHandler(AddressOf ID_PICTURE_BOX_Paint)
-
-                ID_PICTURE_BOX(i).Controls.Add(ID_MY_TEXTBOX(i))
-
-                ID_MY_TEXTBOX(i).Name = "ID_MY_TEXTBOX"
-                ID_MY_TEXTBOX(i).Multiline = True
-                ID_MY_TEXTBOX(i).AutoSize = False
-                ID_MY_TEXTBOX(i).Font = graphFont
-                AddHandler ID_MY_TEXTBOX(i).TextChanged, New EventHandler(AddressOf ID_MY_TEXTBOX_TextChanged)
-            End If
+            ID_MY_TEXTBOX(i).Name = "ID_MY_TEXTBOX"
+            ID_MY_TEXTBOX(i).Multiline = True
+            ID_MY_TEXTBOX(i).AutoSize = False
+            ID_MY_TEXTBOX(i).Visible = False
+            ID_MY_TEXTBOX(i).Font = graphFont
+            AddHandler ID_MY_TEXTBOX(i).TextChanged, New EventHandler(AddressOf ID_MY_TEXTBOX_TextChanged)
         Next
 
         'remove unnessary tab pages
@@ -466,7 +468,8 @@ Public Class Main_Form
         Next
 
         tag_page_flag(0) = True
-        img_import_flag(0) = False
+        img_import_flag(0) = True
+
 
     End Sub
 
@@ -583,7 +586,7 @@ Public Class Main_Form
     'check license information when main dialog is loading
     Private Sub Main_Form_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
-            Init()
+            'Init()
             Initialize_Button_Colors()
             Timer1.Interval = 30
             Timer1.Start()
@@ -597,15 +600,10 @@ Public Class Main_Form
         End Try
 
         Try
-            SelectVideoDevice(AxVideoCap1, ID_COMBO_VIDEO_DEVICE)
-            SelectVideoInput(AxVideoCap1, ID_COMBO_VIDEO_INPUT)
-            SelectResolution(AxVideoCap1, CameraResolutionsCB)
-
+            OpenCamera()
+            SelectResolution(videoDevice, CameraResolutionsCB)
             If Not My.Settings.camresindex.Equals("") Then
-                CameraResolutionsCB.SelectedIndex = My.Settings.camresindex
-            End If
-            If Not My.Settings.cameraname.Equals("") Then
-                ID_COMBO_VIDEO_DEVICE.SelectedIndex = My.Settings.cameraname
+                CameraResolutionsCB.SelectedIndex = My.Settings.camresindex + 1
             End If
 
         Catch ex As Exception
@@ -694,7 +692,10 @@ Public Class Main_Form
     Private Sub ID_MENU_OPEN_CAM_Click(sender As Object, e As EventArgs) Handles ID_MENU_OPEN_CAM.Click
         Try
             OpenCamera()
-
+            SelectResolution(videoDevice, CameraResolutionsCB)
+            If Not My.Settings.camresindex.Equals("") Then
+                CameraResolutionsCB.SelectedIndex = My.Settings.camresindex + 1
+            End If
         Catch excpt As Exception
             MessageBox.Show(excpt.Message)
         End Try
@@ -704,7 +705,8 @@ Public Class Main_Form
     Private Sub ID_MENU_CLOSE_CAM_Click(sender As Object, e As EventArgs) Handles ID_MENU_CLOSE_CAM.Click
         Try
             CloseCamera()
-
+            ID_PICTURE_BOX(0).Image = Nothing
+            ID_PICTURE_BOX_CAM.Image = Nothing
         Catch excpt As Exception
             MessageBox.Show(excpt.Message)
         End Try
@@ -719,10 +721,9 @@ Public Class Main_Form
         Dim title = "Open"
 
         Dim start As Integer = tab_index
-        If start = 0 Then start = 1
         img_import_flag(tab_index) = True
 
-        Dim img_cnt = ID_PICTURE_BOX(1).LoadImageFromFiles(filter, title, origin_image, resized_image, initial_ratio, start, img_import_flag)
+        Dim img_cnt = ID_PICTURE_BOX(0).LoadImageFromFiles(filter, title, origin_image, resized_image, initial_ratio, start, img_import_flag)
 
         If img_cnt >= 1 Then
             ID_PICTURE_BOX(tab_index).Image = Nothing
@@ -967,26 +968,70 @@ Public Class Main_Form
 
     End Sub
 
+    Private Sub ANGLEOFFIXEDDIAMETERToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ANGLEOFFIXEDDIAMETERToolStripMenuItem.Click
+        menu_click = True
+        cur_measure_type = MeasureType.circle_fixed
+        obj_selected.measure_type = cur_measure_type
+        obj_selected.Refresh()
+
+        Dim form = New Form3()
+        If form.ShowDialog() = DialogResult.OK Then
+            obj_selected.scale_object.length = CSng(form.ID_TEXT_FIXED.Text)
+            obj_selected.radius = obj_selected.scale_object.length / ID_PICTURE_BOX(tab_index).Width
+        End If
+    End Sub
+
+    Private Sub LINEOFFIXEDLENGTHToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LINEOFFIXEDLENGTHToolStripMenuItem.Click
+        menu_click = True
+        cur_measure_type = MeasureType.line_fixed
+        obj_selected.measure_type = cur_measure_type
+        obj_selected.Refresh()
+
+        Dim form = New Form3()
+        If form.ShowDialog() = DialogResult.OK Then
+            obj_selected.scale_object.length = CSng(form.ID_TEXT_FIXED.Text)
+            obj_selected.length = obj_selected.scale_object.length / ID_PICTURE_BOX(tab_index).Width
+        End If
+    End Sub
+
+    Private Sub FIXEDANGLEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FIXEDANGLEToolStripMenuItem.Click
+        menu_click = True
+        cur_measure_type = MeasureType.angle_fixed
+        obj_selected.measure_type = cur_measure_type
+        obj_selected.Refresh()
+
+        Dim form = New Form3()
+        If form.ShowDialog() = DialogResult.OK Then
+            obj_selected.angle = CSng(form.ID_TEXT_FIXED.Text)
+        End If
+    End Sub
+
     'zoom image
     Private Sub Zoom_Image()
-        If tab_index = 0 Then
-            Return
-        End If
-        Dim ratio = zoom_factor(tab_index) * initial_ratio(tab_index)
-        current_image(tab_index) = ZoomImage(ratio, origin_image, current_image, tab_index)
-        ID_PICTURE_BOX(tab_index).Invoke(New Action(Sub() ID_PICTURE_BOX(tab_index).Image = Enumerable.ElementAt(current_image, tab_index).ToBitmap()))
-        left_top = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
-        scroll_pos.X = ID_PANEL(tab_index).HorizontalScroll.Value
-        scroll_pos.Y = ID_PANEL(tab_index).VerticalScroll.Value
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-        Dim flag = False
-        If sel_index >= 0 Then flag = True
-        ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, flag)
-        If ID_MY_TEXTBOX(tab_index).Visible = True Then
-            Dim obj_anno = object_list.ElementAt(tab_index).ElementAt(anno_num)
-            Dim st_pt As Point = New Point(obj_anno.draw_point.X * ID_PICTURE_BOX(tab_index).Width, obj_anno.draw_point.Y * ID_PICTURE_BOX(tab_index).Height)
-            ID_MY_TEXTBOX(tab_index).UpdateLocation(st_pt, left_top, scroll_pos)
-        End If
+        Try
+            Dim ratio = zoom_factor(tab_index)
+            Dim zoomed = ZoomImage(ratio, resized_image, current_image, tab_index)
+            'Dim Image = Enumerable.ElementAt(current_image, tab_index).ToBitmap()
+            Dim Image = zoomed.ToBitmap()
+            Dim Adjusted = AdjustBrightnessAndContrast(Image, brightness(tab_index), contrast(tab_index), gamma(tab_index))
+
+            'ID_PICTURE_BOX(tab_index).Invoke(New Action(Sub() ID_PICTURE_BOX(tab_index).Image = Enumerable.ElementAt(current_image, tab_index).ToBitmap()))
+            ID_PICTURE_BOX(tab_index).Image = Adjusted
+            left_top = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
+            scroll_pos.X = ID_PANEL(tab_index).HorizontalScroll.Value
+            scroll_pos.Y = ID_PANEL(tab_index).VerticalScroll.Value
+            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+            Dim flag = False
+            If sel_index >= 0 Then flag = True
+            ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, flag)
+            If ID_MY_TEXTBOX(tab_index).Visible = True Then
+                Dim obj_anno = object_list.ElementAt(tab_index).ElementAt(anno_num)
+                Dim st_pt As Point = New Point(obj_anno.draw_point.X * ID_PICTURE_BOX(tab_index).Width, obj_anno.draw_point.Y * ID_PICTURE_BOX(tab_index).Height)
+                ID_MY_TEXTBOX(tab_index).UpdateLocation(st_pt, left_top, scroll_pos)
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message.ToString())
+        End Try
     End Sub
 
     'zoom in image and draw it to picturebox
@@ -1168,6 +1213,11 @@ Public Class Main_Form
         ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, flag)
     End Sub
 
+    'detect edge of selected region
+    Private Sub EDGEDETECTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EDGEDETECTToolStripMenuItem.Click
+        EdgeRegionDrawReady = True
+    End Sub
+
     'update object selected
     'when mouse is clicked on annotation insert textbox there to you can edit it
     'draw objects and load list of objects to listview
@@ -1177,7 +1227,7 @@ Public Class Main_Form
         End If
         If e.Button = MouseButtons.Left Then
             SetCapture(CInt(ID_PICTURE_BOX(tab_index).Handle))
-            Dim m_pt As PointF = New Point()
+            Dim m_pt As PointF = New PointF()
             m_pt.X = CSng(e.X) / ID_PICTURE_BOX(tab_index).Width
             m_pt.Y = CSng(e.Y) / ID_PICTURE_BOX(tab_index).Height
             m_pt.X = Math.Min(Math.Max(m_pt.X, 0), 1)
@@ -1236,7 +1286,7 @@ Public Class Main_Form
                                 PolyRealSelectArrayIndx = curve_sel_index
                             End If
                             ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                            DrawCurveObjSelected(ID_PICTURE_BOX(tab_index), obj)
+                            DrawCurveObjSelected(ID_PICTURE_BOX(tab_index), obj, digit, CF)
                         End If
                     End If
 
@@ -1268,6 +1318,10 @@ Public Class Main_Form
                     End If
                     ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
                 End If
+            End If
+
+            If EdgeRegionDrawReady = True Then
+                FirstPtOfEdge = m_pt2
             End If
         Else    'right click
             If cur_measure_type = MeasureType.C_Poly Then
@@ -1319,16 +1373,30 @@ Public Class Main_Form
                 C_LineObj.Refresh()
             End If
         ElseIf cur_measure_type = MeasureType.C_Curve Then
-                CurvePreviousPoint = Nothing
-                C_CurveObj.CDrawPos = CGetPos(C_CurveObj)
-                Dim tempObj = CloneCurveObj(C_CurveObj)
-                obj_selected.curve_object = New CurveObject()
-                obj_selected.curve_object.CurveItem.Add(tempObj)
-                obj_selected.name = "C" & cur_obj_num(tab_index)
-                AddCurveToList()
-                C_CurveObj.Refresh()
-            ElseIf cur_measure_type = MeasureType.C_CuPoly Then
-                CuPolyPreviousPoint = Nothing
+            CurvePreviousPoint = Nothing
+            C_CurveObj.CDrawPos = CGetPos(C_CurveObj)
+            Dim tempObj = CloneCurveObj(C_CurveObj)
+            obj_selected.curve_object = New CurveObject()
+            obj_selected.curve_object.CurveItem.Add(tempObj)
+            obj_selected.name = "C" & cur_obj_num(tab_index)
+            AddCurveToList()
+            C_CurveObj.Refresh()
+        ElseIf cur_measure_type = MeasureType.C_CuPoly Then
+            CuPolyPreviousPoint = Nothing
+        End If
+
+        If EdgeRegionDrawReady = True And SecondPtOfEdge.X <> 0 And SecondPtOfEdge.Y <> 0 Then
+            'run code for detect edge
+            Dim img = Canny(ID_PICTURE_BOX(tab_index).Image, FirstPtOfEdge, SecondPtOfEdge)
+            ID_PICTURE_BOX(tab_index).Image = img
+            Dim Mat = GetMatFromSDImage(img)
+            Dim sz As Size = New Size(ID_PICTURE_BOX(tab_index).Width, Convert.ToInt32(img.Height * ID_PICTURE_BOX(tab_index).Width / img.Width))
+            CvInvoke.Resize(Mat, resized_image(tab_index), sz)
+            EdgeRegionDrawReady = False
+            FirstPtOfEdge.X = 0
+            FirstPtOfEdge.Y = 0
+            SecondPtOfEdge.X = 0
+            SecondPtOfEdge.Y = 0
         End If
     End Sub
 
@@ -1342,6 +1410,8 @@ Public Class Main_Form
         m_pt.Y = Math.Min(Math.Max(m_pt.Y, 0), 1)
         Dim dx = m_pt.X - m_cur_drag.X
         Dim dy = m_pt.Y - m_cur_drag.Y
+
+        Dim m_pt2 = New Point(e.X, e.Y)
 
         If GetCapture() = ID_PICTURE_BOX(tab_index).Handle Then
             If cur_measure_type < 0 Then
@@ -1425,8 +1495,14 @@ Public Class Main_Form
                     End If
                 End If
             End If
+
+            If EdgeRegionDrawReady = True Then
+                SecondPtOfEdge = m_pt2
+                ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                ID_PICTURE_BOX(tab_index).DrawRectangle(FirstPtOfEdge, SecondPtOfEdge)
+            End If
         Else    'mouse is not clicked
-            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+
             If sel_index >= 0 Then
                 ID_PICTURE_BOX(tab_index).HightLightItem(object_list.ElementAt(tab_index).ElementAt(sel_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
                 ID_PICTURE_BOX(tab_index).DrawObjSelected(object_list.ElementAt(tab_index).ElementAt(sel_index), True)
@@ -1435,6 +1511,7 @@ Public Class Main_Form
             If cur_measure_type >= 0 Then
                 If cur_measure_type < MeasureType.C_Line Then
                     Dim temp As Point = New Point(e.X, e.Y)
+                    ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
                     ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, False)
                     ID_PICTURE_BOX(tab_index).DrawTempFinal(obj_selected, temp, side_drag, digit, CF, True)
                 ElseIf cur_measure_type = MeasureType.C_Poly Then
@@ -1445,6 +1522,7 @@ Public Class Main_Form
                         C_PolyObj.PolyPoint(C_PolyObj.PolyPointIndx) = ptF
                     Else
                         If C_PolyObj.PolyPointIndx >= 1 Then
+                            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
                             DrawPolyObj(ID_PICTURE_BOX(tab_index), line_infor, C_PolyObj)
                             DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, PolyPreviousPoint.Value, e.Location)
                         End If
@@ -1460,6 +1538,7 @@ Public Class Main_Form
                             temp = dumyPoint
                         End If
                         If temp <> dumyPoint Then
+                            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
                             DrawCuPolyObj(ID_PICTURE_BOX(tab_index), line_infor, C_CuPolyObj)
                             DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, temp, e.Location)
                         End If
@@ -1468,7 +1547,8 @@ Public Class Main_Form
                     curve_sel_index = CheckCurveItemInPos(ID_PICTURE_BOX(tab_index), m_pt, object_list.ElementAt(tab_index))
                     If curve_sel_index >= 0 Then
                         Dim obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index)
-                        DrawCurveObjSelected(ID_PICTURE_BOX(tab_index), obj)
+                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                        DrawCurveObjSelected(ID_PICTURE_BOX(tab_index), obj, digit, CF)
                     End If
                 End If
             End If
@@ -1524,17 +1604,18 @@ Public Class Main_Form
     'set brightness, contrast and gamma to current image
     Private Sub ID_BTN_BRIGHTNESS_Click(sender As Object, e As EventArgs) Handles ID_BTN_BRIGHTNESS.Click
         redraw_flag = True
-        If tab_index = 0 Then
-            Return
-        End If
-        Dim form As ID_FORM_BRIGHTNESS = New ID_FORM_BRIGHTNESS(ID_PICTURE_BOX(tab_index), Enumerable.ElementAt(resized_image, tab_index).ToBitmap(), brightness(tab_index), contrast(tab_index), gamma(tab_index))
-        Dim image = origin_image(tab_index).Clone().ToBitmap()
-        Dim InitialImage = AdjustBrightnessAndContrast(image, brightness(tab_index), contrast(tab_index), gamma(tab_index))
+        Dim ratio = zoom_factor(tab_index)
+        Dim zoomed = ZoomImage(ratio, resized_image, current_image, tab_index)
+        Dim Image = zoomed.ToBitmap()
+        Dim form As ID_FORM_BRIGHTNESS = New ID_FORM_BRIGHTNESS(ID_PICTURE_BOX(tab_index), Image, brightness(tab_index), contrast(tab_index), gamma(tab_index))
+        'Dim image = origin_image(tab_index).Clone().ToBitmap()
+
+        Dim InitialImage = AdjustBrightnessAndContrast(Image, brightness(tab_index), contrast(tab_index), gamma(tab_index))
         If form.ShowDialog() = DialogResult.OK Then
             brightness(tab_index) = form.brightness
             contrast(tab_index) = form.contrast
             gamma(tab_index) = form.gamma
-            current_image(tab_index) = GetMatFromSDImage(ID_PICTURE_BOX(tab_index).Image)
+            'current_image(tab_index) = GetMatFromSDImage(ID_PICTURE_BOX(tab_index).Image)
 
             'Dim UpdatedImage = AdjustBrightnessAndContrast(image, brightness(tab_index), contrast(tab_index), gamma(tab_index))
             'origin_image(tab_index) = GetMatFromSDImage(UpdatedImage)
@@ -1659,7 +1740,12 @@ Public Class Main_Form
             ini.Save(ini_path)
         End If
 
-
+        If videoDevice Is Nothing Then
+        ElseIf videoDevice.IsRunning Then
+            videoDevice.SignalToStop()
+            RemoveHandler videoDevice.NewFrame, New NewFrameEventHandler(AddressOf Device_NewFrame)
+            videoDevice = Nothing
+        End If
         camera_state = False
     End Sub
 
@@ -1770,6 +1856,7 @@ Public Class Main_Form
         Else
             show_legend = False
         End If
+        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
     End Sub
 
     'display setting.ini
@@ -1817,29 +1904,50 @@ Public Class Main_Form
 
 #Region "Webcam Methods"
 
+    'pop one frame from webcam and display it to pictureboxs
+    Public Sub Device_NewFrame(sender As Object, eventArgs As AForge.Video.NewFrameEventArgs)
+        On Error Resume Next
+
+        Me.Invoke(Sub()
+                      newImage = DirectCast(eventArgs.Frame.Clone(), Bitmap)
+
+                      If flag = False Then
+                          ID_PICTURE_BOX(0).Image = newImage.Clone()
+                      End If
+                      ID_PICTURE_BOX_CAM.Image = newImage.Clone()
+                      newImage?.Dispose()
+                  End Sub)
+
+    End Sub
 
     'open camera
     Private Sub OpenCamera()
-        AxVideoCap1.Device = ID_COMBO_VIDEO_DEVICE.SelectedIndex
-        AxVideoCap1.VideoInput = ID_COMBO_VIDEO_INPUT.SelectedIndex
-        AxVideoCap1.VideoFormat = CameraResolutionsCB.SelectedIndex
+        Dim cameraInt As Int32 = CheckPerticularCamera(videoDevices, _devicename)
+        If (cameraInt < 0) Then
+            MessageBox.Show("Compatible Camera not found..")
+            Exit Sub
+        End If
 
-        axMainVideoCap.Device = ID_COMBO_VIDEO_DEVICE.SelectedIndex
-        axMainVideoCap.VideoInput = ID_COMBO_VIDEO_INPUT.SelectedIndex
-        axMainVideoCap.VideoFormat = CameraResolutionsCB.SelectedIndex
-
-
-        Me.AxVideoCap1.Start()
-        axMainVideoCap.Start()
-
+        videoDevices = New FilterInfoCollection(FilterCategory.VideoInputDevice)
+        videoDevice = New VideoCaptureDevice(videoDevices(Convert.ToInt32(cameraInt)).MonikerString)
+        If Not My.Settings.camresindex.Equals("") Then
+            videoDevice.VideoResolution = videoDevice.VideoCapabilities(Convert.ToInt32(My.Settings.camresindex))
+        End If
+        AddHandler videoDevice.NewFrame, New NewFrameEventHandler(AddressOf Device_NewFrame)
+        videoDevice.Start()
+        camera_state = True
     End Sub
 
     'close camera
     Private Sub CloseCamera()
-        AxVideoCap1.Stop()
-        AxVideoCap1.Unload()
-        axMainVideoCap.Stop()
-        axMainVideoCap.Unload()
+
+        If videoDevice Is Nothing Then
+        ElseIf videoDevice.IsRunning Then
+            videoDevice.SignalToStop()
+            RemoveHandler videoDevice.NewFrame, New NewFrameEventHandler(AddressOf Device_NewFrame)
+            videoDevice.Source = Nothing
+        End If
+        camera_state = False
     End Sub
 
     'capture image and add it to ID_LISTVIEW_IMAGE
@@ -1847,8 +1955,10 @@ Public Class Main_Form
 
         Try
 
-            'Dim img1 As Image = ID_PICTURE_BOX_CAM.Image.Clone()
-            Dim img1 As Image = AxVideoCap1.SnapShot2Picture()
+            If ID_PICTURE_BOX_CAM.Image Is Nothing Then
+                Return
+            End If
+            Dim img1 As Image = ID_PICTURE_BOX_CAM.Image.Clone()
 
             Createdirectory(imagepath)
             If photoList.Images.Count <= 0 Then
@@ -1857,9 +1967,6 @@ Public Class Main_Form
                 file_counter = Convert.ToInt32(IO.Path.GetFileNameWithoutExtension(photoList.Images.Keys.Item(photoList.Images.Count - 1).ToString()).Split("_")(1)) + 1
             End If
 
-            If img1 Is Nothing Then
-                Return
-            End If
             img1.Save(imagepath & "\\test_" & (file_counter) & ".jpeg", Imaging.ImageFormat.Jpeg)
             photoList.ImageSize = New Size(160, 120)
             photoList.Images.Add("\\test_" & (file_counter) & ".jpeg", img1)
@@ -1887,7 +1994,7 @@ Public Class Main_Form
         ID_LISTVIEW_IMAGE.Clear()
         ID_LISTVIEW_IMAGE.Items.Clear()
         photoList.Images.Clear()
-        'ID_PICTURE_BOX_CAM.Image = Nothing
+        ID_PICTURE_BOX_CAM.Image = Nothing
         ID_PICTURE_BOX(tab_index).Image = Nothing
         DeleteImages(imagepath)
     End Sub
@@ -1895,11 +2002,12 @@ Public Class Main_Form
     'stop camera and display the selected image to ID_PICTURE_BOX
     Private Sub ID_LISTVIEW_IMAGE_DoubleClick(sender As Object, e As EventArgs) Handles ID_LISTVIEW_IMAGE.DoubleClick
         Try
+            flag = True
 
             Dim itemSelected As Integer = GetListViewSelectedItemIndex(ID_LISTVIEW_IMAGE)
             SetListViewSelectedItem(ID_LISTVIEW_IMAGE, itemSelected)
             Dim Image As Image = Image.FromFile(ID_LISTVIEW_IMAGE.SelectedItems(0).Tag)
-            'ID_PICTURE_BOX_CAM.Image = Image
+            ID_PICTURE_BOX_CAM.Image = Image
 
             Dim page_num = tab_index
 
@@ -1953,58 +2061,32 @@ Public Class Main_Form
 
     'display property window for the video capture
     Private Sub Btn_CameraProperties_Click(sender As Object, e As EventArgs) Handles Btn_CameraProperties.Click
-        AxVideoCap1.ShowVideoCapturePropertyPage(0)
+
+        If videoDevice Is Nothing Then
+            MsgBox("Please start Camera First")
+
+        ElseIf videoDevice.IsRunning Then
+            videoDevice.DisplayPropertyPage(Me.Handle)
+        End If
+    End Sub
+
+    'set flag for live image so that live images can be displayed to tab
+    Private Sub btn_live_Click(sender As Object, e As EventArgs) Handles btn_live.Click
+        flag = False
+
     End Sub
 
     'change the resolution of webcam
     Private Sub CameraResolutionsCB_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CameraResolutionsCB.SelectedIndexChanged
 
-        If CameraResolutionsCB.SelectedIndex >= 0 Then
-            My.Settings.camresindex = CameraResolutionsCB.SelectedIndex
+        If CameraResolutionsCB.SelectedIndex > 0 Then
+            My.Settings.camresindex = CameraResolutionsCB.SelectedIndex - 1
             My.Settings.Save()
             CloseCamera()
             Threading.Thread.Sleep(500)
             OpenCamera()
         End If
 
-    End Sub
-
-    'change video device
-    Private Sub ID_COMBO_VIDEO_DEVICE_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ID_COMBO_VIDEO_DEVICE.SelectedIndexChanged
-        If ID_COMBO_VIDEO_DEVICE.SelectedIndex >= 0 Then
-            AxVideoCap1.RefreshVideoDevice(ID_COMBO_VIDEO_DEVICE.SelectedIndex)
-            SelectVideoInput(AxVideoCap1, ID_COMBO_VIDEO_INPUT)
-            SelectResolution(AxVideoCap1, CameraResolutionsCB)
-            CloseCamera()
-            Threading.Thread.Sleep(500)
-            OpenCamera()
-        End If
-    End Sub
-
-    'change video input
-    Private Sub ID_COMBO_VIDEO_INPUT_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ID_COMBO_VIDEO_INPUT.SelectedIndexChanged
-        If ID_COMBO_VIDEO_INPUT.SelectedIndex >= 0 Then
-            My.Settings.cameraname = ID_COMBO_VIDEO_INPUT.SelectedIndex
-            My.Settings.Save()
-            CloseCamera()
-            Threading.Thread.Sleep(500)
-            OpenCamera()
-        End If
-    End Sub
-
-    'pause/resume camera
-    Private Sub ID_BTN_LIVE_Click(sender As Object, e As EventArgs) Handles ID_BTN_LIVE.Click
-        If live_flag = True Then
-            AxVideoCap1.Pause()
-            axMainVideoCap.Pause()
-            live_flag = False
-            ID_BTN_LIVE.Text = "Resume"
-        Else
-            AxVideoCap1.Resume()
-            axMainVideoCap.Resume()
-            live_flag = True
-            ID_BTN_LIVE.Text = "Pause"
-        End If
     End Sub
 
     'set the path of directory for captured images
@@ -2262,15 +2344,10 @@ Public Class Main_Form
     ''' Add Curve object to obj list
     ''' </summary>
     Private Sub AddCurveToList()
-        obj_selected.obj_num = cur_obj_num(tab_index)
-        SetLineAndFont(obj_selected, line_infor, font_infor)
-        object_list(tab_index).Add(obj_selected)
+        AddMaxMinToList()
+
         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
         ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
-        obj_selected.Refresh()
-        cur_measure_type = -1
-        cur_obj_num(tab_index) += 1
-        If undo_num < 2 Then undo_num += 1
     End Sub
 
     Private Sub AddMaxMinToList()
@@ -2410,65 +2487,49 @@ Public Class Main_Form
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             obj_selected = CalcPMinBetweenCuPolyAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CuPolyRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             obj_selected = CalcPMinBetweenCuPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             obj_selected = CalcPMinBetweenCurveAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             obj_selected = CalcPMinBetweenCurveAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If PRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             obj_selected = CalcPMinBetweenPointAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If PRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
             obj_selected = CalcPMinBetweenPointAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If LRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
             obj_selected = CalcPMinBetweenLineAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
             Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
             Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
             obj_selected = CalcPMinBetweenCurveAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-            SetLineAndFont(obj_selected, line_infor, font_infor)
-            object_list(tab_index).Add(obj_selected)
-            obj_selected.Refresh()
+            AddMaxMinToList()
         End If
 
         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
