@@ -732,6 +732,10 @@ Public Class Main_Form
 
         If img_cnt >= 1 Then
             ID_PICTURE_BOX(tab_index).Image = Nothing
+            obj_selected.Refresh()
+            cur_measure_type = -1
+            sel_index = -1
+            curve_sel_index = -1
             initVar()
         End If
         Dim added_tag = 0
@@ -1230,6 +1234,9 @@ Public Class Main_Form
     'detect edge of selected region
     Private Sub EDGEDETECTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EDGEDETECTToolStripMenuItem.Click
         EdgeRegionDrawReady = True
+        obj_selected.measure_type = MeasureType.C_Curve
+        obj_selected.Refresh()
+        ID_STATUS_LABEL.Text = "Detect edge."
     End Sub
 
     'update object selected
@@ -1413,20 +1420,35 @@ Public Class Main_Form
         If EdgeRegionDrawReady = True And SecondPtOfEdge.X <> 0 And SecondPtOfEdge.Y <> 0 Then
             'run code for detect edge
             Dim input As Image = resized_image(tab_index).ToBitmap()
-            Dim img = Canny(input, FirstPtOfEdge, SecondPtOfEdge)
-            Dim Mat = GetMatFromSDImage(img)
-            Dim sz As Size = New Size(ID_PICTURE_BOX(tab_index).Width, Convert.ToInt32(img.Height * ID_PICTURE_BOX(tab_index).Width / img.Width))
-            CvInvoke.Resize(Mat, resized_image(tab_index), sz)
+            Dim Adjusted = AdjustBrightnessAndContrast(input, brightness(tab_index), contrast(tab_index), gamma(tab_index))
+            C_CurveObj = Canny(Adjusted, FirstPtOfEdge, SecondPtOfEdge)
 
-            Dim Adjusted = AdjustBrightnessAndContrast(img, brightness(tab_index), contrast(tab_index), gamma(tab_index))
-            ID_PICTURE_BOX(tab_index).Image = Adjusted
-            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+            CurvePreviousPoint = Nothing
+            C_CurveObj.CDrawPos = CGetPos(C_CurveObj)
+            Dim tempObj = CloneCurveObj(C_CurveObj)
+            obj_selected.curve_object = New CurveObject()
+            obj_selected.curve_object.CurveItem.Add(tempObj)
+            obj_selected.name = "C" & cur_obj_num(tab_index)
+            AddCurveToList()
+            C_CurveObj.Refresh()
             EdgeRegionDrawReady = False
             FirstPtOfEdge.X = 0
             FirstPtOfEdge.Y = 0
             SecondPtOfEdge.X = 0
             SecondPtOfEdge.Y = 0
-        End If
+            Dim form = New Form4()
+            Dim result = form.ShowDialog()
+            If result = DialogResult.Cancel Then
+                Undo()
+                undo_num += 1
+
+            ElseIf result = DialogResult.Retry Then
+                Undo()
+                    undo_num += 1
+                    EdgeRegionDrawReady = True
+                    obj_selected.measure_type = MeasureType.C_Curve
+                End If
+            End If
 
         If move_line = True And EndPtOfMove.X <> 0 And EndPtOfMove.Y <> 0 Then
             obj_selected2.obj_num = cur_obj_num(tab_index)

@@ -526,7 +526,7 @@ Public Module Utils
     Public Function GetDecimalNumber(ByVal scr As Double, ByVal digit As Integer, ByVal CF As Double) As Double
         Dim dst = scr * CF
         Dim test = dst * Math.Pow(10, digit)
-        If test - CInt(test) < 0.1 Then
+        If test - CInt(test) < 0.1 And digit <> 0 Then
             Dim eplison = 1.0 / Math.Pow(10, digit)
             dst += eplison
         End If

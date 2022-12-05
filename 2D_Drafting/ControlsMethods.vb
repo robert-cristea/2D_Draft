@@ -958,8 +958,8 @@ Public Module ControlsMethods
             Dim nor_pt1, nor_pt2, nor_pt3, nor_pt4, nor_pt5, nor_pt6, nor_pt7, nor_pt8, side_pt, draw_pt As Point
             If item.measure_type = MeasureType.line_fixed Then
                 Dim length = Math.Sqrt(Math.Pow(end_point.X - start_point.X, 2) + Math.Pow(end_point.Y - start_point.Y, 2)) * CF
-                end_point.X = start_point.X + (end_point.X - start_point.X) / length * item.length * pictureBox.Width
-                end_point.Y = start_point.Y + (end_point.Y - start_point.Y) / length * item.length * pictureBox.Width
+                'end_point.X = start_point.X + (end_point.X - start_point.X) / length * item.length * pictureBox.Width
+                'end_point.Y = start_point.Y + (end_point.Y - start_point.Y) / length * item.length * pictureBox.Width
 
                 nor_pt1 = New Point(item.line_object.nor_pt1.X * pictureBox.Width, item.line_object.nor_pt1.Y * pictureBox.Height)
                 nor_pt3 = New Point(item.line_object.nor_pt3.X * pictureBox.Width, item.line_object.nor_pt3.Y * pictureBox.Height)
@@ -1246,7 +1246,8 @@ Public Module ControlsMethods
             graph.RotateTransform(trans_angle)
             Dim trans_pt = GetRotationTransform(draw_pt, trans_angle)
 
-            Dim length_decimal = item.scale_object.length
+            'Dim length_decimal = item.scale_object.length
+            Dim length_decimal = GetDecimalNumber(item.scale_object.length, digit, 1)
 
             If Main_Form.show_legend = True Then
                 Dim output = item.name + " " + length_decimal.ToString()
@@ -1316,7 +1317,7 @@ Public Module ControlsMethods
         Dim radius = 2
 
         For i = 0 To obj_selected.item_set - 1
-            If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_horizontal OrElse obj_selected.measure_type = MeasureType.line_vertical OrElse obj_selected.measure_type = MeasureType.draw_line OrElse obj_selected.measure_type = MeasureType.measure_scale OrElse obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.circle_fixed Then
+            If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_horizontal OrElse obj_selected.measure_type = MeasureType.line_vertical OrElse obj_selected.measure_type = MeasureType.draw_line OrElse obj_selected.measure_type = MeasureType.measure_scale OrElse obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.circle_fixed OrElse obj_selected.measure_type = MeasureType.line_fixed Then
                 If i = 0 Then
                     graph.DrawArc(graphPen, New Rectangle(start_point.X - radius, start_point.Y - radius, radius * 2, radius * 2), 0, 360)
                     If obj_selected.measure_type = MeasureType.measure_scale Then
@@ -2515,7 +2516,7 @@ Public Module ControlsMethods
                         str_item(1) = length.ToString()
                         str_item(4) = unit
                     Case MeasureType.circle_fixed
-                        length = item.scale_object.length
+                        length = GetDecimalNumber(item.scale_object.length, digit, 1)
                         str_item(3) = length.ToString()
                         str_item(4) = unit
                     Case MeasureType.angle_fixed
@@ -2607,7 +2608,7 @@ Public Module ControlsMethods
                         str_item(1) = length.ToString()
                         str_item(4) = unit
                     Case MeasureType.circle_fixed
-                        length = item.scale_object.length
+                        length = GetDecimalNumber(item.scale_object.length, digit, 1)
                         str_item(3) = length.ToString()
                         str_item(4) = unit
                     Case MeasureType.angle_fixed

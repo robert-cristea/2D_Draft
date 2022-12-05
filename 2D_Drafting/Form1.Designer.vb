@@ -62,6 +62,7 @@ Partial Class Main_Form
         Me.CURVEPOLYGENToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SELECTOBJECTSToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EDGEDETECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MOVELINEOBJECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HELPToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ID_MENU_ACTIVATE = New System.Windows.Forms.ToolStripMenuItem()
         Me.ID_MENU_LICENSE_INFO = New System.Windows.Forms.ToolStripMenuItem()
@@ -142,7 +143,6 @@ Partial Class Main_Form
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ID_STATUS_LABEL = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.MOVELINEOBJECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -176,54 +176,54 @@ Partial Class Main_Form
         '
         Me.ID_MENU_OPEN_CAM.Image = Global._2D_Drafting.My.Resources.Resources.import_camera
         Me.ID_MENU_OPEN_CAM.Name = "ID_MENU_OPEN_CAM"
-        Me.ID_MENU_OPEN_CAM.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_OPEN_CAM.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_OPEN_CAM.Text = "OPEN CAMERA"
         '
         'ID_MENU_CLOSE_CAM
         '
         Me.ID_MENU_CLOSE_CAM.Image = Global._2D_Drafting.My.Resources.Resources.close_camera
         Me.ID_MENU_CLOSE_CAM.Name = "ID_MENU_CLOSE_CAM"
-        Me.ID_MENU_CLOSE_CAM.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_CLOSE_CAM.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_CLOSE_CAM.Text = "CLOSE CAMERA"
         '
         'ID_MENU_OPEN
         '
         Me.ID_MENU_OPEN.Image = Global._2D_Drafting.My.Resources.Resources.import_image
         Me.ID_MENU_OPEN.Name = "ID_MENU_OPEN"
-        Me.ID_MENU_OPEN.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_OPEN.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_OPEN.Text = "IMPORT IMAGE"
         '
         'ID_MENU_SAVE
         '
         Me.ID_MENU_SAVE.Image = Global._2D_Drafting.My.Resources.Resources.export_report
         Me.ID_MENU_SAVE.Name = "ID_MENU_SAVE"
-        Me.ID_MENU_SAVE.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_SAVE.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_SAVE.Text = "EXPORT IMAGE"
         '
         'ID_MENU_SAVE_XLSX
         '
         Me.ID_MENU_SAVE_XLSX.Image = Global._2D_Drafting.My.Resources.Resources.export_xlsx
         Me.ID_MENU_SAVE_XLSX.Name = "ID_MENU_SAVE_XLSX"
-        Me.ID_MENU_SAVE_XLSX.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_SAVE_XLSX.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_SAVE_XLSX.Text = "EXPORT XLSX"
         '
         'ID_MENU_EXPORT_REPORT
         '
         Me.ID_MENU_EXPORT_REPORT.Image = Global._2D_Drafting.My.Resources.Resources.export_xlsx
         Me.ID_MENU_EXPORT_REPORT.Name = "ID_MENU_EXPORT_REPORT"
-        Me.ID_MENU_EXPORT_REPORT.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_EXPORT_REPORT.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_EXPORT_REPORT.Text = "EXPORT REPORT"
         '
         'ID_MENU_TO_CURVES
         '
         Me.ID_MENU_TO_CURVES.Name = "ID_MENU_TO_CURVES"
-        Me.ID_MENU_TO_CURVES.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_TO_CURVES.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_TO_CURVES.Text = "TO CURVES"
         '
         'ID_MENU_EXIT
         '
         Me.ID_MENU_EXIT.Name = "ID_MENU_EXIT"
-        Me.ID_MENU_EXIT.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_EXIT.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_EXIT.Text = "EXIT"
         '
         'VIEWToolStripMenuItem
@@ -237,14 +237,14 @@ Partial Class Main_Form
         '
         Me.ZOOMINToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_zoom_in
         Me.ZOOMINToolStripMenuItem.Name = "ZOOMINToolStripMenuItem"
-        Me.ZOOMINToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ZOOMINToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
         Me.ZOOMINToolStripMenuItem.Text = "ZOOM IN"
         '
         'ZOOMOUTToolStripMenuItem
         '
         Me.ZOOMOUTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_zoom_out
         Me.ZOOMOUTToolStripMenuItem.Name = "ZOOMOUTToolStripMenuItem"
-        Me.ZOOMOUTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ZOOMOUTToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
         Me.ZOOMOUTToolStripMenuItem.Text = "ZOOM OUT"
         '
         'MEASUREToolStripMenuItem
@@ -346,35 +346,35 @@ Partial Class Main_Form
         '
         Me.UNDOToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_undo
         Me.UNDOToolStripMenuItem.Name = "UNDOToolStripMenuItem"
-        Me.UNDOToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.UNDOToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.UNDOToolStripMenuItem.Text = "UNDO"
         '
         'RESELECTToolStripMenuItem
         '
         Me.RESELECTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_reset
         Me.RESELECTToolStripMenuItem.Name = "RESELECTToolStripMenuItem"
-        Me.RESELECTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.RESELECTToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.RESELECTToolStripMenuItem.Text = "RESELECT"
         '
         'ADDTAGToolStripMenuItem
         '
         Me.ADDTAGToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_tab_add
         Me.ADDTAGToolStripMenuItem.Name = "ADDTAGToolStripMenuItem"
-        Me.ADDTAGToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ADDTAGToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.ADDTAGToolStripMenuItem.Text = "ADD TAB"
         '
         'REMOVETAGToolStripMenuItem
         '
         Me.REMOVETAGToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_tab_remove
         Me.REMOVETAGToolStripMenuItem.Name = "REMOVETAGToolStripMenuItem"
-        Me.REMOVETAGToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.REMOVETAGToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.REMOVETAGToolStripMenuItem.Text = "REMOVE TAB"
         '
         'DRAWOBJECTSToolStripMenuItem
         '
         Me.DRAWOBJECTSToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LINEToolStripMenuItem1, Me.POLYGENToolStripMenuItem, Me.POINTToolStripMenuItem, Me.CURVEToolStripMenuItem, Me.CURVEPOLYGENToolStripMenuItem})
         Me.DRAWOBJECTSToolStripMenuItem.Name = "DRAWOBJECTSToolStripMenuItem"
-        Me.DRAWOBJECTSToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.DRAWOBJECTSToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.DRAWOBJECTSToolStripMenuItem.Text = "DRAW OBJECTS"
         '
         'LINEToolStripMenuItem1
@@ -415,14 +415,20 @@ Partial Class Main_Form
         'SELECTOBJECTSToolStripMenuItem
         '
         Me.SELECTOBJECTSToolStripMenuItem.Name = "SELECTOBJECTSToolStripMenuItem"
-        Me.SELECTOBJECTSToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.SELECTOBJECTSToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.SELECTOBJECTSToolStripMenuItem.Text = "SELECT OBJECTS"
         '
         'EDGEDETECTToolStripMenuItem
         '
         Me.EDGEDETECTToolStripMenuItem.Name = "EDGEDETECTToolStripMenuItem"
-        Me.EDGEDETECTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.EDGEDETECTToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.EDGEDETECTToolStripMenuItem.Text = "EDGE DETECT"
+        '
+        'MOVELINEOBJECTToolStripMenuItem
+        '
+        Me.MOVELINEOBJECTToolStripMenuItem.Name = "MOVELINEOBJECTToolStripMenuItem"
+        Me.MOVELINEOBJECTToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.MOVELINEOBJECTToolStripMenuItem.Text = "MOVE LINE OBJECT"
         '
         'HELPToolStripMenuItem
         '
@@ -434,25 +440,25 @@ Partial Class Main_Form
         'ID_MENU_ACTIVATE
         '
         Me.ID_MENU_ACTIVATE.Name = "ID_MENU_ACTIVATE"
-        Me.ID_MENU_ACTIVATE.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_ACTIVATE.Size = New System.Drawing.Size(148, 22)
         Me.ID_MENU_ACTIVATE.Text = "ACTIVATE"
         '
         'ID_MENU_LICENSE_INFO
         '
         Me.ID_MENU_LICENSE_INFO.Name = "ID_MENU_LICENSE_INFO"
-        Me.ID_MENU_LICENSE_INFO.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_LICENSE_INFO.Size = New System.Drawing.Size(148, 22)
         Me.ID_MENU_LICENSE_INFO.Text = "LICENSE INFO"
         '
         'ID_MENU_SETTING_INFO
         '
         Me.ID_MENU_SETTING_INFO.Name = "ID_MENU_SETTING_INFO"
-        Me.ID_MENU_SETTING_INFO.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_SETTING_INFO.Size = New System.Drawing.Size(148, 22)
         Me.ID_MENU_SETTING_INFO.Text = "SETTING INFO"
         '
         'ID_MENU_ABOUT
         '
         Me.ID_MENU_ABOUT.Name = "ID_MENU_ABOUT"
-        Me.ID_MENU_ABOUT.Size = New System.Drawing.Size(180, 22)
+        Me.ID_MENU_ABOUT.Size = New System.Drawing.Size(148, 22)
         Me.ID_MENU_ABOUT.Text = "ABOUT"
         '
         'ContextMenuStrip1
@@ -848,6 +854,8 @@ Partial Class Main_Form
         '
         'Panel2
         '
+        Me.Panel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Panel2.Controls.Add(Me.Btn_CameraProperties)
         Me.Panel2.Controls.Add(Me.btn_delete)
         Me.Panel2.Controls.Add(Me.btn_browse)
@@ -1138,7 +1146,8 @@ Partial Class Main_Form
         '
         'ID_TAG_CTRL
         '
-        Me.ID_TAG_CTRL.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.ID_TAG_CTRL.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ID_TAG_CTRL.Location = New System.Drawing.Point(262, 165)
         Me.ID_TAG_CTRL.Name = "ID_TAG_CTRL"
@@ -1210,12 +1219,6 @@ Partial Class Main_Form
         '
         Me.ID_STATUS_LABEL.Name = "ID_STATUS_LABEL"
         Me.ID_STATUS_LABEL.Size = New System.Drawing.Size(0, 17)
-        '
-        'MOVELINEOBJECTToolStripMenuItem
-        '
-        Me.MOVELINEOBJECTToolStripMenuItem.Name = "MOVELINEOBJECTToolStripMenuItem"
-        Me.MOVELINEOBJECTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.MOVELINEOBJECTToolStripMenuItem.Text = "MOVE LINE OBJECT"
         '
         'Main_Form
         '
