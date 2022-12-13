@@ -1,7 +1,12 @@
-﻿Imports System.IO
+﻿Imports System.Drawing.Imaging
+Imports System.IO
+Imports System.Runtime.CompilerServices
 Imports Emgu.CV
+Imports Emgu.CV.CvEnum
 Imports Emgu.CV.Face
+Imports Emgu.CV.Features2D
 Imports Emgu.CV.Structure
+Imports Emgu.CV.Util
 Imports Image = System.Drawing.Image
 
 ''' <summary>
@@ -332,5 +337,923 @@ Public Module ImageProcess
 
         Return cvImage.Mat
     End Function
+
+#Region "Segmentation Tool"
+    ''' <summary>
+    ''' Load Image to picture box from a byte array.
+    ''' </summary>
+    ''' <paramname="pictureBox">The picture box to load image on.</param>
+    ''' <paramname="byteArray">The byte array to get image form.</param>
+    <Extension()>
+    Public Sub LoadImageFromByteArray(ByVal pictureBox As PictureBox, ByVal byteArray As Byte())
+
+        Dim stream As MemoryStream = New MemoryStream(byteArray)
+        Dim img = Image.FromStream(stream)
+        stream.Close()
+        pictureBox.Image = img
+
+    End Sub
+
+    ''' <summary>
+    ''' Gets a byte array copy of the image inside picture box.
+    ''' </summary>
+    ''' <paramname="pictureBox">The picture box to get byte image form.</param>
+    ''' <returns></returns>
+    <Extension()>
+    Public Function GetByteImage(ByVal pictureBox As PictureBox) As Byte()
+
+        Dim ImgByteArray As Byte()
+        Dim stream As MemoryStream = New MemoryStream()
+        pictureBox.Image.Save(stream, ImageFormat.Jpeg) 'TODO- Fix gdi+ error
+        ImgByteArray = stream.ToArray()
+        stream.Close()
+
+        Return ImgByteArray
+    End Function
+
+    ''' <summary>
+    ''' Gets a byte array copy of the image inside picture box.
+    ''' </summary>
+    ''' <paramname="pictureBox">The picture box to get byte image form.</param>
+    ''' <returns></returns>
+    Public Function GetByteImage(ByVal image As Image) As Byte()
+
+        Dim ImgByteArray As Byte()
+        Dim stream As MemoryStream = New MemoryStream()
+        image.Save(stream, ImageFormat.Jpeg) 'TODO- Fix gdi+ error
+        ImgByteArray = stream.ToArray()
+        stream.Close()
+
+        Return ImgByteArray
+    End Function
+
+    ''' <summary>
+    ''' Identify circles according to roundness and thr_cir.
+    ''' </summary>
+    ''' <paramname="scr">The source image.</param>
+    ''' <paramname="roundness">The threshold for detecing circles with circularity.</param>
+    ''' <paramname="thr_cir">The threshold for detecing circles with area.</param>
+    ''' <paramname="Obj">The object to contain circles.</param>
+    ''' 
+    Public Function IdentifyCicles(ByVal scr As Image, ByVal roundness As Integer, ByVal thr_cir As Integer, ByVal Obj As SegObject) As Image
+        'inputImage type is System.Drawing.Image
+
+        Dim bitmapImage As Bitmap = New Bitmap(scr)
+
+        Dim rectangle As Rectangle = New Rectangle(0, 0, bitmapImage.Width, bitmapImage.Height) 'System.Drawing
+        Dim bmpData = bitmapImage.LockBits(rectangle, ImageLockMode.ReadWrite, bitmapImage.PixelFormat) 'System.Drawing.Imaging
+
+        'outputImage type is Emgu.CV.Image
+        Dim outputImage As Emgu.CV.Image(Of Bgra, Byte) = New Emgu.CV.Image(Of Bgra, Byte)(bitmapImage.Width, bitmapImage.Height, bmpData.Stride, bmpData.Scan0) '(IntPtr)
+        bitmapImage.UnlockBits(bmpData)
+
+
+        Dim simpleBlobDetector As SimpleBlobDetector = New SimpleBlobDetector(New SimpleBlobDetectorParams() With {
+    .FilterByCircularity = True,
+    .FilterByArea = True,
+    .MinCircularity = CSng(roundness) / 100,
+    .MaxCircularity = 1.0F,
+    .MinArea = thr_cir,
+    .MaxArea = 10000
+})
+
+        Dim modelKeyPoints As VectorOfKeyPoint = New VectorOfKeyPoint()
+
+        Dim keypoints = simpleBlobDetector.Detect(outputImage)
+
+        Dim circles As List(Of Integer()) = New List(Of Integer())
+        For i = 0 To keypoints.Length - 1
+            Dim circle = New Integer(3) {}
+            circle(0) = SegType.circle
+            circle(1) = CInt(keypoints(i).Point.X)
+            circle(2) = CInt(keypoints(i).Point.Y)
+            circle(3) = CInt(keypoints(i).Size)
+
+            circles.Add(circle)
+        Next
+
+        For i = 0 To circles.Count - 1 - 1
+            For j = i + 1 To circles.Count - 1
+                Dim circle_i = circles(i)
+                Dim circle_j = circles(j)
+                If circle_i(3) < circle_j(3) Then
+                    circles(i) = circle_j
+                    circles(j) = circle_i
+                End If
+            Next
+        Next
+
+        For i = 0 To keypoints.Length - 1
+            Dim circle = circles(i)
+
+            Dim pos = New PointF(circle(1) / CDbl(scr.Width), circle(2) / CDbl(scr.Height))
+            Dim size = circle(3) / CDbl(scr.Width)
+
+            Obj.circleObj.Cnt = i + 1
+            Obj.circleObj.pos(i) = pos
+            Obj.circleObj.size(i) = size
+
+        Next
+
+        modelKeyPoints.Push(keypoints)
+
+        Call Features2DToolbox.DrawKeypoints(outputImage, modelKeyPoints, outputImage, New Bgr(Color.Red), Features2DToolbox.KeypointDrawType.DrawRichKeypoints)
+
+        'ImageView.imshow(outputImage);
+
+        Dim array As Byte() = outputImage.ToJpegData()
+        outputImage.Dispose()
+        circles.Clear()
+
+        Dim stream As MemoryStream = New MemoryStream(array)
+        Dim img = Image.FromStream(stream)
+
+        Return img
+    End Function
+
+    ''' <summary>
+    ''' Identify circles according to roundness and thr_cir.
+    ''' </summary>
+    ''' <paramname="pictureBox">The source image.</param>
+    ''' <paramname="roundness">The threshold for detecing circles with circularity.</param>
+    ''' <paramname="thr_seg">The threshold for segmetation.</param>
+    ''' <paramname="Obj">The object containing items.</param>
+
+    Public Function IdentifyInterSections(g As Graphics, scr As Image, ByVal thr_seg As Integer, Obj As SegObject) As Image
+
+        Dim Pen As Pen = New Pen(Color.Blue, 1)
+        Dim Pen2 As Pen = New Pen(Color.Green, 1)
+        Dim bmpImage As Bitmap = New Bitmap(scr)
+
+        Dim colorImage As Emgu.CV.Image(Of Bgr, Byte) = bmpImage.ToImage(Of Bgr, Byte)()
+        bmpImage.Dispose()
+
+        Dim grayImage As Emgu.CV.Image(Of Gray, Byte) = colorImage.Convert(Of Gray, Byte)()
+
+        'ImageView.imshow(grayImage);
+        CvInvoke.Threshold(grayImage, grayImage, thr_seg, 255, CvEnum.ThresholdType.Binary)
+
+        Dim tempimg As Emgu.CV.Image(Of Emgu.CV.Structure.Gray, Byte) = grayImage
+        CvInvoke.MedianBlur(grayImage, grayImage, 3)
+        'Emgu.CV.CvInvoke.Imshow("original image", cropped)
+        CvInvoke.Canny(grayImage, tempimg, 100, 200)
+
+        Dim color_data = colorImage.Data
+        Dim gray_data = tempimg.Data
+        Dim CntInLine = 0
+        For i = 1 To Obj.sectObj.horLine
+            Dim y As Integer = i * colorImage.Height / (Obj.sectObj.horLine + 1)
+            CntInLine = 0
+            g.DrawLine(Pen2, New Point(0, y), New Point(colorImage.Width - 1, y))
+            For x = 0 To colorImage.Width - 1
+                If gray_data(y, x, 0) > 0 Then
+                    g.DrawEllipse(Pen, New Rectangle(x - 2, y - 2, 4, 4))
+                    Dim pos = New PointF(x / CDbl(scr.Width), y / CDbl(scr.Height))
+                    Obj.sectObj.horSectPos(i - 1, CntInLine) = pos
+                    CntInLine += 1
+                End If
+            Next
+
+            Obj.sectObj.horSectCnt(i - 1) = CntInLine
+        Next
+
+        For i = 1 To Obj.sectObj.verLine
+            Dim x As Integer = i * colorImage.Width / (Obj.sectObj.verLine + 1)
+            CntInLine = 0
+            g.DrawLine(Pen2, New Point(x, 0), New Point(x, colorImage.Height - 1))
+            For y = 0 To colorImage.Height - 1
+                If gray_data(y, x, 0) > 0 Then
+                    g.DrawEllipse(Pen, New Rectangle(x - 2, y - 2, 4, 4))
+                    Dim pos = New PointF(x / CDbl(scr.Width), y / CDbl(scr.Height))
+                    Obj.sectObj.verSectPos(i - 1, CntInLine) = pos
+                    CntInLine += 1
+                End If
+            Next
+            Obj.sectObj.verSectCnt(i - 1) = CntInLine
+        Next
+        colorImage.Dispose()
+        tempimg.Dispose()
+        grayImage.Dispose()
+        Pen.Dispose()
+        Pen2.Dispose()
+
+    End Function
+
+    ''' <summary>
+    ''' Identify circles according to roundness and thr_cir.
+    ''' </summary>
+    ''' <paramname="pictureBox">The source image.</param>
+    ''' <paramname="roundness">The threshold for detecing circles with circularity.</param>
+    ''' <paramname="thr_seg">The threshold for segmetation.</param>
+    ''' <paramname="Obj">The object containing items.</param>
+
+    Public Function IdentifyInterSections(ByVal pictureBox As PictureBox, scr As Image, ByVal thr_seg As Integer, Obj As SegObject) As Image
+        Dim g As Graphics = pictureBox.CreateGraphics()
+        IdentifyInterSections(g, scr, thr_seg, Obj)
+        g.Dispose()
+
+    End Function
+
+    ''' <summary>
+    ''' Segment Remaing Image into Black and White.
+    ''' </summary>
+    ''' <paramname="src">The source image.</param>
+    ''' <paramname="thr_seg">The threshold for segmentation into black and white.</param>
+    ''' <paramname="Obj">The object containing circles.</param>
+    ''' <paramname="percent_black">The percentage of black area.</param>
+    ''' <paramname="percent_white">The percentage of white area.</param>
+
+    Public Function SegmentIntoBlackAndWhite(ByVal scr As Image, ByVal thr_seg As Integer, ByVal Obj As SegObject, ByRef percent_black As Double, ByRef percent_white As Double) As Image
+        'inputImage type is System.Drawing.Image
+
+        Dim bmpImage As Bitmap = New Bitmap(scr)
+        Dim colorImage As Emgu.CV.Image(Of Bgr, Byte) = bmpImage.ToImage(Of Bgr, Byte)()
+        bmpImage.Dispose()
+
+        Dim grayImage As Emgu.CV.Image(Of Gray, Byte) = colorImage.Convert(Of Gray, Byte)()
+
+        'ImageView.imshow(grayImage);
+        CvInvoke.Threshold(grayImage, grayImage, thr_seg, 255, CvEnum.ThresholdType.Binary)
+
+
+        Dim area_cir = 0
+        Dim area_black = 0
+        Dim area_white = 0
+        Dim color = New Bgr(Drawing.Color.Gray)
+
+        For i = 0 To Obj.circleObj.Cnt - 1
+            Dim center = New Point(Obj.circleObj.pos(i).X * scr.Width, Obj.circleObj.pos(i).Y * scr.Height)
+            Dim radius As Integer = Obj.circleObj.size(i) * scr.Width / 2
+            Dim thickness = 1
+
+            Dim left = Math.Max(0, center.X - radius)
+            Dim top = Math.Max(0, center.Y - radius)
+            Dim right = Math.Min(grayImage.Width, center.X + radius)
+            Dim bottom = Math.Min(grayImage.Height, center.Y + radius)
+
+            For y As Integer = top To bottom - 1
+                For x As Integer = left To right - 1
+                    'offset to center
+                    Dim virtX = x - center.X
+                    Dim virtY = y - center.Y
+
+                    If Math.Sqrt(virtX * virtX + virtY * virtY) <= radius Then
+                        grayImage.Data(y, x, 0) = 128
+                    End If
+
+                Next
+            Next
+
+            'CvInvoke.Circle(grayImage, center, radius, color.MCvScalar, thickness, Emgu.CV.CvEnum.LineType.Filled, 0);
+
+        Next
+
+        'counts the pixels in white region and convert gray to bgr
+
+        Dim color_circle = New Bgr(Drawing.Color.Red)
+        Dim color_black = New Bgr(Drawing.Color.Black)
+
+        Dim color_data = colorImage.Data
+        Dim gray_data = grayImage.Data
+
+        ' Assign color to each pixel
+        For y = 0 To colorImage.Height - 1
+            For x = 0 To colorImage.Width - 1
+                If gray_data(y, x, 0) = 255 Then
+                    area_white += 1
+                ElseIf gray_data(y, x, 0) = 128 Then
+                    color_data(y, x, 0) = 0
+                    color_data(y, x, 1) = 0
+                    color_data(y, x, 2) = 255
+                    area_cir += 1
+                Else
+                    color_data(y, x, 0) = 0
+                    color_data(y, x, 1) = 0
+                    color_data(y, x, 2) = 0
+                    area_black += 1
+                End If
+            Next
+        Next
+
+
+        percent_white = Math.Round(area_white * 100 / (grayImage.Width * grayImage.Height), 2)
+        percent_black = Math.Round((grayImage.Height * grayImage.Width - area_white - area_cir) * 100 / (grayImage.Height * grayImage.Width), 2)
+
+        Dim array As Byte() = colorImage.ToJpegData()
+
+        grayImage.Dispose()
+        colorImage.Dispose()
+
+        Dim stream As MemoryStream = New MemoryStream(array)
+        Dim img = Image.FromStream(stream)
+
+        Return img
+    End Function
+
+    ''' <summary>
+    ''' Segment Remaing Image into Black and White.
+    ''' </summary>
+    ''' <paramname="src">The source image.</param>
+    ''' <paramname="thr_seg">The threshold for segmentation into black and white.</param>
+
+    Public Function GetEdgeFromBinary(ByVal scr As Image, ByVal thr_seg As Integer) As Image
+        'inputImage type is System.Drawing.Image
+
+        Dim bmpImage As Bitmap = New Bitmap(scr)
+        Dim colorImage As Emgu.CV.Image(Of Bgr, Byte) = bmpImage.ToImage(Of Bgr, Byte)()
+        bmpImage.Dispose()
+
+        Dim grayImage As Emgu.CV.Image(Of Gray, Byte) = colorImage.Convert(Of Gray, Byte)()
+
+        'ImageView.imshow(grayImage);
+        CvInvoke.Threshold(grayImage, grayImage, thr_seg, 255, CvEnum.ThresholdType.Binary)
+
+        Dim tempimg As Emgu.CV.Image(Of Emgu.CV.Structure.Gray, Byte) = grayImage
+        CvInvoke.MedianBlur(grayImage, grayImage, 3)
+        'Emgu.CV.CvInvoke.Imshow("original image", cropped)
+        CvInvoke.Canny(grayImage, tempimg, 100, 200)
+
+        Dim array As Byte() = tempimg.ToJpegData()
+
+        colorImage.Dispose()
+        grayImage.Dispose()
+        tempimg.Dispose()
+
+        Dim stream As MemoryStream = New MemoryStream(array)
+        Dim img = Image.FromStream(stream)
+
+        Return img
+    End Function
+
+    ''' <summary>
+    ''' Colour third thresholded region as green.
+    ''' </summary>
+    ''' <paramname="src">The source image.</param>
+    ''' <paramname="thr_seg">The threshold for segmentation into black and white.</param>
+    ''' <paramname="circles">The List for center points and size of circles.</param>
+    ''' <paramname="percent_black">The percentage of black area.</param>
+    ''' <paramname="percent_white">The percentage of white area.</param>
+
+    Public Function ColourThirdRegion(ByVal scr As Image, ByVal thr_seg As Integer, ByVal circles As List(Of Integer()), ByRef percent_black As Integer, ByRef percent_white As Integer) As Image
+        'inputImage type is System.Drawing.Image
+
+        Dim bmpImage As Bitmap = New Bitmap(scr)
+        Dim colorImage As Emgu.CV.Image(Of Bgr, Byte) = bmpImage.ToImage(Of Bgr, Byte)()
+        bmpImage.Dispose()
+
+        Dim grayImage As Emgu.CV.Image(Of Gray, Byte) = colorImage.Convert(Of Gray, Byte)()
+
+        'ImageView.imshow(grayImage);
+        CvInvoke.Threshold(grayImage, grayImage, thr_seg, 255, CvEnum.ThresholdType.Binary)
+
+
+        Dim area_cir = 0
+        Dim area_black = 0
+        Dim area_white = 0
+        Dim color = New Bgr(Drawing.Color.Gray)
+
+        For i = 0 To circles.Count - 1
+            Dim circle = circles(i)
+            Dim center = New Point(circle(1), circle(2))
+            Dim radius = circle(3) / 2
+            Dim thickness = 1
+            Dim area = radius * radius * Math.PI
+            area_cir += CInt(area)
+
+            Dim left = Math.Max(0, center.X - radius)
+            Dim top = Math.Max(0, center.Y - radius)
+            Dim right = Math.Min(grayImage.Width, center.X + radius)
+            Dim bottom = Math.Min(grayImage.Height, center.Y + radius)
+
+            For y As Integer = top To bottom - 1
+                For x As Integer = left To right - 1
+                    'offset to center
+                    Dim virtX = x - center.X
+                    Dim virtY = y - center.Y
+
+                    If Math.Sqrt(virtX * virtX + virtY * virtY) <= radius Then
+                        grayImage.Data(y, x, 0) = 128
+                    End If
+
+                Next
+            Next
+
+            'CvInvoke.Circle(grayImage, center, radius, color.MCvScalar, thickness, Emgu.CV.CvEnum.LineType.Filled, 0);
+
+        Next
+
+        'counts the pixels in white region and convert gray to bgr
+
+        Dim color_circle = New Bgr(Drawing.Color.Red)
+        Dim color_black = New Bgr(Drawing.Color.Black)
+
+        Dim color_data = colorImage.Data
+        Dim gray_data = grayImage.Data
+
+        ' Assign color to each pixel
+        For y = 0 To colorImage.Height - 1
+            For x = 0 To colorImage.Width - 1
+                If gray_data(y, x, 0) = 255 Then
+                    area_white += 1
+                    color_data(y, x, 0) = 0
+                    color_data(y, x, 1) = 255
+                    color_data(y, x, 2) = 0
+                ElseIf gray_data(y, x, 0) = 128 Then
+                    color_data(y, x, 0) = 0
+                    color_data(y, x, 1) = 0
+                    color_data(y, x, 2) = 255
+                Else
+                    color_data(y, x, 0) = 0
+                    color_data(y, x, 1) = 0
+                    color_data(y, x, 2) = 0
+                End If
+            Next
+        Next
+
+
+        percent_white = area_white * 100 / (grayImage.Width * grayImage.Height)
+        percent_black = (grayImage.Height * grayImage.Width - area_white - area_cir) * 100 / (grayImage.Height * grayImage.Width)
+
+        Dim array As Byte() = colorImage.ToJpegData()
+
+        grayImage.Dispose()
+        colorImage.Dispose()
+
+        Dim stream As MemoryStream = New MemoryStream(array)
+        Dim img = Image.FromStream(stream)
+
+        Return img
+    End Function
+
+
+
+    ''' <summary>
+    ''' Subtract Circles from Image.
+    ''' </summary>
+    ''' <paramname="scr">The source image.</param>
+    ''' <paramname="Obj">The object containing circles.</param>
+    ''' <paramname="percentage">The percentage of circles.</param>
+
+    Public Function SubtractCircles(ByVal src As Image, ByVal Obj As SegObject, ByRef percentage As Double) As Image
+        'inputImage type is System.Drawing.Image
+
+        Dim bitmapImage As Bitmap = New Bitmap(src)
+
+        Dim rectangle As Rectangle = New Rectangle(0, 0, bitmapImage.Width, bitmapImage.Height) 'System.Drawing
+        Dim bmpData = bitmapImage.LockBits(rectangle, ImageLockMode.ReadWrite, bitmapImage.PixelFormat) 'System.Drawing.Imaging
+
+        'outputImage type is Emgu.CV.Image
+        Dim outputImage As Emgu.CV.Image(Of Bgra, Byte) = New Emgu.CV.Image(Of Bgra, Byte)(bitmapImage.Width, bitmapImage.Height, bmpData.Stride, bmpData.Scan0) '(IntPtr)
+        bitmapImage.UnlockBits(bmpData)
+
+        'ImageView.imShow(outputImage);
+        'subtract pixels in image by set its value to 128
+        Dim area_cir = 0
+
+        For i = 0 To Obj.circleObj.Cnt - 1
+            Dim center = New Point(Obj.circleObj.pos(i).X * src.Width, Obj.circleObj.pos(i).Y * src.Height)
+            Dim radius As Integer = Obj.circleObj.size(i) * src.Width / 2
+            Dim color = New Bgra(0, 0, 255, 128)
+            Dim thickness = 1
+            Dim area = Math.PI * radius * radius
+            area_cir += CInt(area)
+
+            Dim left = Math.Max(0, center.X - radius)
+            Dim top = Math.Max(0, center.Y - radius)
+            Dim right = Math.Min(bitmapImage.Width, center.X + radius)
+            Dim bottom = Math.Min(bitmapImage.Height, center.Y + radius)
+
+            For y As Integer = top To bottom - 1
+                For x As Integer = left To right - 1
+                    'offset to center
+                    Dim virtX = x - center.X
+                    Dim virtY = y - center.Y
+
+                    If Math.Sqrt(virtX * virtX + virtY * virtY) <= radius Then
+                        'data[y, x, 0] = 128;
+                        'data[y, x, 1] = 128;
+                        'data[y, x, 2] = 128;
+                        outputImage(y, x) = color
+                    End If
+
+                Next
+            Next
+
+        Next
+
+        Dim array As Byte() = outputImage.ToJpegData()
+        outputImage.Dispose()
+        percentage = Math.Round(area_cir * 100 / (bitmapImage.Width * bitmapImage.Height), 2)
+
+        Dim stream As MemoryStream = New MemoryStream(array)
+        Dim img = Image.FromStream(stream)
+
+        Return img
+
+    End Function
+
+    ''' <summary>
+    ''' Hightlight the Circle which is clicked.
+    ''' </summary>
+    ''' <paramname="scr">The source image.</param>
+    ''' <paramname="point">The point that mouse cursor indicates.</param>
+    ''' <paramname="circles">The List includes the center points and size of circles.</param>
+    ''' <paramname="index">The index of circles which is selected.</param>
+
+    Public Function HighlightCircle(ByVal scr As Image, ByVal point As Point, ByVal circles As List(Of Integer()), ByRef index As Integer) As Image
+        'inputImage type is System.Drawing.Image
+
+        Dim bitmapImage As Bitmap = New Bitmap(scr)
+
+        Dim rectangle As Rectangle = New Rectangle(0, 0, bitmapImage.Width, bitmapImage.Height) 'System.Drawing
+        Dim bmpData = bitmapImage.LockBits(rectangle, ImageLockMode.ReadWrite, bitmapImage.PixelFormat) 'System.Drawing.Imaging
+
+        'outputImage type is Emgu.CV.Image
+        Dim outputImage As Emgu.CV.Image(Of Bgra, Byte) = New Emgu.CV.Image(Of Bgra, Byte)(bitmapImage.Width, bitmapImage.Height, bmpData.Stride, bmpData.Scan0)
+        bitmapImage.UnlockBits(bmpData)
+
+        'find the index of circles
+        For i = 0 To circles.Count - 1
+            Dim circle = circles(i)
+            Dim radius = circle(3) / 2
+            Dim left As Integer = Math.Max(circle(1) - radius, 0)
+            Dim top As Integer = Math.Max(circle(2) - radius, 0)
+            Dim right As Integer = Math.Min(circle(1) + radius, bitmapImage.Width - 1)
+            Dim bottom As Integer = Math.Min(circle(2) + radius, bitmapImage.Height - 1)
+
+            If point.X > left AndAlso point.X < right AndAlso point.Y > top AndAlso point.Y < bottom Then
+                index = i
+                Exit For
+            End If
+        Next
+
+        If index >= 0 Then
+            Dim circle = circles(index)
+            Dim center = New Point(circle(1), circle(2))
+            Dim color = New Bgr(Drawing.Color.Blue)
+            Dim size = circle(3)
+            Dim radius = circle(3) / 2
+            Dim thickness = 2
+
+            CvInvoke.Circle(outputImage, center, radius, color.MCvScalar, thickness, CvEnum.LineType.FourConnected, 0)
+        End If
+
+        'ImageView.imshow(outputImage);
+        Dim array As Byte() = outputImage.ToJpegData()
+        outputImage.Dispose()
+
+        Dim stream As MemoryStream = New MemoryStream(array)
+        Dim img = Image.FromStream(stream)
+
+        Return img
+    End Function
+
+    ''' <summary>
+    ''' Combine the original image and segmented image.
+    ''' </summary>
+    ''' <paramname="ori">The original image.</param>
+    ''' <paramname="segmented">The segmented image.</param>
+    ''' <paramname="trans">The transparent of segmented image.</param>
+
+    Public Function CombineOriAndSeg(ByVal ori As Image, ByVal segmented As Image, ByVal trans As Integer) As Image
+
+        Dim bmpImage As Bitmap = New Bitmap(ori)
+        Dim ori_Image As Emgu.CV.Image(Of Bgr, Byte) = bmpImage.ToImage(Of Bgr, Byte)()
+        bmpImage.Dispose()
+
+        Dim bmpImage2 As Bitmap = New Bitmap(segmented)
+        Dim seg_Image As Emgu.CV.Image(Of Bgr, Byte) = bmpImage2.ToImage(Of Bgr, Byte)()
+        bmpImage2.Dispose()
+
+        'ImageView.imshow(ori_Image);
+        'ImageView.imShow(seg_Image);
+
+        ' Data, it's faster not to iterate over a property
+        Dim data = ori_Image.Data
+        Dim pixels = seg_Image.Data
+
+        ' Assign color to each pixel
+        For y = 0 To ori_Image.Height - 1
+            For x = 0 To ori_Image.Width - 1
+                Dim xImg = x
+                Dim yImg = y
+                Dim alphaLay = CSng(trans) / 100
+                Dim alphaImg = 1 - alphaLay
+
+                data(yImg, xImg, 0) = CByte(pixels(y, x, 0) * alphaLay + data(yImg, xImg, 0) * alphaImg)
+                data(yImg, xImg, 1) = CByte(pixels(y, x, 1) * alphaLay + data(yImg, xImg, 1) * alphaImg)
+                data(yImg, xImg, 2) = CByte(pixels(y, x, 2) * alphaLay + data(yImg, xImg, 2) * alphaImg)
+                'data[yImg, xImg, 3] = (byte)((alphaLay == data[yImg, xImg, 3] && alphaLay == 0) ? 0 : 255);
+            Next
+        Next
+
+        'ImageView.imshow(ori_Image);
+        Dim array As Byte() = ori_Image.ToJpegData()
+        ori_Image.Dispose()
+        seg_Image.Dispose()
+
+        Dim stream As MemoryStream = New MemoryStream(array)
+        Dim img = Image.FromStream(stream)
+
+        Return img
+    End Function
+
+    ''' <summary>
+    ''' Overlap segmented image up to Original Image.
+    ''' </summary>
+    ''' <paramname="ori">The original image.</param>
+    ''' <paramname="segmented">The segmented image.</param>
+
+    Public Function OverLapSegToOri(ByVal ori As Image, ByVal segmented As Image) As Image
+
+        Dim bmpImage As Bitmap = New Bitmap(ori)
+        Dim ori_Image As Emgu.CV.Image(Of Bgr, Byte) = bmpImage.ToImage(Of Bgr, Byte)()
+        bmpImage.Dispose()
+
+        Dim bmpImage2 As Bitmap = New Bitmap(segmented)
+        Dim seg_Image As Emgu.CV.Image(Of Gray, Byte) = bmpImage2.ToImage(Of Gray, Byte)()
+        bmpImage2.Dispose()
+
+        'ImageView.imshow(ori_Image);
+        'ImageView.imShow(seg_Image);
+
+        ' Data, it's faster not to iterate over a property
+        Dim data = ori_Image.Data
+        Dim pixels = seg_Image.Data
+
+        ' Assign color to each pixel
+        For y = 0 To ori_Image.Height - 1
+            For x = 0 To ori_Image.Width - 1
+                Dim xImg = x
+                Dim yImg = y
+                If pixels(yImg, xImg, 0) > 128 Then
+                    data(yImg, xImg, 0) = 0
+                    data(yImg, xImg, 1) = 0
+                    data(yImg, xImg, 2) = 255
+                End If
+            Next
+        Next
+
+        'ImageView.imshow(ori_Image);
+        Dim array As Byte() = ori_Image.ToJpegData()
+        ori_Image.Dispose()
+        seg_Image.Dispose()
+
+        Dim stream As MemoryStream = New MemoryStream(array)
+        Dim img = Image.FromStream(stream)
+
+        Return img
+    End Function
+
+    ''' <summary>
+    ''' Convert RGB to Gray.
+    ''' </summary>
+    ''' <paramname="buf">The RGB image.</param>
+    Public Function getGrayScale(ByVal buf As Emgu.CV.Image(Of Emgu.CV.Structure.Bgr, Byte)) As Emgu.CV.Image(Of Emgu.CV.Structure.Gray, Byte)
+
+        Dim gray As Emgu.CV.Image(Of Emgu.CV.Structure.Gray, Byte) = buf.Convert(Of Gray, Byte)()
+
+        Return gray
+    End Function
+
+    ''' <summary>
+    ''' draw progress to picturebox.
+    ''' </summary>
+    ''' <paramname="pictureBox">The picturebox for drawing.</param>
+    ''' <paramname="PhaseVal">The list of phase values.</param>
+    ''' <paramname="PhaseCol">The list of colors for each phase.</param>
+    Public Sub DrawProcess(pictureBox As PictureBox, PhaseVal As List(Of Integer), PhaseCol As List(Of String))
+        pictureBox.Refresh()
+        Dim g As Graphics = pictureBox.CreateGraphics()
+        Dim drawSt As Integer
+        Dim drawEnd As Integer
+        For i = 0 To PhaseCol.Count - 1
+            drawEnd = PhaseVal(i + 1) * pictureBox.Width / 255
+            drawSt = PhaseVal(i) * pictureBox.Width / 255
+            Dim brush As Brush = New SolidBrush(Color.FromName(PhaseCol(i)))
+            g.FillRectangle(brush, New Rectangle(drawSt, 0, drawEnd - drawSt, pictureBox.Height))
+            brush.Dispose()
+        Next
+
+        g.Dispose()
+    End Sub
+
+    ''' <summary>
+    ''' show multi segmentation.
+    ''' </summary>
+    ''' <paramname="ori">The original image.</param>
+    ''' <paramname="PhaseVal">The list of phase values.</param>
+    ''' <paramname="PhaseCol">The list of colors for each phase.</param>
+    ''' <paramname="PhaseArea">The list of areas for each phase.</param>
+    Public Function MultiSegment(ori As Image, PhaseVal As List(Of Integer), PhaseCol As List(Of String), PhaseArea As List(Of Integer), PhaseSel As List(Of Integer), FirstPt As Point, SecondPt As Point, flag As Boolean) As Image
+        PhaseArea.Clear()
+        For i = 0 To PhaseCol.Count - 1
+            PhaseArea.Add(0)
+        Next
+        Dim bmpImage As Bitmap = New Bitmap(ori)
+        Dim colorImage As Emgu.CV.Image(Of Bgr, Byte) = bmpImage.ToImage(Of Bgr, Byte)()
+        bmpImage.Dispose()
+
+        Dim grayImage = getGrayScale(colorImage)
+        Dim color = colorImage.Data
+        Dim gray = grayImage.Data
+
+        Dim startX = 0
+        Dim endX = colorImage.Width - 1
+        Dim startY = 0
+        Dim endY = colorImage.Height - 1
+        If flag Then
+            startX = FirstPt.X
+            endX = SecondPt.X
+            startY = FirstPt.Y
+            endY = SecondPt.Y
+        End If
+        For y = startY To endY
+            For x = startX To endX
+                For i = 0 To PhaseCol.Count - 1
+                    Dim brushCol As Color = System.Drawing.Color.FromName(PhaseCol(i))
+                    If gray(y, x, 0) < PhaseVal(i + 1) And gray(y, x, 0) >= PhaseVal(i) Then
+                        If PhaseSel(i) = 1 Then
+                            color(y, x, 0) = brushCol.B
+                            color(y, x, 1) = brushCol.G
+                            color(y, x, 2) = brushCol.R
+                        End If
+                        PhaseArea(i) += 1
+                    End If
+                Next
+            Next
+        Next
+        Dim array As Byte() = colorImage.ToJpegData()
+        colorImage.Dispose()
+        grayImage.Dispose()
+
+        Dim stream As MemoryStream = New MemoryStream(array)
+        Dim img = Image.FromStream(stream)
+
+        Return img
+    End Function
+
+    Public Function GetImageFromEmgu(ori As Emgu.CV.Image(Of Bgr, Byte)) As Image
+        Dim array As Byte() = ori.ToJpegData()
+        ori.Dispose()
+        Dim stream As MemoryStream = New MemoryStream(array)
+        Dim img = Image.FromStream(stream)
+
+        Return img
+    End Function
+
+    Public Function GetImageFromEmgu(ori As Emgu.CV.Image(Of Gray, Byte)) As Image
+        Dim array As Byte() = ori.ToJpegData()
+        ori.Dispose()
+        Dim stream As MemoryStream = New MemoryStream(array)
+        Dim img = Image.FromStream(stream)
+
+        Return img
+    End Function
+
+    Public Function GetBinaryWith2Thr(ori As Emgu.CV.Image(Of Gray, Byte), min As Integer, max As Integer) As Emgu.CV.Image(Of Gray, Byte)
+        Dim ResImg = ori.CopyBlank()
+        Dim ScrData = ori.Data
+        Dim ResData = ResImg.Data
+
+        For y = 0 To ResImg.Height - 1
+            For x = 0 To ResImg.Width - 1
+                If ScrData(y, x, 0) > min And ScrData(y, x, 0) < max Then
+                    ResData(y, x, 0) = 255
+                End If
+            Next
+        Next
+
+        Return ResImg
+    End Function
+
+    ''' <summary>
+    ''' Get current phase segmentation from mouse click.
+    ''' </summary>
+    ''' <paramname="ori">The original image.</param>
+    ''' <paramname="mPt">The position of mouse clicked.</param>
+    ''' <paramname="PhaseVal">The list of phase values.</param>
+    Public Function GetCurrentSelPhase(ori As Emgu.CV.Image(Of Gray, Byte), mPt As PointF, PhaseVal As List(Of Integer)) As Integer
+        Dim pos = New Point(mPt.X * ori.Width, mPt.Y * ori.Height)
+        Dim intensity = ori.Data(pos.Y, pos.X, 0)
+        For i = 0 To PhaseVal.Count - 2
+            If intensity > PhaseVal(i) And intensity < PhaseVal(i + 1) Then
+                Return i
+            End If
+        Next
+        Return 0
+    End Function
+
+
+    Public Function blur(ByVal buf As Emgu.CV.Image(Of Emgu.CV.Structure.Gray, Byte)) As Emgu.CV.Image(Of Emgu.CV.Structure.Gray, Byte)
+        Dim tempimg As Emgu.CV.Image(Of Emgu.CV.Structure.Gray, Byte) = buf
+        Emgu.CV.CvInvoke.GaussianBlur(buf, tempimg, New Size(5, 5), 0)
+        Return tempimg
+    End Function
+
+
+    ''' <summary>
+    ''' Identify blobs.
+    ''' </summary>
+    ''' <paramname="scr">The source image.</param>
+    ''' <paramname="BinaryImg">The binary image.</param>
+    ''' <paramname="ObjList">The object to contain information for blobs.</param>
+    Public Function BlobDetection(colorImage As Emgu.CV.Image(Of Bgr, Byte), BinaryImg As Emgu.CV.Image(Of Gray, Byte), ObjList As List(Of BlobObj), minArea As Single, Optional minRound As Single = 0, Optional maxRound As Single = 1) As Emgu.CV.Image(Of Bgr, Byte)
+
+        Dim contours As New VectorOfVectorOfPoint()
+
+        CvInvoke.FindContours(BinaryImg, contours, Nothing, RetrType.Tree, ChainApproxMethod.ChainApproxSimple)
+        Dim totalArea = colorImage.Width * colorImage.Height
+        Dim maxArea = totalArea / 4
+
+        Dim ResultImg = colorImage.Copy()
+        Dim perimeter, area, circularity, width, height, roundness As Double
+        Dim minX, maxX, minY, maxY As Integer
+        Dim Obj As BlobObj = New BlobObj
+        For i = 0 To contours.Size - 1
+            Dim contour = contours(i)
+            perimeter = CvInvoke.ArcLength(contour, True)
+            area = CvInvoke.ContourArea(contour, False)
+            If area > maxArea Or area < minArea Then
+                Continue For
+            End If
+            circularity = Math.Pow(perimeter, 2) / (4 * Math.PI * area)
+            minX = 9999999
+            minY = 9999999
+            maxX = 0
+            maxY = 0
+            Dim pts As Point() = New Point(contour.Size - 1) {}
+            For j = 0 To contour.Size - 1
+                Dim point = contour(j)
+                If point.X < minX Then minX = point.X
+                If point.X > maxX Then maxX = point.X
+                If point.Y < minY Then minY = point.Y
+                If point.Y > maxY Then maxY = point.Y
+                pts(j) = point
+            Next
+            width = maxX - minX
+            height = maxY - minY
+            roundness = Math.Round(4 * Math.PI * area / (perimeter * perimeter), 2)
+
+            If roundness > minRound And roundness < maxRound Then
+                Obj.Area = Math.Round(area, 2)
+                Obj.Perimeter = Math.Round(perimeter, 2)
+                Obj.height = height
+                Obj.Width = width
+                Obj.topLeft = New PointF(minX / CDbl(colorImage.Width), minY / CDbl(colorImage.Height))
+                Obj.rightBottom = New PointF(maxX / CDbl(colorImage.Width), maxY / CDbl(colorImage.Height))
+                Obj.roundness = roundness
+                ObjList.Add(Obj)
+
+                ResultImg.FillConvexPoly(pts, New Bgr(0, 0, 255), LineType.EightConnected)
+            Else
+                ResultImg.FillConvexPoly(pts, New Bgr(255, 0, 0), LineType.EightConnected)
+            End If
+
+            'colorImage.DrawPolyline(pts, True, New Bgr(0, 0, 255))
+
+        Next
+
+        Return ResultImg
+    End Function
+
+    Public Sub DrawLabelForCount(g As Graphics, pic As PictureBox, ObjList As List(Of BlobObj), font As Font)
+        Dim graphBrush As SolidBrush = New SolidBrush(Color.Black)
+        Dim width = pic.Width
+        Dim Height = pic.Height
+        For i = 0 To ObjList.Count - 1
+            Dim Obj = ObjList(i)
+            Dim pos = New Point((Obj.topLeft.X + Obj.rightBottom.X) * width / 2, (Obj.topLeft.Y + Obj.rightBottom.Y) * Height / 2)
+            g.DrawString((i + 1).ToString(), font, graphBrush, pos)
+        Next
+        graphBrush.Dispose()
+    End Sub
+    Public Sub DrawLabelForCount(pic As PictureBox, ObjList As List(Of BlobObj), font As Font)
+        pic.Refresh()
+        Dim g = pic.CreateGraphics()
+        DrawLabelForCount(g, pic, ObjList, font)
+        g.Dispose()
+    End Sub
+
+    Public Function InvertBinary(BinaryImg As Emgu.CV.Image(Of Gray, Byte)) As Emgu.CV.Image(Of Gray, Byte)
+        Dim Scrdata = BinaryImg.Data
+
+        Dim output = BinaryImg.CopyBlank()
+        Dim outData = output.Data
+
+        For y = 0 To BinaryImg.Height - 1
+            For x = 0 To BinaryImg.Width - 1
+                If Scrdata(y, x, 0) > 128 Then
+                    outData(y, x, 0) = 0
+                Else
+                    outData(y, x, 0) = 255
+                End If
+            Next
+        Next
+
+        Return output
+    End Function
+
+#End Region
 End Module
 

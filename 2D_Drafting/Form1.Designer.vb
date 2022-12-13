@@ -25,41 +25,15 @@ Partial Class Main_Form
         Me.components = New System.ComponentModel.Container()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FILEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ID_MENU_OPEN_CAM = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ID_MENU_CLOSE_CAM = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ID_MENU_OPEN = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ID_MENU_SAVE = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ID_MENU_SAVE_XLSX = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ID_MENU_EXPORT_REPORT = New System.Windows.Forms.ToolStripMenuItem()
         Me.ID_MENU_TO_CURVES = New System.Windows.Forms.ToolStripMenuItem()
         Me.ID_MENU_EXIT = New System.Windows.Forms.ToolStripMenuItem()
         Me.VIEWToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ZOOMINToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ZOOMOUTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MEASUREToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.LINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HORIZONTALLINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.VERTICALLINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PARALLELLINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ANGLETHROUGHTHREEPOINTSToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ANGLETHROUGHTWOLINESToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ARCToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ANNOTATIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LINEOFFIXEDLENGTHToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.FIXEDANGLEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TOOLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.UNDOToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RESELECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ADDTAGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.REMOVETAGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DRAWOBJECTSToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.LINEToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.POLYGENToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.POINTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CURVEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CURVEPOLYGENToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SELECTOBJECTSToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EDGEDETECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MOVELINEOBJECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -77,31 +51,8 @@ Partial Class Main_Form
         Me.MinCalcBtn = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.ID_BTN_C_SEL = New System.Windows.Forms.Button()
-        Me.ID_BTN_C_CUPOLY = New System.Windows.Forms.Button()
-        Me.ID_BTN_C_CURVE = New System.Windows.Forms.Button()
-        Me.ID_BTN_C_POINT = New System.Windows.Forms.Button()
-        Me.ID_BTN_C_POLY = New System.Windows.Forms.Button()
-        Me.ID_BTN_C_LINE = New System.Windows.Forms.Button()
-        Me.ID_BTN_TAB_REMOVE = New System.Windows.Forms.Button()
-        Me.ID_BTN_TAB_ADD = New System.Windows.Forms.Button()
-        Me.ID_BTN_RESEL = New System.Windows.Forms.Button()
-        Me.ID_BTN_UNDO = New System.Windows.Forms.Button()
-        Me.ID_BTN_ZOOM_OUT = New System.Windows.Forms.Button()
-        Me.ID_BTN_ZOON_IN = New System.Windows.Forms.Button()
-        Me.ID_BTN_BRIGHTNESS = New System.Windows.Forms.Button()
         Me.ID_CHECK_SIDE = New System.Windows.Forms.CheckBox()
         Me.ID_GROUP_BOX_CONTROL = New System.Windows.Forms.GroupBox()
-        Me.ID_BTN_SCALE = New System.Windows.Forms.Button()
-        Me.ID_BTN_P_LINE = New System.Windows.Forms.Button()
-        Me.ID_BTN_PENCIL = New System.Windows.Forms.Button()
-        Me.ID_BTN_ANNOTATION = New System.Windows.Forms.Button()
-        Me.ID_BTN_RADIUS = New System.Windows.Forms.Button()
-        Me.ID_BTN_ANGLE = New System.Windows.Forms.Button()
-        Me.ID_BTN_ARC = New System.Windows.Forms.Button()
-        Me.ID_BTN_LINE_PARA = New System.Windows.Forms.Button()
-        Me.ID_BTN_LINE_VER = New System.Windows.Forms.Button()
-        Me.ID_BTN_LINE_HOR = New System.Windows.Forms.Button()
-        Me.ID_BTN_LINE_ALIGN = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Btn_CameraProperties = New System.Windows.Forms.Button()
         Me.btn_delete = New System.Windows.Forms.Button()
@@ -112,15 +63,11 @@ Partial Class Main_Form
         Me.btn_live = New System.Windows.Forms.Button()
         Me.ID_BTN_CLEAR_ALL = New System.Windows.Forms.Button()
         Me.ID_LISTVIEW_IMAGE = New System.Windows.Forms.ListView()
-        Me.ID_PICTURE_BOX_CAM = New System.Windows.Forms.PictureBox()
         Me.ID_BTN_CAPTURE = New System.Windows.Forms.Button()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.ID_COMBOBOX_CF = New System.Windows.Forms.ComboBox()
-        Me.ID_BTN_TEXT_FONT = New System.Windows.Forms.Button()
-        Me.ID_BTN_TEXT_COL_PICKER = New System.Windows.Forms.Button()
         Me.ID_BTN_TEXT_COL = New System.Windows.Forms.Button()
         Me.ID_COMBO_LINE_SHAPE = New System.Windows.Forms.ComboBox()
-        Me.ID_BTN_COL_PICKER = New System.Windows.Forms.Button()
         Me.ID_BTN_CUR_COL = New System.Windows.Forms.Button()
         Me.ID_NUM_LINE_WIDTH = New System.Windows.Forms.NumericUpDown()
         Me.ID_NUM_DIGIT = New System.Windows.Forms.NumericUpDown()
@@ -143,17 +90,76 @@ Partial Class Main_Form
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ID_STATUS_LABEL = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.CIRCLEDETECTIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.INTERSECTIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PHASESEGMENTATIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.COUNTCLASSIFICATIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PARTICIPLESIZEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.NODULARITYToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ID_BTN_TEXT_FONT = New System.Windows.Forms.Button()
+        Me.ID_BTN_TEXT_COL_PICKER = New System.Windows.Forms.Button()
+        Me.ID_BTN_COL_PICKER = New System.Windows.Forms.Button()
+        Me.ID_BTN_C_CUPOLY = New System.Windows.Forms.Button()
+        Me.ID_BTN_C_CURVE = New System.Windows.Forms.Button()
+        Me.ID_BTN_C_POINT = New System.Windows.Forms.Button()
+        Me.ID_BTN_C_POLY = New System.Windows.Forms.Button()
+        Me.ID_BTN_C_LINE = New System.Windows.Forms.Button()
+        Me.ID_BTN_TAB_REMOVE = New System.Windows.Forms.Button()
+        Me.ID_BTN_TAB_ADD = New System.Windows.Forms.Button()
+        Me.ID_BTN_RESEL = New System.Windows.Forms.Button()
+        Me.ID_BTN_UNDO = New System.Windows.Forms.Button()
+        Me.ID_BTN_ZOOM_OUT = New System.Windows.Forms.Button()
+        Me.ID_BTN_ZOON_IN = New System.Windows.Forms.Button()
+        Me.ID_BTN_BRIGHTNESS = New System.Windows.Forms.Button()
+        Me.ID_BTN_SCALE = New System.Windows.Forms.Button()
+        Me.ID_BTN_P_LINE = New System.Windows.Forms.Button()
+        Me.ID_BTN_PENCIL = New System.Windows.Forms.Button()
+        Me.ID_BTN_ANNOTATION = New System.Windows.Forms.Button()
+        Me.ID_BTN_RADIUS = New System.Windows.Forms.Button()
+        Me.ID_BTN_ANGLE = New System.Windows.Forms.Button()
+        Me.ID_BTN_ARC = New System.Windows.Forms.Button()
+        Me.ID_BTN_LINE_PARA = New System.Windows.Forms.Button()
+        Me.ID_BTN_LINE_VER = New System.Windows.Forms.Button()
+        Me.ID_BTN_LINE_HOR = New System.Windows.Forms.Button()
+        Me.ID_BTN_LINE_ALIGN = New System.Windows.Forms.Button()
+        Me.ID_MENU_OPEN_CAM = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ID_MENU_CLOSE_CAM = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ID_MENU_OPEN = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ID_MENU_SAVE = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ID_MENU_SAVE_XLSX = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ID_MENU_EXPORT_REPORT = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ZOOMINToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ZOOMOUTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HORIZONTALLINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.VERTICALLINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PARALLELLINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ANGLETHROUGHTHREEPOINTSToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ANGLETHROUGHTWOLINESToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ARCToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ANNOTATIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.UNDOToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RESELECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ADDTAGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.REMOVETAGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LINEToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.POLYGENToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.POINTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CURVEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CURVEPOLYGENToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ID_PICTURE_BOX_CAM = New System.Windows.Forms.PictureBox()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.ID_GROUP_BOX_CONTROL.SuspendLayout()
         Me.Panel2.SuspendLayout()
-        CType(Me.ID_PICTURE_BOX_CAM, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         CType(Me.ID_NUM_LINE_WIDTH, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ID_NUM_DIGIT, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ID_LISTVIEW, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.StatusStrip1.SuspendLayout()
+        CType(Me.ID_PICTURE_BOX_CAM, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -171,48 +177,6 @@ Partial Class Main_Form
         Me.FILEToolStripMenuItem.Name = "FILEToolStripMenuItem"
         Me.FILEToolStripMenuItem.Size = New System.Drawing.Size(40, 20)
         Me.FILEToolStripMenuItem.Text = "FILE"
-        '
-        'ID_MENU_OPEN_CAM
-        '
-        Me.ID_MENU_OPEN_CAM.Image = Global._2D_Drafting.My.Resources.Resources.import_camera
-        Me.ID_MENU_OPEN_CAM.Name = "ID_MENU_OPEN_CAM"
-        Me.ID_MENU_OPEN_CAM.Size = New System.Drawing.Size(160, 22)
-        Me.ID_MENU_OPEN_CAM.Text = "OPEN CAMERA"
-        '
-        'ID_MENU_CLOSE_CAM
-        '
-        Me.ID_MENU_CLOSE_CAM.Image = Global._2D_Drafting.My.Resources.Resources.close_camera
-        Me.ID_MENU_CLOSE_CAM.Name = "ID_MENU_CLOSE_CAM"
-        Me.ID_MENU_CLOSE_CAM.Size = New System.Drawing.Size(160, 22)
-        Me.ID_MENU_CLOSE_CAM.Text = "CLOSE CAMERA"
-        '
-        'ID_MENU_OPEN
-        '
-        Me.ID_MENU_OPEN.Image = Global._2D_Drafting.My.Resources.Resources.import_image
-        Me.ID_MENU_OPEN.Name = "ID_MENU_OPEN"
-        Me.ID_MENU_OPEN.Size = New System.Drawing.Size(160, 22)
-        Me.ID_MENU_OPEN.Text = "IMPORT IMAGE"
-        '
-        'ID_MENU_SAVE
-        '
-        Me.ID_MENU_SAVE.Image = Global._2D_Drafting.My.Resources.Resources.export_report
-        Me.ID_MENU_SAVE.Name = "ID_MENU_SAVE"
-        Me.ID_MENU_SAVE.Size = New System.Drawing.Size(160, 22)
-        Me.ID_MENU_SAVE.Text = "EXPORT IMAGE"
-        '
-        'ID_MENU_SAVE_XLSX
-        '
-        Me.ID_MENU_SAVE_XLSX.Image = Global._2D_Drafting.My.Resources.Resources.export_xlsx
-        Me.ID_MENU_SAVE_XLSX.Name = "ID_MENU_SAVE_XLSX"
-        Me.ID_MENU_SAVE_XLSX.Size = New System.Drawing.Size(160, 22)
-        Me.ID_MENU_SAVE_XLSX.Text = "EXPORT XLSX"
-        '
-        'ID_MENU_EXPORT_REPORT
-        '
-        Me.ID_MENU_EXPORT_REPORT.Image = Global._2D_Drafting.My.Resources.Resources.export_xlsx
-        Me.ID_MENU_EXPORT_REPORT.Name = "ID_MENU_EXPORT_REPORT"
-        Me.ID_MENU_EXPORT_REPORT.Size = New System.Drawing.Size(160, 22)
-        Me.ID_MENU_EXPORT_REPORT.Text = "EXPORT REPORT"
         '
         'ID_MENU_TO_CURVES
         '
@@ -233,89 +197,12 @@ Partial Class Main_Form
         Me.VIEWToolStripMenuItem.Size = New System.Drawing.Size(46, 20)
         Me.VIEWToolStripMenuItem.Text = "VIEW"
         '
-        'ZOOMINToolStripMenuItem
-        '
-        Me.ZOOMINToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_zoom_in
-        Me.ZOOMINToolStripMenuItem.Name = "ZOOMINToolStripMenuItem"
-        Me.ZOOMINToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
-        Me.ZOOMINToolStripMenuItem.Text = "ZOOM IN"
-        '
-        'ZOOMOUTToolStripMenuItem
-        '
-        Me.ZOOMOUTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_zoom_out
-        Me.ZOOMOUTToolStripMenuItem.Name = "ZOOMOUTToolStripMenuItem"
-        Me.ZOOMOUTToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
-        Me.ZOOMOUTToolStripMenuItem.Text = "ZOOM OUT"
-        '
         'MEASUREToolStripMenuItem
         '
         Me.MEASUREToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LINEToolStripMenuItem, Me.HORIZONTALLINEToolStripMenuItem, Me.VERTICALLINEToolStripMenuItem, Me.PARALLELLINEToolStripMenuItem, Me.ANGLETHROUGHTHREEPOINTSToolStripMenuItem, Me.ANGLETHROUGHTWOLINESToolStripMenuItem, Me.ARCToolStripMenuItem, Me.ANNOTATIONToolStripMenuItem, Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem, Me.ANGLEOFFIXEDDIAMETERToolStripMenuItem, Me.LINEOFFIXEDLENGTHToolStripMenuItem, Me.FIXEDANGLEToolStripMenuItem})
         Me.MEASUREToolStripMenuItem.Name = "MEASUREToolStripMenuItem"
         Me.MEASUREToolStripMenuItem.Size = New System.Drawing.Size(71, 20)
         Me.MEASUREToolStripMenuItem.Text = "MEASURE"
-        '
-        'LINEToolStripMenuItem
-        '
-        Me.LINEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_line_align
-        Me.LINEToolStripMenuItem.Name = "LINEToolStripMenuItem"
-        Me.LINEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
-        Me.LINEToolStripMenuItem.Text = "LINE"
-        '
-        'HORIZONTALLINEToolStripMenuItem
-        '
-        Me.HORIZONTALLINEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_line_hor
-        Me.HORIZONTALLINEToolStripMenuItem.Name = "HORIZONTALLINEToolStripMenuItem"
-        Me.HORIZONTALLINEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
-        Me.HORIZONTALLINEToolStripMenuItem.Text = "HORIZONTAL LINE"
-        '
-        'VERTICALLINEToolStripMenuItem
-        '
-        Me.VERTICALLINEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_line_ver
-        Me.VERTICALLINEToolStripMenuItem.Name = "VERTICALLINEToolStripMenuItem"
-        Me.VERTICALLINEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
-        Me.VERTICALLINEToolStripMenuItem.Text = "VERTICAL LINE"
-        '
-        'PARALLELLINEToolStripMenuItem
-        '
-        Me.PARALLELLINEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_line_par
-        Me.PARALLELLINEToolStripMenuItem.Name = "PARALLELLINEToolStripMenuItem"
-        Me.PARALLELLINEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
-        Me.PARALLELLINEToolStripMenuItem.Text = "PARALLEL LINE"
-        '
-        'ANGLETHROUGHTHREEPOINTSToolStripMenuItem
-        '
-        Me.ANGLETHROUGHTHREEPOINTSToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_angle
-        Me.ANGLETHROUGHTHREEPOINTSToolStripMenuItem.Name = "ANGLETHROUGHTHREEPOINTSToolStripMenuItem"
-        Me.ANGLETHROUGHTHREEPOINTSToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
-        Me.ANGLETHROUGHTHREEPOINTSToolStripMenuItem.Text = "ANGLE THROUGH THREE POINTS"
-        '
-        'ANGLETHROUGHTWOLINESToolStripMenuItem
-        '
-        Me.ANGLETHROUGHTWOLINESToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_angle_far
-        Me.ANGLETHROUGHTWOLINESToolStripMenuItem.Name = "ANGLETHROUGHTWOLINESToolStripMenuItem"
-        Me.ANGLETHROUGHTWOLINESToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
-        Me.ANGLETHROUGHTWOLINESToolStripMenuItem.Text = "ANGLE THROUGH TWO LINES"
-        '
-        'ARCToolStripMenuItem
-        '
-        Me.ARCToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_arc
-        Me.ARCToolStripMenuItem.Name = "ARCToolStripMenuItem"
-        Me.ARCToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
-        Me.ARCToolStripMenuItem.Text = "ARC"
-        '
-        'ANNOTATIONToolStripMenuItem
-        '
-        Me.ANNOTATIONToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_annotation
-        Me.ANNOTATIONToolStripMenuItem.Name = "ANNOTATIONToolStripMenuItem"
-        Me.ANNOTATIONToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
-        Me.ANNOTATIONToolStripMenuItem.Text = "ANNOTATION"
-        '
-        'DISTANCEFROMPOINTTOLINEToolStripMenuItem
-        '
-        Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_pt_line
-        Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem.Name = "DISTANCEFROMPOINTTOLINEToolStripMenuItem"
-        Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
-        Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem.Text = "DISTANCE FROM POINT TO LINE"
         '
         'ANGLEOFFIXEDDIAMETERToolStripMenuItem
         '
@@ -337,97 +224,34 @@ Partial Class Main_Form
         '
         'TOOLToolStripMenuItem
         '
-        Me.TOOLToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UNDOToolStripMenuItem, Me.RESELECTToolStripMenuItem, Me.ADDTAGToolStripMenuItem, Me.REMOVETAGToolStripMenuItem, Me.DRAWOBJECTSToolStripMenuItem, Me.SELECTOBJECTSToolStripMenuItem, Me.EDGEDETECTToolStripMenuItem, Me.MOVELINEOBJECTToolStripMenuItem})
+        Me.TOOLToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UNDOToolStripMenuItem, Me.RESELECTToolStripMenuItem, Me.ADDTAGToolStripMenuItem, Me.REMOVETAGToolStripMenuItem, Me.DRAWOBJECTSToolStripMenuItem, Me.SELECTOBJECTSToolStripMenuItem, Me.EDGEDETECTToolStripMenuItem, Me.MOVELINEOBJECTToolStripMenuItem, Me.CIRCLEDETECTIONToolStripMenuItem, Me.INTERSECTIONToolStripMenuItem, Me.PHASESEGMENTATIONToolStripMenuItem, Me.COUNTCLASSIFICATIONToolStripMenuItem, Me.PARTICIPLESIZEToolStripMenuItem, Me.NODULARITYToolStripMenuItem})
         Me.TOOLToolStripMenuItem.Name = "TOOLToolStripMenuItem"
         Me.TOOLToolStripMenuItem.Size = New System.Drawing.Size(48, 20)
         Me.TOOLToolStripMenuItem.Text = "TOOL"
-        '
-        'UNDOToolStripMenuItem
-        '
-        Me.UNDOToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_undo
-        Me.UNDOToolStripMenuItem.Name = "UNDOToolStripMenuItem"
-        Me.UNDOToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
-        Me.UNDOToolStripMenuItem.Text = "UNDO"
-        '
-        'RESELECTToolStripMenuItem
-        '
-        Me.RESELECTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_reset
-        Me.RESELECTToolStripMenuItem.Name = "RESELECTToolStripMenuItem"
-        Me.RESELECTToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
-        Me.RESELECTToolStripMenuItem.Text = "RESELECT"
-        '
-        'ADDTAGToolStripMenuItem
-        '
-        Me.ADDTAGToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_tab_add
-        Me.ADDTAGToolStripMenuItem.Name = "ADDTAGToolStripMenuItem"
-        Me.ADDTAGToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
-        Me.ADDTAGToolStripMenuItem.Text = "ADD TAB"
-        '
-        'REMOVETAGToolStripMenuItem
-        '
-        Me.REMOVETAGToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_tab_remove
-        Me.REMOVETAGToolStripMenuItem.Name = "REMOVETAGToolStripMenuItem"
-        Me.REMOVETAGToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
-        Me.REMOVETAGToolStripMenuItem.Text = "REMOVE TAB"
         '
         'DRAWOBJECTSToolStripMenuItem
         '
         Me.DRAWOBJECTSToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LINEToolStripMenuItem1, Me.POLYGENToolStripMenuItem, Me.POINTToolStripMenuItem, Me.CURVEToolStripMenuItem, Me.CURVEPOLYGENToolStripMenuItem})
         Me.DRAWOBJECTSToolStripMenuItem.Name = "DRAWOBJECTSToolStripMenuItem"
-        Me.DRAWOBJECTSToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.DRAWOBJECTSToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
         Me.DRAWOBJECTSToolStripMenuItem.Text = "DRAW OBJECTS"
-        '
-        'LINEToolStripMenuItem1
-        '
-        Me.LINEToolStripMenuItem1.Image = Global._2D_Drafting.My.Resources.Resources.menu_c_line
-        Me.LINEToolStripMenuItem1.Name = "LINEToolStripMenuItem1"
-        Me.LINEToolStripMenuItem1.Size = New System.Drawing.Size(161, 22)
-        Me.LINEToolStripMenuItem1.Text = "LINE"
-        '
-        'POLYGENToolStripMenuItem
-        '
-        Me.POLYGENToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_poly
-        Me.POLYGENToolStripMenuItem.Name = "POLYGENToolStripMenuItem"
-        Me.POLYGENToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
-        Me.POLYGENToolStripMenuItem.Text = "POLYGEN"
-        '
-        'POINTToolStripMenuItem
-        '
-        Me.POINTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_point
-        Me.POINTToolStripMenuItem.Name = "POINTToolStripMenuItem"
-        Me.POINTToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
-        Me.POINTToolStripMenuItem.Text = "POINT"
-        '
-        'CURVEToolStripMenuItem
-        '
-        Me.CURVEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_curve
-        Me.CURVEToolStripMenuItem.Name = "CURVEToolStripMenuItem"
-        Me.CURVEToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
-        Me.CURVEToolStripMenuItem.Text = "CURVE"
-        '
-        'CURVEPOLYGENToolStripMenuItem
-        '
-        Me.CURVEPOLYGENToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_CuPoly
-        Me.CURVEPOLYGENToolStripMenuItem.Name = "CURVEPOLYGENToolStripMenuItem"
-        Me.CURVEPOLYGENToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
-        Me.CURVEPOLYGENToolStripMenuItem.Text = "CURVE&POLYGEN"
         '
         'SELECTOBJECTSToolStripMenuItem
         '
         Me.SELECTOBJECTSToolStripMenuItem.Name = "SELECTOBJECTSToolStripMenuItem"
-        Me.SELECTOBJECTSToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.SELECTOBJECTSToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
         Me.SELECTOBJECTSToolStripMenuItem.Text = "SELECT OBJECTS"
         '
         'EDGEDETECTToolStripMenuItem
         '
         Me.EDGEDETECTToolStripMenuItem.Name = "EDGEDETECTToolStripMenuItem"
-        Me.EDGEDETECTToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.EDGEDETECTToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
         Me.EDGEDETECTToolStripMenuItem.Text = "EDGE DETECT"
         '
         'MOVELINEOBJECTToolStripMenuItem
         '
         Me.MOVELINEOBJECTToolStripMenuItem.Name = "MOVELINEOBJECTToolStripMenuItem"
-        Me.MOVELINEOBJECTToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.MOVELINEOBJECTToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
         Me.MOVELINEOBJECTToolStripMenuItem.Text = "MOVE LINE OBJECT"
         '
         'HELPToolStripMenuItem
@@ -569,138 +393,6 @@ Partial Class Main_Form
         Me.ToolTip1.SetToolTip(Me.ID_BTN_C_SEL, "Select objects")
         Me.ID_BTN_C_SEL.UseVisualStyleBackColor = False
         '
-        'ID_BTN_C_CUPOLY
-        '
-        Me.ID_BTN_C_CUPOLY.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_C_CUPOLY.Image = Global._2D_Drafting.My.Resources.Resources.C_cupoly
-        Me.ID_BTN_C_CUPOLY.Location = New System.Drawing.Point(95, 74)
-        Me.ID_BTN_C_CUPOLY.Name = "ID_BTN_C_CUPOLY"
-        Me.ID_BTN_C_CUPOLY.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_C_CUPOLY.TabIndex = 4
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_CUPOLY, "Draw a Polygen&Curve")
-        Me.ID_BTN_C_CUPOLY.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_C_CURVE
-        '
-        Me.ID_BTN_C_CURVE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_C_CURVE.Image = Global._2D_Drafting.My.Resources.Resources.C_curve
-        Me.ID_BTN_C_CURVE.Location = New System.Drawing.Point(31, 74)
-        Me.ID_BTN_C_CURVE.Name = "ID_BTN_C_CURVE"
-        Me.ID_BTN_C_CURVE.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_C_CURVE.TabIndex = 3
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_CURVE, "Draw a Curve")
-        Me.ID_BTN_C_CURVE.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_C_POINT
-        '
-        Me.ID_BTN_C_POINT.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_C_POINT.Image = Global._2D_Drafting.My.Resources.Resources.C_point
-        Me.ID_BTN_C_POINT.Location = New System.Drawing.Point(158, 19)
-        Me.ID_BTN_C_POINT.Name = "ID_BTN_C_POINT"
-        Me.ID_BTN_C_POINT.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_C_POINT.TabIndex = 2
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_POINT, "Draw a Point")
-        Me.ID_BTN_C_POINT.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_C_POLY
-        '
-        Me.ID_BTN_C_POLY.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_C_POLY.Image = Global._2D_Drafting.My.Resources.Resources.C_poly
-        Me.ID_BTN_C_POLY.Location = New System.Drawing.Point(95, 19)
-        Me.ID_BTN_C_POLY.Name = "ID_BTN_C_POLY"
-        Me.ID_BTN_C_POLY.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_C_POLY.TabIndex = 1
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_POLY, "Draw a Polygen")
-        Me.ID_BTN_C_POLY.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_C_LINE
-        '
-        Me.ID_BTN_C_LINE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_C_LINE.Image = Global._2D_Drafting.My.Resources.Resources.C_line
-        Me.ID_BTN_C_LINE.Location = New System.Drawing.Point(31, 19)
-        Me.ID_BTN_C_LINE.Name = "ID_BTN_C_LINE"
-        Me.ID_BTN_C_LINE.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_C_LINE.TabIndex = 0
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_LINE, "Draw a line")
-        Me.ID_BTN_C_LINE.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_TAB_REMOVE
-        '
-        Me.ID_BTN_TAB_REMOVE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_TAB_REMOVE.Image = Global._2D_Drafting.My.Resources.Resources.tab_remove
-        Me.ID_BTN_TAB_REMOVE.Location = New System.Drawing.Point(1135, 83)
-        Me.ID_BTN_TAB_REMOVE.Name = "ID_BTN_TAB_REMOVE"
-        Me.ID_BTN_TAB_REMOVE.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_TAB_REMOVE.TabIndex = 8
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_TAB_REMOVE, "Remove current tab page")
-        Me.ID_BTN_TAB_REMOVE.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_TAB_ADD
-        '
-        Me.ID_BTN_TAB_ADD.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_TAB_ADD.Image = Global._2D_Drafting.My.Resources.Resources.tab_add
-        Me.ID_BTN_TAB_ADD.Location = New System.Drawing.Point(1077, 83)
-        Me.ID_BTN_TAB_ADD.Name = "ID_BTN_TAB_ADD"
-        Me.ID_BTN_TAB_ADD.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_TAB_ADD.TabIndex = 7
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_TAB_ADD, "Add new tab page")
-        Me.ID_BTN_TAB_ADD.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_RESEL
-        '
-        Me.ID_BTN_RESEL.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_RESEL.Image = Global._2D_Drafting.My.Resources.Resources.reset
-        Me.ID_BTN_RESEL.Location = New System.Drawing.Point(1259, 28)
-        Me.ID_BTN_RESEL.Name = "ID_BTN_RESEL"
-        Me.ID_BTN_RESEL.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_RESEL.TabIndex = 6
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_RESEL, "Reselection")
-        Me.ID_BTN_RESEL.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_UNDO
-        '
-        Me.ID_BTN_UNDO.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_UNDO.Image = Global._2D_Drafting.My.Resources.Resources.undo
-        Me.ID_BTN_UNDO.Location = New System.Drawing.Point(1196, 28)
-        Me.ID_BTN_UNDO.Name = "ID_BTN_UNDO"
-        Me.ID_BTN_UNDO.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_UNDO.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_UNDO, "Undo")
-        Me.ID_BTN_UNDO.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_ZOOM_OUT
-        '
-        Me.ID_BTN_ZOOM_OUT.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_ZOOM_OUT.Image = Global._2D_Drafting.My.Resources.Resources.zoom_out
-        Me.ID_BTN_ZOOM_OUT.Location = New System.Drawing.Point(1135, 28)
-        Me.ID_BTN_ZOOM_OUT.Name = "ID_BTN_ZOOM_OUT"
-        Me.ID_BTN_ZOOM_OUT.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_ZOOM_OUT.TabIndex = 4
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_ZOOM_OUT, "Decrement the zoom factor of the document")
-        Me.ID_BTN_ZOOM_OUT.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_ZOON_IN
-        '
-        Me.ID_BTN_ZOON_IN.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_ZOON_IN.Image = Global._2D_Drafting.My.Resources.Resources.zoon_in
-        Me.ID_BTN_ZOON_IN.Location = New System.Drawing.Point(1077, 28)
-        Me.ID_BTN_ZOON_IN.Name = "ID_BTN_ZOON_IN"
-        Me.ID_BTN_ZOON_IN.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_ZOON_IN.TabIndex = 3
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_ZOON_IN, "Increment the zoom factor of the document")
-        Me.ID_BTN_ZOON_IN.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_BRIGHTNESS
-        '
-        Me.ID_BTN_BRIGHTNESS.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_BRIGHTNESS.Image = Global._2D_Drafting.My.Resources.Resources.brightness
-        Me.ID_BTN_BRIGHTNESS.Location = New System.Drawing.Point(1008, 83)
-        Me.ID_BTN_BRIGHTNESS.Name = "ID_BTN_BRIGHTNESS"
-        Me.ID_BTN_BRIGHTNESS.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_BRIGHTNESS.TabIndex = 2
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_BRIGHTNESS, "Dialog for setting brightness, contrast and gamma value of current image")
-        Me.ID_BTN_BRIGHTNESS.UseVisualStyleBackColor = False
-        '
         'ID_CHECK_SIDE
         '
         Me.ID_CHECK_SIDE.AutoSize = True
@@ -730,127 +422,6 @@ Partial Class Main_Form
         Me.ID_GROUP_BOX_CONTROL.TabIndex = 0
         Me.ID_GROUP_BOX_CONTROL.TabStop = False
         Me.ID_GROUP_BOX_CONTROL.Text = "Measure Types"
-        '
-        'ID_BTN_SCALE
-        '
-        Me.ID_BTN_SCALE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_SCALE.Image = Global._2D_Drafting.My.Resources.Resources.measuring_scale1
-        Me.ID_BTN_SCALE.Location = New System.Drawing.Point(269, 74)
-        Me.ID_BTN_SCALE.Name = "ID_BTN_SCALE"
-        Me.ID_BTN_SCALE.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_SCALE.TabIndex = 10
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_SCALE, "Insert a measuring scale")
-        Me.ID_BTN_SCALE.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_P_LINE
-        '
-        Me.ID_BTN_P_LINE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_P_LINE.Image = Global._2D_Drafting.My.Resources.Resources.pt_line
-        Me.ID_BTN_P_LINE.Location = New System.Drawing.Point(208, 74)
-        Me.ID_BTN_P_LINE.Name = "ID_BTN_P_LINE"
-        Me.ID_BTN_P_LINE.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_P_LINE.TabIndex = 9
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_P_LINE, "Calculates distance of perpendicular line through point to line  ")
-        Me.ID_BTN_P_LINE.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_PENCIL
-        '
-        Me.ID_BTN_PENCIL.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_PENCIL.Image = Global._2D_Drafting.My.Resources.Resources.pencil
-        Me.ID_BTN_PENCIL.Location = New System.Drawing.Point(145, 74)
-        Me.ID_BTN_PENCIL.Name = "ID_BTN_PENCIL"
-        Me.ID_BTN_PENCIL.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_PENCIL.TabIndex = 8
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_PENCIL, "Draw a line")
-        Me.ID_BTN_PENCIL.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_ANNOTATION
-        '
-        Me.ID_BTN_ANNOTATION.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_ANNOTATION.Image = Global._2D_Drafting.My.Resources.Resources.annotation
-        Me.ID_BTN_ANNOTATION.Location = New System.Drawing.Point(81, 74)
-        Me.ID_BTN_ANNOTATION.Name = "ID_BTN_ANNOTATION"
-        Me.ID_BTN_ANNOTATION.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_ANNOTATION.TabIndex = 7
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_ANNOTATION, "Add a annotation")
-        Me.ID_BTN_ANNOTATION.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_RADIUS
-        '
-        Me.ID_BTN_RADIUS.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_RADIUS.Image = Global._2D_Drafting.My.Resources.Resources.radius
-        Me.ID_BTN_RADIUS.Location = New System.Drawing.Point(22, 74)
-        Me.ID_BTN_RADIUS.Name = "ID_BTN_RADIUS"
-        Me.ID_BTN_RADIUS.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_RADIUS.TabIndex = 6
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_RADIUS, "Calculates a arc through three points")
-        Me.ID_BTN_RADIUS.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_ANGLE
-        '
-        Me.ID_BTN_ANGLE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_ANGLE.Image = Global._2D_Drafting.My.Resources.Resources.angle
-        Me.ID_BTN_ANGLE.Location = New System.Drawing.Point(330, 19)
-        Me.ID_BTN_ANGLE.Name = "ID_BTN_ANGLE"
-        Me.ID_BTN_ANGLE.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_ANGLE.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_ANGLE, "Calculates angle through two lines in degree")
-        Me.ID_BTN_ANGLE.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_ARC
-        '
-        Me.ID_BTN_ARC.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_ARC.Image = Global._2D_Drafting.My.Resources.Resources.arc
-        Me.ID_BTN_ARC.Location = New System.Drawing.Point(269, 19)
-        Me.ID_BTN_ARC.Name = "ID_BTN_ARC"
-        Me.ID_BTN_ARC.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_ARC.TabIndex = 4
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_ARC, "Calculates angle through three points in degree")
-        Me.ID_BTN_ARC.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_LINE_PARA
-        '
-        Me.ID_BTN_LINE_PARA.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_LINE_PARA.Image = Global._2D_Drafting.My.Resources.Resources.line_parallel
-        Me.ID_BTN_LINE_PARA.Location = New System.Drawing.Point(208, 19)
-        Me.ID_BTN_LINE_PARA.Name = "ID_BTN_LINE_PARA"
-        Me.ID_BTN_LINE_PARA.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_LINE_PARA.TabIndex = 3
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_LINE_PARA, "Calculates distance of perpendicular line between two parallel lines")
-        Me.ID_BTN_LINE_PARA.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_LINE_VER
-        '
-        Me.ID_BTN_LINE_VER.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_LINE_VER.Image = Global._2D_Drafting.My.Resources.Resources.line_vertical
-        Me.ID_BTN_LINE_VER.Location = New System.Drawing.Point(145, 19)
-        Me.ID_BTN_LINE_VER.Name = "ID_BTN_LINE_VER"
-        Me.ID_BTN_LINE_VER.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_LINE_VER.TabIndex = 2
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_LINE_VER, "Calculates vertical line through two input points")
-        Me.ID_BTN_LINE_VER.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_LINE_HOR
-        '
-        Me.ID_BTN_LINE_HOR.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_LINE_HOR.Image = Global._2D_Drafting.My.Resources.Resources.line_horizon
-        Me.ID_BTN_LINE_HOR.Location = New System.Drawing.Point(81, 19)
-        Me.ID_BTN_LINE_HOR.Name = "ID_BTN_LINE_HOR"
-        Me.ID_BTN_LINE_HOR.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_LINE_HOR.TabIndex = 1
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_LINE_HOR, "Calculates horizontal line through two input points")
-        Me.ID_BTN_LINE_HOR.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_LINE_ALIGN
-        '
-        Me.ID_BTN_LINE_ALIGN.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_LINE_ALIGN.Image = Global._2D_Drafting.My.Resources.Resources.line_align
-        Me.ID_BTN_LINE_ALIGN.Location = New System.Drawing.Point(22, 19)
-        Me.ID_BTN_LINE_ALIGN.Name = "ID_BTN_LINE_ALIGN"
-        Me.ID_BTN_LINE_ALIGN.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_LINE_ALIGN.TabIndex = 0
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_LINE_ALIGN, "Calculates line through two input points")
-        Me.ID_BTN_LINE_ALIGN.UseVisualStyleBackColor = False
         '
         'Panel2
         '
@@ -956,15 +527,6 @@ Partial Class Main_Form
         Me.ID_LISTVIEW_IMAGE.TabIndex = 13
         Me.ID_LISTVIEW_IMAGE.UseCompatibleStateImageBehavior = False
         '
-        'ID_PICTURE_BOX_CAM
-        '
-        Me.ID_PICTURE_BOX_CAM.BackColor = System.Drawing.Color.Gray
-        Me.ID_PICTURE_BOX_CAM.Location = New System.Drawing.Point(29, 180)
-        Me.ID_PICTURE_BOX_CAM.Name = "ID_PICTURE_BOX_CAM"
-        Me.ID_PICTURE_BOX_CAM.Size = New System.Drawing.Size(196, 186)
-        Me.ID_PICTURE_BOX_CAM.TabIndex = 12
-        Me.ID_PICTURE_BOX_CAM.TabStop = False
-        '
         'ID_BTN_CAPTURE
         '
         Me.ID_BTN_CAPTURE.Location = New System.Drawing.Point(29, 54)
@@ -1007,27 +569,6 @@ Partial Class Main_Form
         Me.ID_COMBOBOX_CF.Size = New System.Drawing.Size(71, 21)
         Me.ID_COMBOBOX_CF.TabIndex = 16
         '
-        'ID_BTN_TEXT_FONT
-        '
-        Me.ID_BTN_TEXT_FONT.BackColor = System.Drawing.SystemColors.AppWorkspace
-        Me.ID_BTN_TEXT_FONT.Image = Global._2D_Drafting.My.Resources.Resources.annotation
-        Me.ID_BTN_TEXT_FONT.Location = New System.Drawing.Point(126, 234)
-        Me.ID_BTN_TEXT_FONT.Name = "ID_BTN_TEXT_FONT"
-        Me.ID_BTN_TEXT_FONT.Size = New System.Drawing.Size(36, 36)
-        Me.ID_BTN_TEXT_FONT.TabIndex = 15
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_TEXT_FONT, "Set measure text font")
-        Me.ID_BTN_TEXT_FONT.UseVisualStyleBackColor = False
-        '
-        'ID_BTN_TEXT_COL_PICKER
-        '
-        Me.ID_BTN_TEXT_COL_PICKER.Image = Global._2D_Drafting.My.Resources.Resources.color_picker
-        Me.ID_BTN_TEXT_COL_PICKER.Location = New System.Drawing.Point(157, 202)
-        Me.ID_BTN_TEXT_COL_PICKER.Name = "ID_BTN_TEXT_COL_PICKER"
-        Me.ID_BTN_TEXT_COL_PICKER.Size = New System.Drawing.Size(25, 25)
-        Me.ID_BTN_TEXT_COL_PICKER.TabIndex = 14
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_TEXT_COL_PICKER, "Set measure text color")
-        Me.ID_BTN_TEXT_COL_PICKER.UseVisualStyleBackColor = True
-        '
         'ID_BTN_TEXT_COL
         '
         Me.ID_BTN_TEXT_COL.BackColor = System.Drawing.Color.Black
@@ -1046,16 +587,6 @@ Partial Class Main_Form
         Me.ID_COMBO_LINE_SHAPE.Name = "ID_COMBO_LINE_SHAPE"
         Me.ID_COMBO_LINE_SHAPE.Size = New System.Drawing.Size(84, 21)
         Me.ID_COMBO_LINE_SHAPE.TabIndex = 12
-        '
-        'ID_BTN_COL_PICKER
-        '
-        Me.ID_BTN_COL_PICKER.Image = Global._2D_Drafting.My.Resources.Resources.color_picker
-        Me.ID_BTN_COL_PICKER.Location = New System.Drawing.Point(157, 133)
-        Me.ID_BTN_COL_PICKER.Name = "ID_BTN_COL_PICKER"
-        Me.ID_BTN_COL_PICKER.Size = New System.Drawing.Size(25, 25)
-        Me.ID_BTN_COL_PICKER.TabIndex = 11
-        Me.ToolTip1.SetToolTip(Me.ID_BTN_COL_PICKER, "Set measure line color")
-        Me.ID_BTN_COL_PICKER.UseVisualStyleBackColor = True
         '
         'ID_BTN_CUR_COL
         '
@@ -1220,6 +751,517 @@ Partial Class Main_Form
         Me.ID_STATUS_LABEL.Name = "ID_STATUS_LABEL"
         Me.ID_STATUS_LABEL.Size = New System.Drawing.Size(0, 17)
         '
+        'CIRCLEDETECTIONToolStripMenuItem
+        '
+        Me.CIRCLEDETECTIONToolStripMenuItem.Name = "CIRCLEDETECTIONToolStripMenuItem"
+        Me.CIRCLEDETECTIONToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.CIRCLEDETECTIONToolStripMenuItem.Text = "CIRCLE IDENTIFY"
+        '
+        'INTERSECTIONToolStripMenuItem
+        '
+        Me.INTERSECTIONToolStripMenuItem.Name = "INTERSECTIONToolStripMenuItem"
+        Me.INTERSECTIONToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.INTERSECTIONToolStripMenuItem.Text = "INTERSECTION IDENTIFY"
+        '
+        'PHASESEGMENTATIONToolStripMenuItem
+        '
+        Me.PHASESEGMENTATIONToolStripMenuItem.Name = "PHASESEGMENTATIONToolStripMenuItem"
+        Me.PHASESEGMENTATIONToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.PHASESEGMENTATIONToolStripMenuItem.Text = "PHASE SEGMENTATION"
+        '
+        'COUNTCLASSIFICATIONToolStripMenuItem
+        '
+        Me.COUNTCLASSIFICATIONToolStripMenuItem.Name = "COUNTCLASSIFICATIONToolStripMenuItem"
+        Me.COUNTCLASSIFICATIONToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.COUNTCLASSIFICATIONToolStripMenuItem.Text = "COUNT & CLASSIFICATION"
+        '
+        'PARTICIPLESIZEToolStripMenuItem
+        '
+        Me.PARTICIPLESIZEToolStripMenuItem.Name = "PARTICIPLESIZEToolStripMenuItem"
+        Me.PARTICIPLESIZEToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.PARTICIPLESIZEToolStripMenuItem.Text = "PARTICIPLE SIZE"
+        '
+        'NODULARITYToolStripMenuItem
+        '
+        Me.NODULARITYToolStripMenuItem.Name = "NODULARITYToolStripMenuItem"
+        Me.NODULARITYToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.NODULARITYToolStripMenuItem.Text = "NODULARITY"
+        '
+        'ID_BTN_TEXT_FONT
+        '
+        Me.ID_BTN_TEXT_FONT.BackColor = System.Drawing.SystemColors.AppWorkspace
+        Me.ID_BTN_TEXT_FONT.Image = Global._2D_Drafting.My.Resources.Resources.annotation
+        Me.ID_BTN_TEXT_FONT.Location = New System.Drawing.Point(126, 234)
+        Me.ID_BTN_TEXT_FONT.Name = "ID_BTN_TEXT_FONT"
+        Me.ID_BTN_TEXT_FONT.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_TEXT_FONT.TabIndex = 15
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_TEXT_FONT, "Set measure text font")
+        Me.ID_BTN_TEXT_FONT.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_TEXT_COL_PICKER
+        '
+        Me.ID_BTN_TEXT_COL_PICKER.Image = Global._2D_Drafting.My.Resources.Resources.color_picker
+        Me.ID_BTN_TEXT_COL_PICKER.Location = New System.Drawing.Point(157, 202)
+        Me.ID_BTN_TEXT_COL_PICKER.Name = "ID_BTN_TEXT_COL_PICKER"
+        Me.ID_BTN_TEXT_COL_PICKER.Size = New System.Drawing.Size(25, 25)
+        Me.ID_BTN_TEXT_COL_PICKER.TabIndex = 14
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_TEXT_COL_PICKER, "Set measure text color")
+        Me.ID_BTN_TEXT_COL_PICKER.UseVisualStyleBackColor = True
+        '
+        'ID_BTN_COL_PICKER
+        '
+        Me.ID_BTN_COL_PICKER.Image = Global._2D_Drafting.My.Resources.Resources.color_picker
+        Me.ID_BTN_COL_PICKER.Location = New System.Drawing.Point(157, 133)
+        Me.ID_BTN_COL_PICKER.Name = "ID_BTN_COL_PICKER"
+        Me.ID_BTN_COL_PICKER.Size = New System.Drawing.Size(25, 25)
+        Me.ID_BTN_COL_PICKER.TabIndex = 11
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_COL_PICKER, "Set measure line color")
+        Me.ID_BTN_COL_PICKER.UseVisualStyleBackColor = True
+        '
+        'ID_BTN_C_CUPOLY
+        '
+        Me.ID_BTN_C_CUPOLY.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_C_CUPOLY.Image = Global._2D_Drafting.My.Resources.Resources.C_cupoly
+        Me.ID_BTN_C_CUPOLY.Location = New System.Drawing.Point(95, 74)
+        Me.ID_BTN_C_CUPOLY.Name = "ID_BTN_C_CUPOLY"
+        Me.ID_BTN_C_CUPOLY.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_C_CUPOLY.TabIndex = 4
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_CUPOLY, "Draw a Polygen&Curve")
+        Me.ID_BTN_C_CUPOLY.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_C_CURVE
+        '
+        Me.ID_BTN_C_CURVE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_C_CURVE.Image = Global._2D_Drafting.My.Resources.Resources.C_curve
+        Me.ID_BTN_C_CURVE.Location = New System.Drawing.Point(31, 74)
+        Me.ID_BTN_C_CURVE.Name = "ID_BTN_C_CURVE"
+        Me.ID_BTN_C_CURVE.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_C_CURVE.TabIndex = 3
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_CURVE, "Draw a Curve")
+        Me.ID_BTN_C_CURVE.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_C_POINT
+        '
+        Me.ID_BTN_C_POINT.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_C_POINT.Image = Global._2D_Drafting.My.Resources.Resources.C_point
+        Me.ID_BTN_C_POINT.Location = New System.Drawing.Point(158, 19)
+        Me.ID_BTN_C_POINT.Name = "ID_BTN_C_POINT"
+        Me.ID_BTN_C_POINT.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_C_POINT.TabIndex = 2
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_POINT, "Draw a Point")
+        Me.ID_BTN_C_POINT.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_C_POLY
+        '
+        Me.ID_BTN_C_POLY.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_C_POLY.Image = Global._2D_Drafting.My.Resources.Resources.C_poly
+        Me.ID_BTN_C_POLY.Location = New System.Drawing.Point(95, 19)
+        Me.ID_BTN_C_POLY.Name = "ID_BTN_C_POLY"
+        Me.ID_BTN_C_POLY.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_C_POLY.TabIndex = 1
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_POLY, "Draw a Polygen")
+        Me.ID_BTN_C_POLY.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_C_LINE
+        '
+        Me.ID_BTN_C_LINE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_C_LINE.Image = Global._2D_Drafting.My.Resources.Resources.C_line
+        Me.ID_BTN_C_LINE.Location = New System.Drawing.Point(31, 19)
+        Me.ID_BTN_C_LINE.Name = "ID_BTN_C_LINE"
+        Me.ID_BTN_C_LINE.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_C_LINE.TabIndex = 0
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_C_LINE, "Draw a line")
+        Me.ID_BTN_C_LINE.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_TAB_REMOVE
+        '
+        Me.ID_BTN_TAB_REMOVE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_TAB_REMOVE.Image = Global._2D_Drafting.My.Resources.Resources.tab_remove
+        Me.ID_BTN_TAB_REMOVE.Location = New System.Drawing.Point(1135, 83)
+        Me.ID_BTN_TAB_REMOVE.Name = "ID_BTN_TAB_REMOVE"
+        Me.ID_BTN_TAB_REMOVE.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_TAB_REMOVE.TabIndex = 8
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_TAB_REMOVE, "Remove current tab page")
+        Me.ID_BTN_TAB_REMOVE.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_TAB_ADD
+        '
+        Me.ID_BTN_TAB_ADD.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_TAB_ADD.Image = Global._2D_Drafting.My.Resources.Resources.tab_add
+        Me.ID_BTN_TAB_ADD.Location = New System.Drawing.Point(1077, 83)
+        Me.ID_BTN_TAB_ADD.Name = "ID_BTN_TAB_ADD"
+        Me.ID_BTN_TAB_ADD.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_TAB_ADD.TabIndex = 7
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_TAB_ADD, "Add new tab page")
+        Me.ID_BTN_TAB_ADD.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_RESEL
+        '
+        Me.ID_BTN_RESEL.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_RESEL.Image = Global._2D_Drafting.My.Resources.Resources.reset
+        Me.ID_BTN_RESEL.Location = New System.Drawing.Point(1259, 28)
+        Me.ID_BTN_RESEL.Name = "ID_BTN_RESEL"
+        Me.ID_BTN_RESEL.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_RESEL.TabIndex = 6
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_RESEL, "Reselection")
+        Me.ID_BTN_RESEL.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_UNDO
+        '
+        Me.ID_BTN_UNDO.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_UNDO.Image = Global._2D_Drafting.My.Resources.Resources.undo
+        Me.ID_BTN_UNDO.Location = New System.Drawing.Point(1196, 28)
+        Me.ID_BTN_UNDO.Name = "ID_BTN_UNDO"
+        Me.ID_BTN_UNDO.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_UNDO.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_UNDO, "Undo")
+        Me.ID_BTN_UNDO.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_ZOOM_OUT
+        '
+        Me.ID_BTN_ZOOM_OUT.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_ZOOM_OUT.Image = Global._2D_Drafting.My.Resources.Resources.zoom_out
+        Me.ID_BTN_ZOOM_OUT.Location = New System.Drawing.Point(1135, 28)
+        Me.ID_BTN_ZOOM_OUT.Name = "ID_BTN_ZOOM_OUT"
+        Me.ID_BTN_ZOOM_OUT.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_ZOOM_OUT.TabIndex = 4
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_ZOOM_OUT, "Decrement the zoom factor of the document")
+        Me.ID_BTN_ZOOM_OUT.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_ZOON_IN
+        '
+        Me.ID_BTN_ZOON_IN.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_ZOON_IN.Image = Global._2D_Drafting.My.Resources.Resources.zoon_in
+        Me.ID_BTN_ZOON_IN.Location = New System.Drawing.Point(1077, 28)
+        Me.ID_BTN_ZOON_IN.Name = "ID_BTN_ZOON_IN"
+        Me.ID_BTN_ZOON_IN.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_ZOON_IN.TabIndex = 3
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_ZOON_IN, "Increment the zoom factor of the document")
+        Me.ID_BTN_ZOON_IN.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_BRIGHTNESS
+        '
+        Me.ID_BTN_BRIGHTNESS.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_BRIGHTNESS.Image = Global._2D_Drafting.My.Resources.Resources.brightness
+        Me.ID_BTN_BRIGHTNESS.Location = New System.Drawing.Point(1008, 83)
+        Me.ID_BTN_BRIGHTNESS.Name = "ID_BTN_BRIGHTNESS"
+        Me.ID_BTN_BRIGHTNESS.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_BRIGHTNESS.TabIndex = 2
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_BRIGHTNESS, "Dialog for setting brightness, contrast and gamma value of current image")
+        Me.ID_BTN_BRIGHTNESS.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_SCALE
+        '
+        Me.ID_BTN_SCALE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_SCALE.Image = Global._2D_Drafting.My.Resources.Resources.measuring_scale1
+        Me.ID_BTN_SCALE.Location = New System.Drawing.Point(269, 74)
+        Me.ID_BTN_SCALE.Name = "ID_BTN_SCALE"
+        Me.ID_BTN_SCALE.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_SCALE.TabIndex = 10
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_SCALE, "Insert a measuring scale")
+        Me.ID_BTN_SCALE.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_P_LINE
+        '
+        Me.ID_BTN_P_LINE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_P_LINE.Image = Global._2D_Drafting.My.Resources.Resources.pt_line
+        Me.ID_BTN_P_LINE.Location = New System.Drawing.Point(208, 74)
+        Me.ID_BTN_P_LINE.Name = "ID_BTN_P_LINE"
+        Me.ID_BTN_P_LINE.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_P_LINE.TabIndex = 9
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_P_LINE, "Calculates distance of perpendicular line through point to line  ")
+        Me.ID_BTN_P_LINE.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_PENCIL
+        '
+        Me.ID_BTN_PENCIL.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_PENCIL.Image = Global._2D_Drafting.My.Resources.Resources.pencil
+        Me.ID_BTN_PENCIL.Location = New System.Drawing.Point(145, 74)
+        Me.ID_BTN_PENCIL.Name = "ID_BTN_PENCIL"
+        Me.ID_BTN_PENCIL.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_PENCIL.TabIndex = 8
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_PENCIL, "Draw a line")
+        Me.ID_BTN_PENCIL.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_ANNOTATION
+        '
+        Me.ID_BTN_ANNOTATION.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_ANNOTATION.Image = Global._2D_Drafting.My.Resources.Resources.annotation
+        Me.ID_BTN_ANNOTATION.Location = New System.Drawing.Point(81, 74)
+        Me.ID_BTN_ANNOTATION.Name = "ID_BTN_ANNOTATION"
+        Me.ID_BTN_ANNOTATION.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_ANNOTATION.TabIndex = 7
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_ANNOTATION, "Add a annotation")
+        Me.ID_BTN_ANNOTATION.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_RADIUS
+        '
+        Me.ID_BTN_RADIUS.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_RADIUS.Image = Global._2D_Drafting.My.Resources.Resources.radius
+        Me.ID_BTN_RADIUS.Location = New System.Drawing.Point(22, 74)
+        Me.ID_BTN_RADIUS.Name = "ID_BTN_RADIUS"
+        Me.ID_BTN_RADIUS.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_RADIUS.TabIndex = 6
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_RADIUS, "Calculates a arc through three points")
+        Me.ID_BTN_RADIUS.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_ANGLE
+        '
+        Me.ID_BTN_ANGLE.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_ANGLE.Image = Global._2D_Drafting.My.Resources.Resources.angle
+        Me.ID_BTN_ANGLE.Location = New System.Drawing.Point(330, 19)
+        Me.ID_BTN_ANGLE.Name = "ID_BTN_ANGLE"
+        Me.ID_BTN_ANGLE.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_ANGLE.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_ANGLE, "Calculates angle through two lines in degree")
+        Me.ID_BTN_ANGLE.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_ARC
+        '
+        Me.ID_BTN_ARC.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_ARC.Image = Global._2D_Drafting.My.Resources.Resources.arc
+        Me.ID_BTN_ARC.Location = New System.Drawing.Point(269, 19)
+        Me.ID_BTN_ARC.Name = "ID_BTN_ARC"
+        Me.ID_BTN_ARC.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_ARC.TabIndex = 4
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_ARC, "Calculates angle through three points in degree")
+        Me.ID_BTN_ARC.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_LINE_PARA
+        '
+        Me.ID_BTN_LINE_PARA.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_LINE_PARA.Image = Global._2D_Drafting.My.Resources.Resources.line_parallel
+        Me.ID_BTN_LINE_PARA.Location = New System.Drawing.Point(208, 19)
+        Me.ID_BTN_LINE_PARA.Name = "ID_BTN_LINE_PARA"
+        Me.ID_BTN_LINE_PARA.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_LINE_PARA.TabIndex = 3
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_LINE_PARA, "Calculates distance of perpendicular line between two parallel lines")
+        Me.ID_BTN_LINE_PARA.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_LINE_VER
+        '
+        Me.ID_BTN_LINE_VER.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_LINE_VER.Image = Global._2D_Drafting.My.Resources.Resources.line_vertical
+        Me.ID_BTN_LINE_VER.Location = New System.Drawing.Point(145, 19)
+        Me.ID_BTN_LINE_VER.Name = "ID_BTN_LINE_VER"
+        Me.ID_BTN_LINE_VER.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_LINE_VER.TabIndex = 2
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_LINE_VER, "Calculates vertical line through two input points")
+        Me.ID_BTN_LINE_VER.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_LINE_HOR
+        '
+        Me.ID_BTN_LINE_HOR.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_LINE_HOR.Image = Global._2D_Drafting.My.Resources.Resources.line_horizon
+        Me.ID_BTN_LINE_HOR.Location = New System.Drawing.Point(81, 19)
+        Me.ID_BTN_LINE_HOR.Name = "ID_BTN_LINE_HOR"
+        Me.ID_BTN_LINE_HOR.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_LINE_HOR.TabIndex = 1
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_LINE_HOR, "Calculates horizontal line through two input points")
+        Me.ID_BTN_LINE_HOR.UseVisualStyleBackColor = False
+        '
+        'ID_BTN_LINE_ALIGN
+        '
+        Me.ID_BTN_LINE_ALIGN.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.ID_BTN_LINE_ALIGN.Image = Global._2D_Drafting.My.Resources.Resources.line_align
+        Me.ID_BTN_LINE_ALIGN.Location = New System.Drawing.Point(22, 19)
+        Me.ID_BTN_LINE_ALIGN.Name = "ID_BTN_LINE_ALIGN"
+        Me.ID_BTN_LINE_ALIGN.Size = New System.Drawing.Size(36, 36)
+        Me.ID_BTN_LINE_ALIGN.TabIndex = 0
+        Me.ToolTip1.SetToolTip(Me.ID_BTN_LINE_ALIGN, "Calculates line through two input points")
+        Me.ID_BTN_LINE_ALIGN.UseVisualStyleBackColor = False
+        '
+        'ID_MENU_OPEN_CAM
+        '
+        Me.ID_MENU_OPEN_CAM.Image = Global._2D_Drafting.My.Resources.Resources.import_camera
+        Me.ID_MENU_OPEN_CAM.Name = "ID_MENU_OPEN_CAM"
+        Me.ID_MENU_OPEN_CAM.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_OPEN_CAM.Text = "OPEN CAMERA"
+        '
+        'ID_MENU_CLOSE_CAM
+        '
+        Me.ID_MENU_CLOSE_CAM.Image = Global._2D_Drafting.My.Resources.Resources.close_camera
+        Me.ID_MENU_CLOSE_CAM.Name = "ID_MENU_CLOSE_CAM"
+        Me.ID_MENU_CLOSE_CAM.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_CLOSE_CAM.Text = "CLOSE CAMERA"
+        '
+        'ID_MENU_OPEN
+        '
+        Me.ID_MENU_OPEN.Image = Global._2D_Drafting.My.Resources.Resources.import_image
+        Me.ID_MENU_OPEN.Name = "ID_MENU_OPEN"
+        Me.ID_MENU_OPEN.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_OPEN.Text = "IMPORT IMAGE"
+        '
+        'ID_MENU_SAVE
+        '
+        Me.ID_MENU_SAVE.Image = Global._2D_Drafting.My.Resources.Resources.export_report
+        Me.ID_MENU_SAVE.Name = "ID_MENU_SAVE"
+        Me.ID_MENU_SAVE.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_SAVE.Text = "EXPORT IMAGE"
+        '
+        'ID_MENU_SAVE_XLSX
+        '
+        Me.ID_MENU_SAVE_XLSX.Image = Global._2D_Drafting.My.Resources.Resources.export_xlsx
+        Me.ID_MENU_SAVE_XLSX.Name = "ID_MENU_SAVE_XLSX"
+        Me.ID_MENU_SAVE_XLSX.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_SAVE_XLSX.Text = "EXPORT XLSX"
+        '
+        'ID_MENU_EXPORT_REPORT
+        '
+        Me.ID_MENU_EXPORT_REPORT.Image = Global._2D_Drafting.My.Resources.Resources.export_xlsx
+        Me.ID_MENU_EXPORT_REPORT.Name = "ID_MENU_EXPORT_REPORT"
+        Me.ID_MENU_EXPORT_REPORT.Size = New System.Drawing.Size(160, 22)
+        Me.ID_MENU_EXPORT_REPORT.Text = "EXPORT REPORT"
+        '
+        'ZOOMINToolStripMenuItem
+        '
+        Me.ZOOMINToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_zoom_in
+        Me.ZOOMINToolStripMenuItem.Name = "ZOOMINToolStripMenuItem"
+        Me.ZOOMINToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+        Me.ZOOMINToolStripMenuItem.Text = "ZOOM IN"
+        '
+        'ZOOMOUTToolStripMenuItem
+        '
+        Me.ZOOMOUTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_zoom_out
+        Me.ZOOMOUTToolStripMenuItem.Name = "ZOOMOUTToolStripMenuItem"
+        Me.ZOOMOUTToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+        Me.ZOOMOUTToolStripMenuItem.Text = "ZOOM OUT"
+        '
+        'LINEToolStripMenuItem
+        '
+        Me.LINEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_line_align
+        Me.LINEToolStripMenuItem.Name = "LINEToolStripMenuItem"
+        Me.LINEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.LINEToolStripMenuItem.Text = "LINE"
+        '
+        'HORIZONTALLINEToolStripMenuItem
+        '
+        Me.HORIZONTALLINEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_line_hor
+        Me.HORIZONTALLINEToolStripMenuItem.Name = "HORIZONTALLINEToolStripMenuItem"
+        Me.HORIZONTALLINEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.HORIZONTALLINEToolStripMenuItem.Text = "HORIZONTAL LINE"
+        '
+        'VERTICALLINEToolStripMenuItem
+        '
+        Me.VERTICALLINEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_line_ver
+        Me.VERTICALLINEToolStripMenuItem.Name = "VERTICALLINEToolStripMenuItem"
+        Me.VERTICALLINEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.VERTICALLINEToolStripMenuItem.Text = "VERTICAL LINE"
+        '
+        'PARALLELLINEToolStripMenuItem
+        '
+        Me.PARALLELLINEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_line_par
+        Me.PARALLELLINEToolStripMenuItem.Name = "PARALLELLINEToolStripMenuItem"
+        Me.PARALLELLINEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.PARALLELLINEToolStripMenuItem.Text = "PARALLEL LINE"
+        '
+        'ANGLETHROUGHTHREEPOINTSToolStripMenuItem
+        '
+        Me.ANGLETHROUGHTHREEPOINTSToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_angle
+        Me.ANGLETHROUGHTHREEPOINTSToolStripMenuItem.Name = "ANGLETHROUGHTHREEPOINTSToolStripMenuItem"
+        Me.ANGLETHROUGHTHREEPOINTSToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.ANGLETHROUGHTHREEPOINTSToolStripMenuItem.Text = "ANGLE THROUGH THREE POINTS"
+        '
+        'ANGLETHROUGHTWOLINESToolStripMenuItem
+        '
+        Me.ANGLETHROUGHTWOLINESToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_angle_far
+        Me.ANGLETHROUGHTWOLINESToolStripMenuItem.Name = "ANGLETHROUGHTWOLINESToolStripMenuItem"
+        Me.ANGLETHROUGHTWOLINESToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.ANGLETHROUGHTWOLINESToolStripMenuItem.Text = "ANGLE THROUGH TWO LINES"
+        '
+        'ARCToolStripMenuItem
+        '
+        Me.ARCToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_arc
+        Me.ARCToolStripMenuItem.Name = "ARCToolStripMenuItem"
+        Me.ARCToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.ARCToolStripMenuItem.Text = "ARC"
+        '
+        'ANNOTATIONToolStripMenuItem
+        '
+        Me.ANNOTATIONToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_annotation
+        Me.ANNOTATIONToolStripMenuItem.Name = "ANNOTATIONToolStripMenuItem"
+        Me.ANNOTATIONToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.ANNOTATIONToolStripMenuItem.Text = "ANNOTATION"
+        '
+        'DISTANCEFROMPOINTTOLINEToolStripMenuItem
+        '
+        Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_pt_line
+        Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem.Name = "DISTANCEFROMPOINTTOLINEToolStripMenuItem"
+        Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem.Size = New System.Drawing.Size(250, 22)
+        Me.DISTANCEFROMPOINTTOLINEToolStripMenuItem.Text = "DISTANCE FROM POINT TO LINE"
+        '
+        'UNDOToolStripMenuItem
+        '
+        Me.UNDOToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_undo
+        Me.UNDOToolStripMenuItem.Name = "UNDOToolStripMenuItem"
+        Me.UNDOToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.UNDOToolStripMenuItem.Text = "UNDO"
+        '
+        'RESELECTToolStripMenuItem
+        '
+        Me.RESELECTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_reset
+        Me.RESELECTToolStripMenuItem.Name = "RESELECTToolStripMenuItem"
+        Me.RESELECTToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.RESELECTToolStripMenuItem.Text = "RESELECT"
+        '
+        'ADDTAGToolStripMenuItem
+        '
+        Me.ADDTAGToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_tab_add
+        Me.ADDTAGToolStripMenuItem.Name = "ADDTAGToolStripMenuItem"
+        Me.ADDTAGToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.ADDTAGToolStripMenuItem.Text = "ADD TAB"
+        '
+        'REMOVETAGToolStripMenuItem
+        '
+        Me.REMOVETAGToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_tab_remove
+        Me.REMOVETAGToolStripMenuItem.Name = "REMOVETAGToolStripMenuItem"
+        Me.REMOVETAGToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.REMOVETAGToolStripMenuItem.Text = "REMOVE TAB"
+        '
+        'LINEToolStripMenuItem1
+        '
+        Me.LINEToolStripMenuItem1.Image = Global._2D_Drafting.My.Resources.Resources.menu_c_line
+        Me.LINEToolStripMenuItem1.Name = "LINEToolStripMenuItem1"
+        Me.LINEToolStripMenuItem1.Size = New System.Drawing.Size(161, 22)
+        Me.LINEToolStripMenuItem1.Text = "LINE"
+        '
+        'POLYGENToolStripMenuItem
+        '
+        Me.POLYGENToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_poly
+        Me.POLYGENToolStripMenuItem.Name = "POLYGENToolStripMenuItem"
+        Me.POLYGENToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.POLYGENToolStripMenuItem.Text = "POLYGEN"
+        '
+        'POINTToolStripMenuItem
+        '
+        Me.POINTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_point
+        Me.POINTToolStripMenuItem.Name = "POINTToolStripMenuItem"
+        Me.POINTToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.POINTToolStripMenuItem.Text = "POINT"
+        '
+        'CURVEToolStripMenuItem
+        '
+        Me.CURVEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_curve
+        Me.CURVEToolStripMenuItem.Name = "CURVEToolStripMenuItem"
+        Me.CURVEToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.CURVEToolStripMenuItem.Text = "CURVE"
+        '
+        'CURVEPOLYGENToolStripMenuItem
+        '
+        Me.CURVEPOLYGENToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_CuPoly
+        Me.CURVEPOLYGENToolStripMenuItem.Name = "CURVEPOLYGENToolStripMenuItem"
+        Me.CURVEPOLYGENToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
+        Me.CURVEPOLYGENToolStripMenuItem.Text = "CURVE&POLYGEN"
+        '
+        'ID_PICTURE_BOX_CAM
+        '
+        Me.ID_PICTURE_BOX_CAM.BackColor = System.Drawing.Color.Gray
+        Me.ID_PICTURE_BOX_CAM.Location = New System.Drawing.Point(29, 180)
+        Me.ID_PICTURE_BOX_CAM.Name = "ID_PICTURE_BOX_CAM"
+        Me.ID_PICTURE_BOX_CAM.Size = New System.Drawing.Size(196, 186)
+        Me.ID_PICTURE_BOX_CAM.TabIndex = 12
+        Me.ID_PICTURE_BOX_CAM.TabStop = False
+        '
         'Main_Form
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1243,7 +1285,6 @@ Partial Class Main_Form
         Me.ID_GROUP_BOX_CONTROL.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
-        CType(Me.ID_PICTURE_BOX_CAM, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
         CType(Me.ID_NUM_LINE_WIDTH, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1251,6 +1292,7 @@ Partial Class Main_Form
         CType(Me.ID_LISTVIEW, System.ComponentModel.ISupportInitialize).EndInit()
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
+        CType(Me.ID_PICTURE_BOX_CAM, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1376,4 +1418,10 @@ End Sub
     Friend WithEvents LINEOFFIXEDLENGTHToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents FIXEDANGLEToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents MOVELINEOBJECTToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CIRCLEDETECTIONToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents INTERSECTIONToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PHASESEGMENTATIONToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents COUNTCLASSIFICATIONToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PARTICIPLESIZEToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents NODULARITYToolStripMenuItem As ToolStripMenuItem
 End Class

@@ -332,6 +332,147 @@ Public Module ImportAndExport
     End Sub
 
     ''' <summary>
+    ''' Save the information of objects to excel file.
+    ''' </summary>
+    ''' <paramname="listview">The datagridview contains data</param>
+    ''' <paramname="filter">The filter to be used to get type of images. example ("PNG Files|*.png|BMP Files|*.bmp")</param>
+    ''' <paramname="saveDialogTitle">The title for the save dialog appears for the user.</param>
+
+    Public Sub SaveListToExcel(ByVal listview As DataGridView, ByVal filter As String, ByVal saveDialogTitle As String)
+        Dim SaveFileDialog As SaveFileDialog = New SaveFileDialog()
+        SaveFileDialog.Filter = filter
+        SaveFileDialog.Title = saveDialogTitle
+
+        Dim xlsx_savepath = ""
+        If SaveFileDialog.ShowDialog() = DialogResult.OK Then
+            xlsx_savepath = SaveFileDialog.FileName
+        End If
+        Dim NameSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+        Using workbook = New XLWorkbook()
+            For cnt = 0 To 24
+                Dim worksheet = workbook.Worksheets.Add("Result Sheet" & cnt.ToString())
+                For i = 0 To listview.Columns.Count - 1
+                    worksheet.Cell(NameSet(i) & 1).Value = listview.Columns(i).HeaderText
+                Next
+
+                Dim row_count_listbox = listview.Rows.Count
+                For i = 0 To row_count_listbox - 1
+                    For j = 0 To listview.Columns.Count - 1
+                        worksheet.Cell(NameSet(j) & (i + 2).ToString()).Value = listview.Rows(i).Cells(j).Value
+                    Next
+                Next
+            Next
+
+            workbook.SaveAs(xlsx_savepath)
+        End Using
+    End Sub
+
+
+    ''' <summary>
+    ''' Save the information of objects to excel file.
+    ''' </summary>
+    ''' <paramname="image">The result image</param>
+    ''' <paramname="listview">The datagridview contains data</param>
+    ''' <paramname="filter">The filter to be used to get type of images. example ("PNG Files|*.png|BMP Files|*.bmp")</param>
+    ''' <paramname="saveDialogTitle">The title for the save dialog appears for the user.</param>
+
+    Public Sub SaveListToReport(img As Image, ByVal listview As DataGridView, ByVal filter As String, ByVal saveDialogTitle As String)
+        Dim SaveFileDialog As SaveFileDialog = New SaveFileDialog()
+        SaveFileDialog.Filter = filter
+        SaveFileDialog.Title = saveDialogTitle
+
+        Dim xlsx_savepath = ""
+        If SaveFileDialog.ShowDialog() = DialogResult.OK Then
+            xlsx_savepath = SaveFileDialog.FileName
+        End If
+        Dim NameSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        Using workbook = New XLWorkbook()
+            Dim result As Bitmap = New Bitmap(img.Width, img.Height)
+
+            Using graph = Graphics.FromImage(result)
+                Dim PointX = 0
+                Dim PointY = 0
+                Dim Width = img.Width
+                Dim Height = img.Height
+                graph.DrawImage(img, PointX, PointY, Width, Height)
+                graph.Flush()
+            End Using
+
+            Dim ms As MemoryStream = New MemoryStream()
+            result.Save(ms, Imaging.ImageFormat.Png)
+            Dim worksheet = workbook.Worksheets.Add("Result Sheet")
+            For i = 0 To listview.Columns.Count - 1
+                worksheet.Cell(NameSet(i) & 1).Value = listview.Columns(i).HeaderText
+            Next
+
+            Dim row_count_listbox = listview.Rows.Count
+            For i = 0 To row_count_listbox - 1
+                For j = 0 To listview.Columns.Count - 1
+                    worksheet.Cell(NameSet(j) & (i + 2).ToString()).Value = listview.Rows(i).Cells(j).Value
+                Next
+            Next
+            Dim image = worksheet.AddPicture(ms).MoveTo(worksheet.Cell(NameSet(listview.Columns.Count) & 2)) 'the cast is only to be sure
+
+            workbook.SaveAs(xlsx_savepath)
+        End Using
+    End Sub
+
+    ''' <summary>
+    ''' Save the information of objects to excel file.
+    ''' </summary>
+    ''' <paramname="image">The result image</param>
+    ''' <paramname="listview">The datagridview contains data</param>
+    ''' <paramname="filter">The filter to be used to get type of images. example ("PNG Files|*.png|BMP Files|*.bmp")</param>
+    ''' <paramname="saveDialogTitle">The title for the save dialog appears for the user.</param>
+
+    Public Sub SaveListToReport(pic As PictureBox, ByVal listview As DataGridView, ByVal filter As String, ByVal saveDialogTitle As String, Obj As SegObject, font As Font)
+        Dim SaveFileDialog As SaveFileDialog = New SaveFileDialog()
+        SaveFileDialog.Filter = filter
+        SaveFileDialog.Title = saveDialogTitle
+
+        Dim xlsx_savepath = ""
+        If SaveFileDialog.ShowDialog() = DialogResult.OK Then
+            xlsx_savepath = SaveFileDialog.FileName
+        End If
+        Dim NameSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        Using workbook = New XLWorkbook()
+            Dim result As Bitmap = New Bitmap(pic.Width, pic.Height)
+
+            Using graph = Graphics.FromImage(result)
+                Dim PointX = 0
+                Dim PointY = 0
+                Dim Width = pic.Width
+                Dim Height = pic.Height
+                graph.DrawImage(pic.Image, PointX, PointY, Width, Height)
+                If Obj.measureType = SegType.BlobSegment Then
+                    DrawLabelForCount(graph, pic, Obj.BlobSegObj.BlobList, font)
+                ElseIf Obj.measureType = SegType.intersection Then
+                    IdentifyInterSections(graph, Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image, Obj.sectObj.thr_seg, Obj)
+                End If
+
+                graph.Flush()
+            End Using
+
+            Dim ms As MemoryStream = New MemoryStream()
+            result.Save(ms, Imaging.ImageFormat.Png)
+            Dim worksheet = workbook.Worksheets.Add("Result Sheet")
+            For i = 0 To listview.Columns.Count - 1
+                worksheet.Cell(NameSet(i) & 1).Value = listview.Columns(i).HeaderText
+            Next
+
+            Dim row_count_listbox = listview.Rows.Count
+            For i = 0 To row_count_listbox - 1
+                For j = 0 To listview.Columns.Count - 1
+                    worksheet.Cell(NameSet(j) & (i + 2).ToString()).Value = listview.Rows(i).Cells(j).Value
+                Next
+            Next
+            Dim image = worksheet.AddPicture(ms).MoveTo(worksheet.Cell(NameSet(listview.Columns.Count) & 2)) 'the cast is only to be sure
+
+            workbook.SaveAs(xlsx_savepath)
+        End Using
+    End Sub
+    ''' <summary>
     ''' Load text file and append data-table to existing list.
     ''' </summary>
     ''' <paramname="filename">The name of text file contains data-table</param>

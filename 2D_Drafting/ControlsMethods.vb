@@ -2628,6 +2628,17 @@ Public Module ControlsMethods
 
 #End Region
 
+#Region "HScrollBar Methods"
+    ''' <summary>
+    ''' Display the HScrollBar value to the Label.
+    ''' </summary>
+    ''' <paramname="label">The label you want to display the value of HScrollBar.</param>
+    ''' <paramname="hScrollBar">The hScrollBar whose value is changed by user.</param>
 
+    <Extension()>
+    Public Sub DisplayDataToLabel(ByVal label As Label, ByVal hScrollBar As HScrollBar)
+        label.Text = "" & hScrollBar.Value
+    End Sub
+#End Region
 End Module
 
