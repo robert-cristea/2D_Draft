@@ -449,9 +449,11 @@ Public Module ImageProcess
             Dim pos = New PointF(circle(1) / CDbl(scr.Width), circle(2) / CDbl(scr.Height))
             Dim size = circle(3) / CDbl(scr.Width)
 
-            Obj.circleObj.Cnt = i + 1
-            Obj.circleObj.pos(i) = pos
-            Obj.circleObj.size(i) = size
+            If Obj.circleObj.Cnt < 1001 Then
+                Obj.circleObj.Cnt = i + 1
+                Obj.circleObj.pos(i) = pos
+                Obj.circleObj.size(i) = size
+            End If
 
         Next
 
@@ -1022,7 +1024,7 @@ Public Module ImageProcess
     ''' <paramname="pictureBox">The picturebox for drawing.</param>
     ''' <paramname="PhaseVal">The list of phase values.</param>
     ''' <paramname="PhaseCol">The list of colors for each phase.</param>
-    Public Sub DrawProcess(pictureBox As PictureBox, PhaseVal As List(Of Integer), PhaseCol As List(Of String))
+    Public Sub DrawProcess(pictureBox As PictureBox, PhaseVal As List(Of Integer), PhaseCol As List(Of Integer()))
         pictureBox.Refresh()
         Dim g As Graphics = pictureBox.CreateGraphics()
         Dim drawSt As Integer
@@ -1030,7 +1032,9 @@ Public Module ImageProcess
         For i = 0 To PhaseCol.Count - 1
             drawEnd = PhaseVal(i + 1) * pictureBox.Width / 255
             drawSt = PhaseVal(i) * pictureBox.Width / 255
-            Dim brush As Brush = New SolidBrush(Color.FromName(PhaseCol(i)))
+            Dim Col_Array = PhaseCol(i)
+            Dim brushCol As Color = Color.FromArgb(Col_Array(2), Col_Array(1), Col_Array(0))
+            Dim brush As Brush = New SolidBrush(brushCol)
             g.FillRectangle(brush, New Rectangle(drawSt, 0, drawEnd - drawSt, pictureBox.Height))
             brush.Dispose()
         Next
@@ -1045,7 +1049,7 @@ Public Module ImageProcess
     ''' <paramname="PhaseVal">The list of phase values.</param>
     ''' <paramname="PhaseCol">The list of colors for each phase.</param>
     ''' <paramname="PhaseArea">The list of areas for each phase.</param>
-    Public Function MultiSegment(ori As Image, PhaseVal As List(Of Integer), PhaseCol As List(Of String), PhaseArea As List(Of Integer), PhaseSel As List(Of Integer), FirstPt As Point, SecondPt As Point, flag As Boolean) As Image
+    Public Function MultiSegment(ori As Image, PhaseVal As List(Of Integer), PhaseCol As List(Of Integer()), PhaseArea As List(Of Integer), PhaseSel As List(Of Integer), FirstPt As Point, SecondPt As Point, flag As Boolean) As Image
         PhaseArea.Clear()
         For i = 0 To PhaseCol.Count - 1
             PhaseArea.Add(0)
@@ -1071,12 +1075,13 @@ Public Module ImageProcess
         For y = startY To endY
             For x = startX To endX
                 For i = 0 To PhaseCol.Count - 1
-                    Dim brushCol As Color = System.Drawing.Color.FromName(PhaseCol(i))
+                    'Dim brushCol As Color = System.Drawing.Color.FromName(PhaseCol(i))
+                    Dim brushCol = PhaseCol(i)
                     If gray(y, x, 0) < PhaseVal(i + 1) And gray(y, x, 0) >= PhaseVal(i) Then
                         If PhaseSel(i) = 1 Then
-                            color(y, x, 0) = brushCol.B
-                            color(y, x, 1) = brushCol.G
-                            color(y, x, 2) = brushCol.R
+                            color(y, x, 0) = brushCol(0)    'B
+                            color(y, x, 1) = brushCol(1)    'G
+                            color(y, x, 2) = brushCol(2)    'R
                         End If
                         PhaseArea(i) += 1
                     End If
@@ -1158,7 +1163,7 @@ Public Module ImageProcess
     ''' <paramname="scr">The source image.</param>
     ''' <paramname="BinaryImg">The binary image.</param>
     ''' <paramname="ObjList">The object to contain information for blobs.</param>
-    Public Function BlobDetection(colorImage As Emgu.CV.Image(Of Bgr, Byte), BinaryImg As Emgu.CV.Image(Of Gray, Byte), ObjList As List(Of BlobObj), minArea As Single, Optional minRound As Single = 0, Optional maxRound As Single = 1) As Emgu.CV.Image(Of Bgr, Byte)
+    Public Function BlobDetection(colorImage As Emgu.CV.Image(Of Bgr, Byte), BinaryImg As Emgu.CV.Image(Of Gray, Byte), ObjList As List(Of BlobObj), minArea As Single, Optional minRound As Single = 0, Optional maxRound As Single = 1, Optional minPerAreaRatio As Single = 0, Optional maxPerAreaRatio As Single = 100) As Emgu.CV.Image(Of Bgr, Byte)
 
         Dim contours As New VectorOfVectorOfPoint()
 
@@ -1195,7 +1200,9 @@ Public Module ImageProcess
             height = maxY - minY
             roundness = Math.Round(4 * Math.PI * area / (perimeter * perimeter), 2)
 
-            If roundness > minRound And roundness < maxRound Then
+            Dim perVsAreaRatio = perimeter / area
+
+            If roundness > minRound And roundness < maxRound And perVsAreaRatio > minPerAreaRatio And perVsAreaRatio < maxPerAreaRatio Then
                 Obj.Area = Math.Round(area, 2)
                 Obj.Perimeter = Math.Round(perimeter, 2)
                 Obj.height = height
@@ -1203,6 +1210,7 @@ Public Module ImageProcess
                 Obj.topLeft = New PointF(minX / CDbl(colorImage.Width), minY / CDbl(colorImage.Height))
                 Obj.rightBottom = New PointF(maxX / CDbl(colorImage.Width), maxY / CDbl(colorImage.Height))
                 Obj.roundness = roundness
+
                 ObjList.Add(Obj)
 
                 ResultImg.FillConvexPoly(pts, New Bgr(0, 0, 255), LineType.EightConnected)

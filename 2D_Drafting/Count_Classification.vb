@@ -286,14 +286,25 @@ Public Class Count_Classification
     End Sub
 
     Private Sub BtnGraph_Click(sender As Object, e As EventArgs) Handles BtnGraph.Click
-        Dim ColList As List(Of String) = New List(Of String)
+        Dim ColList As List(Of Integer()) = New List(Of Integer())
 
-        ColList.Add("LimeGreen")
-        ColList.Add("Yellow")
-        ColList.Add("Aqua")
-        ColList.Add("Fuchsia")
+        Dim Col = Color.FromName("LimeGreen")
+        ColList.Add(New Integer() {Col.B, Col.G, Col.R})
+
+        Col = Color.FromName("Yellow")
+        ColList.Add(New Integer() {Col.B, Col.G, Col.R})
+
+        Col = Color.FromName("Aqua")
+        ColList.Add(New Integer() {Col.B, Col.G, Col.R})
+
+        Col = Color.FromName("Fuchsia")
+        ColList.Add(New Integer() {Col.B, Col.G, Col.R})
 
         Dim form = New Graph(DisList, ColList)
         form.ShowDialog()
+    End Sub
+
+    Private Sub Count_Classification_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        Main_Form.Controls.Remove(Me)
     End Sub
 End Class

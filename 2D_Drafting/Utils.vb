@@ -646,5 +646,11 @@ Public Module Utils
         Return sort
 
     End Function
+
+    Public Sub CopyIntegerArray(ByRef Dst As Integer(), Src As Integer(), Len As Integer)
+        For i = 0 To Len - 1
+            Dst(i) = Src(i)
+        Next
+    End Sub
 End Module
 

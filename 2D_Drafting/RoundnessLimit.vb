@@ -11,17 +11,26 @@ Public Class RoundnessLimit
     Public RoundUpper As Single
     Public RoundLower As Single
     Public AreaLimit As Single
+    Public PerVsAreaRatioLower As Single
+    Public PerVsAreaRatioUpper As Single
     Public ObjList As List(Of BlobObj) = New List(Of BlobObj)
+    Public DistingshType As Boolean
 
     Public Sub New()
         InitializeComponent()
     End Sub
 
-    Public Sub New(Upper As Integer, Lower As Integer, MinArea As Single)
+    Public Sub New(Upper As Integer, Lower As Integer, MinArea As Single, DistType As Boolean)
         InitializeComponent()
         IntenUpper = Upper
         IntenLower = Lower
         AreaLimit = MinArea
+        DistingshType = DistType
+        If DistingshType = False Then
+            Me.Text = "Roundness Limit"
+        Else
+            Me.Text = "Perimeter/Area Limit"
+        End If
     End Sub
 
     Private Sub RoundnessLimit_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -36,7 +45,13 @@ Public Class RoundnessLimit
 
     Public Sub DrawResult()
         ObjList.Clear()
-        Dim output = BlobDetection(OriImage, BinaryImage, ObjList, AreaLimit, RoundLower, RoundUpper)
+        Dim output As Emgu.CV.Image(Of Bgr, Byte)
+        If DistingshType = False Then
+            output = BlobDetection(OriImage, BinaryImage, ObjList, AreaLimit, RoundLower, RoundUpper)
+        Else
+            output = BlobDetection(OriImage, BinaryImage, ObjList, AreaLimit, 0, 1, PerVsAreaRatioLower, PerVsAreaRatioUpper)
+        End If
+
         Dim sz = New Size(Main_Form.resized_image(Main_Form.tab_index).Width, Main_Form.resized_image(Main_Form.tab_index).Height)
         CvInvoke.Resize(output, output, sz)
         Dim Image = GetImageFromEmgu(output)
@@ -46,12 +61,14 @@ Public Class RoundnessLimit
 
     Private Sub TrackUpper_Scroll(sender As Object, e As EventArgs) Handles TrackUpper.Scroll
         RoundUpper = TrackUpper.Value / CSng(100)
+        PerVsAreaRatioUpper = RoundUpper
         LabUpper.Text = TrackUpper.Value.ToString()
         DrawResult()
     End Sub
 
     Private Sub TrackLower_Scroll(sender As Object, e As EventArgs) Handles TrackLower.Scroll
         RoundLower = TrackLower.Value / CSng(100)
+        PerVsAreaRatioLower = RoundLower
         LabLower.Text = TrackLower.Value.ToString()
         DrawResult()
     End Sub

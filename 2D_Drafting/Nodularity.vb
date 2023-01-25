@@ -22,7 +22,7 @@ Public Class Nodularity
     Public ObjListTotal As List(Of BlobObj) = New List(Of BlobObj)
     Public Datarows As List(Of DataRow) = New List(Of DataRow)
     Public DisList As List(Of Double) = New List(Of Double)
-    Public ColList As List(Of String) = New List(Of String)
+    Public ColList As List(Of Integer()) = New List(Of Integer())
 
     Private IntensityUpper As Integer
     Private IntensityLower As Integer
@@ -39,6 +39,8 @@ Public Class Nodularity
     Private m_maxArea As Single
     Private m_minArea As Single
 
+    Private DistingshType As Boolean
+
     Public Sub New()
         InitializeComponent()
     End Sub
@@ -50,8 +52,8 @@ Public Class Nodularity
         GrayImage = getGrayScale(OriImage)
         BinaryImage = GrayImage.CopyBlank()
 
-        ColList.Add("Red")
-        ColList.Add("Blue")
+        ColList.Add(New Integer() {0, 0, 255})
+        ColList.Add(New Integer() {255, 0, 0})
     End Sub
 
     Private Sub GetBinaryImage()
@@ -179,7 +181,7 @@ Public Class Nodularity
     End Sub
 
     Private Sub BtnSetLimit_Click(sender As Object, e As EventArgs) Handles BtnSetLimit.Click
-        Dim form = New RoundnessLimit(IntensityUpper, IntensityLower, AreaLimit)
+        Dim form = New RoundnessLimit(IntensityUpper, IntensityLower, AreaLimit, DistingshType)
         If form.ShowDialog() = DialogResult.OK Then
             RoundUpper = form.RoundUpper
             RoundLower = form.RoundLower
@@ -224,5 +226,22 @@ Public Class Nodularity
 
     Private Sub BtnExit_Click(sender As Object, e As EventArgs) Handles BtnExit.Click
         Me.Close()
+    End Sub
+
+    Private Sub BtnRound_Click(sender As Object, e As EventArgs) Handles BtnRound.Click
+        GroupName.Text = "Roundness Limit"
+        DistingshType = False
+    End Sub
+
+    Private Sub BtnPerArea_Click(sender As Object, e As EventArgs) Handles BtnPerArea.Click
+        GroupName.Text = "Perimeter/Area Limit"
+        DistingshType = True
+    End Sub
+
+    Private Sub BtnRange_Click(sender As Object, e As EventArgs) Handles BtnRange.Click
+        Dim form = New RangeDistribution()
+        If form.ShowDialog() = DialogResult.OK Then
+
+        End If
     End Sub
 End Class

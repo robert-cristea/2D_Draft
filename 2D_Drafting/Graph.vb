@@ -2,12 +2,12 @@
 
 Public Class Graph
     Private PointVal As List(Of Double) = New List(Of Double)
-    Private PointCol As List(Of String) = New List(Of String)
+    Private PointCol As List(Of Integer()) = New List(Of Integer())
     Public Sub New()
         InitializeComponent()
     End Sub
 
-    Public Sub New(val As List(Of Double), col As List(Of String))
+    Public Sub New(val As List(Of Double), col As List(Of Integer()))
         InitializeComponent()
         PointVal = val.ToList()
         PointCol = col.ToList
@@ -23,7 +23,8 @@ Public Class Graph
                 dp.SetValueXY(i, 0)
             Else
                 dp.SetValueXY(i, PointVal(i - 1))
-                dp.Color = Color.FromName(PointCol(i - 1))
+                'dp.Color = Color.FromName(PointCol(i - 1))
+                dp.Color = Color.FromArgb(PointCol(i - 1)(2), PointCol(i - 1)(1), PointCol(i - 1)(0))
             End If
 
             Chart1.Series("Data").Points.Add(dp)

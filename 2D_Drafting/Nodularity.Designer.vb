@@ -30,10 +30,10 @@ Partial Class Nodularity
         Me.Label1 = New System.Windows.Forms.Label()
         Me.BtnAuto = New System.Windows.Forms.Button()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.Button2 = New System.Windows.Forms.Button()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.BtnPerArea = New System.Windows.Forms.Button()
+        Me.BtnRound = New System.Windows.Forms.Button()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.GroupName = New System.Windows.Forms.GroupBox()
         Me.TxtLimit = New System.Windows.Forms.TextBox()
         Me.BtnSetLimit = New System.Windows.Forms.Button()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -75,7 +75,7 @@ Partial Class Nodularity
         Me.BtnExit = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
-        Me.GroupBox3.SuspendLayout()
+        Me.GroupName.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -148,8 +148,8 @@ Partial Class Nodularity
         '
         'GroupBox2
         '
-        Me.GroupBox2.Controls.Add(Me.Button2)
-        Me.GroupBox2.Controls.Add(Me.Button1)
+        Me.GroupBox2.Controls.Add(Me.BtnPerArea)
+        Me.GroupBox2.Controls.Add(Me.BtnRound)
         Me.GroupBox2.Controls.Add(Me.Label3)
         Me.GroupBox2.Location = New System.Drawing.Point(238, 14)
         Me.GroupBox2.Name = "GroupBox2"
@@ -158,23 +158,23 @@ Partial Class Nodularity
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Second Step"
         '
-        'Button2
+        'BtnPerArea
         '
-        Me.Button2.Location = New System.Drawing.Point(28, 65)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(90, 23)
-        Me.Button2.TabIndex = 4
-        Me.Button2.Text = "Perimeter/Area"
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.BtnPerArea.Location = New System.Drawing.Point(28, 65)
+        Me.BtnPerArea.Name = "BtnPerArea"
+        Me.BtnPerArea.Size = New System.Drawing.Size(90, 23)
+        Me.BtnPerArea.TabIndex = 4
+        Me.BtnPerArea.Text = "Perimeter/Area"
+        Me.BtnPerArea.UseVisualStyleBackColor = True
         '
-        'Button1
+        'BtnRound
         '
-        Me.Button1.Location = New System.Drawing.Point(28, 33)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(90, 23)
-        Me.Button1.TabIndex = 3
-        Me.Button1.Text = "Roundness"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.BtnRound.Location = New System.Drawing.Point(28, 33)
+        Me.BtnRound.Name = "BtnRound"
+        Me.BtnRound.Size = New System.Drawing.Size(90, 23)
+        Me.BtnRound.TabIndex = 3
+        Me.BtnRound.Text = "Roundness"
+        Me.BtnRound.UseVisualStyleBackColor = True
         '
         'Label3
         '
@@ -185,19 +185,19 @@ Partial Class Nodularity
         Me.Label3.TabIndex = 2
         Me.Label3.Text = "Distinguish By:"
         '
-        'GroupBox3
+        'GroupName
         '
-        Me.GroupBox3.Controls.Add(Me.TxtLimit)
-        Me.GroupBox3.Controls.Add(Me.BtnSetLimit)
-        Me.GroupBox3.Controls.Add(Me.Label5)
-        Me.GroupBox3.Controls.Add(Me.TextBox1)
-        Me.GroupBox3.Controls.Add(Me.Label4)
-        Me.GroupBox3.Location = New System.Drawing.Point(12, 120)
-        Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(372, 89)
-        Me.GroupBox3.TabIndex = 2
-        Me.GroupBox3.TabStop = False
-        Me.GroupBox3.Text = "Roundness Limit"
+        Me.GroupName.Controls.Add(Me.TxtLimit)
+        Me.GroupName.Controls.Add(Me.BtnSetLimit)
+        Me.GroupName.Controls.Add(Me.Label5)
+        Me.GroupName.Controls.Add(Me.TextBox1)
+        Me.GroupName.Controls.Add(Me.Label4)
+        Me.GroupName.Location = New System.Drawing.Point(12, 120)
+        Me.GroupName.Name = "GroupName"
+        Me.GroupName.Size = New System.Drawing.Size(372, 89)
+        Me.GroupName.TabIndex = 2
+        Me.GroupName.TabStop = False
+        Me.GroupName.Text = "Roundness Limit"
         '
         'TxtLimit
         '
@@ -530,7 +530,7 @@ Partial Class Nodularity
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.Label6)
-        Me.Controls.Add(Me.GroupBox3)
+        Me.Controls.Add(Me.GroupName)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
@@ -540,8 +540,8 @@ Partial Class Nodularity
         Me.GroupBox1.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
-        Me.GroupBox3.ResumeLayout(False)
-        Me.GroupBox3.PerformLayout()
+        Me.GroupName.ResumeLayout(False)
+        Me.GroupName.PerformLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -556,10 +556,10 @@ Partial Class Nodularity
     Friend WithEvents Label1 As Label
     Friend WithEvents BtnAuto As Button
     Friend WithEvents GroupBox2 As GroupBox
-    Friend WithEvents Button2 As Button
-    Friend WithEvents Button1 As Button
+    Friend WithEvents BtnPerArea As Button
+    Friend WithEvents BtnRound As Button
     Friend WithEvents Label3 As Label
-    Friend WithEvents GroupBox3 As GroupBox
+    Friend WithEvents GroupName As GroupBox
     Friend WithEvents TxtLimit As TextBox
     Friend WithEvents BtnSetLimit As Button
     Friend WithEvents Label5 As Label

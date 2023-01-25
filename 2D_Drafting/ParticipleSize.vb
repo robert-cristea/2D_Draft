@@ -149,4 +149,8 @@ Public Class ParticipleSize
         Dim title = "Save"
         SaveListToExcel(DataGridView1, filter, title)
     End Sub
+
+    Private Sub ParticipleSize_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        Main_Form.Controls.Remove(Me)
+    End Sub
 End Class

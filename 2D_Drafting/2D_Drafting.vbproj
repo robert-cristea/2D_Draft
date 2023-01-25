@@ -199,28 +199,34 @@
     <Compile Include="CurveClass.vb" />
     <Compile Include="C_ControlMethods.vb" />
     <Compile Include="C_Utils.vb" />
-    <Compile Include="Form1.Designer.vb">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <Compile Include="MainForm.Designer.vb">
+      <DependentUpon>MainForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form1.vb">
+    <Compile Include="MainForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form2.Designer.vb">
-      <DependentUpon>Form2.vb</DependentUpon>
+    <Compile Include="MeasureScaleDlg.Designer.vb">
+      <DependentUpon>MeasureScaleDlg.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form2.vb">
+    <Compile Include="MeasureScaleDlg.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form3.Designer.vb">
-      <DependentUpon>Form3.vb</DependentUpon>
+    <Compile Include="LenDiameter.Designer.vb">
+      <DependentUpon>LenDiameter.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form3.vb">
+    <Compile Include="LenDiameter.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form4.Designer.vb">
-      <DependentUpon>Form4.vb</DependentUpon>
+    <Compile Include="RangeDistribution.Designer.vb">
+      <DependentUpon>RangeDistribution.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form4.vb">
+    <Compile Include="RangeDistribution.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ToCurve.Designer.vb">
+      <DependentUpon>ToCurve.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ToCurve.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Graph.Designer.vb">
@@ -316,17 +322,20 @@
     <EmbeddedResource Include="Count_Classification.resx">
       <DependentUpon>Count_Classification.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.vb</DependentUpon>
+    <EmbeddedResource Include="MeasureScaleDlg.resx">
+      <DependentUpon>MeasureScaleDlg.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form3.resx">
-      <DependentUpon>Form3.vb</DependentUpon>
+    <EmbeddedResource Include="LenDiameter.resx">
+      <DependentUpon>LenDiameter.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form4.resx">
-      <DependentUpon>Form4.vb</DependentUpon>
+    <EmbeddedResource Include="RangeDistribution.resx">
+      <DependentUpon>RangeDistribution.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToCurve.resx">
+      <DependentUpon>ToCurve.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Graph.resx">
       <DependentUpon>Graph.vb</DependentUpon>

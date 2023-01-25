@@ -387,7 +387,8 @@ Public Class Main_Form
     Public FirstPtOfEdge As Point = New Point()
     Public SecondPtOfEdge As Point = New Point()
     Public MouseDownFlag As Boolean
-    Public Col_list As List(Of String) = New List(Of String)        'the list of color names
+    Public str_Col_list As List(Of String) = New List(Of String)        'the list of color names
+    Public Col_list As List(Of Integer()) = New List(Of Integer())
     Public Obj_Seg As SegObject = New SegObject()
 
 
@@ -663,7 +664,10 @@ Public Class Main_Form
 
         For Each prop As PropertyInfo In colType.GetProperties()
             If prop.PropertyType Is GetType(System.Drawing.Color) Then
-                Col_list.Add(prop.Name)
+                str_Col_list.Add(prop.Name)
+                Dim Col = Color.FromName(prop.Name)
+                Dim Col_Array = New Integer() {Col.B, Col.G, Col.R}
+                Col_list.Add(Col_Array)
             End If
         Next
         DeleteImages(imagepath)
@@ -1021,7 +1025,7 @@ Public Class Main_Form
         obj_selected.measure_type = cur_measure_type
 
         ID_STATUS_LABEL.Text = "Drawing a circle which has fixed radius"
-        Dim form = New Form3()
+        Dim form = New LenDiameter()
         If form.ShowDialog() = DialogResult.OK Then
             obj_selected.scale_object.length = CSng(form.ID_TEXT_FIXED.Text)
             obj_selected.radius = obj_selected.scale_object.length / ID_PICTURE_BOX(tab_index).Width
@@ -1036,7 +1040,7 @@ Public Class Main_Form
         obj_selected.measure_type = cur_measure_type
 
         ID_STATUS_LABEL.Text = "Drawing a line which has fixed length"
-        Dim form = New Form3()
+        Dim form = New LenDiameter()
         If form.ShowDialog() = DialogResult.OK Then
             obj_selected.scale_object.length = CSng(form.ID_TEXT_FIXED.Text)
             obj_selected.length = obj_selected.scale_object.length / ID_PICTURE_BOX(tab_index).Width
@@ -1051,7 +1055,7 @@ Public Class Main_Form
         obj_selected.measure_type = cur_measure_type
 
         ID_STATUS_LABEL.Text = "Drawing a angle which has fixed angle"
-        Dim form = New Form3()
+        Dim form = New LenDiameter()
         If form.ShowDialog() = DialogResult.OK Then
             obj_selected.angle = CSng(form.ID_TEXT_FIXED.Text)
         End If
@@ -1478,7 +1482,7 @@ Public Class Main_Form
                 FirstPtOfEdge.Y = 0
                 SecondPtOfEdge.X = 0
                 SecondPtOfEdge.Y = 0
-                Dim form = New Form4()
+                Dim form = New ToCurve()
                 Dim result = form.ShowDialog()
                 If result = DialogResult.Cancel Then
                     Undo()

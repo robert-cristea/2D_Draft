@@ -180,7 +180,6 @@ Partial Class ParticipleSize
         Me.GroupBox2.Size = New System.Drawing.Size(316, 107)
         Me.GroupBox2.TabIndex = 5
         Me.GroupBox2.TabStop = False
-        Me.GroupBox2.Text = "GroupBox2"
         '
         'Label8
         '

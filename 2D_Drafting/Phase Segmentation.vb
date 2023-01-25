@@ -4,7 +4,7 @@ Imports Emgu.CV.Structure
 Imports GeometRi
 
 Public Class Phase_Segmentation
-    Public ObjSel As MeasureObject
+    Public ObjSel As SegObject
     Public OriImage As Emgu.CV.Image(Of Bgr, Byte)
     Public GrayImage As Emgu.CV.Image(Of Gray, Byte)
     Public GrayCrop As Emgu.CV.Image(Of Gray, Byte)
@@ -12,7 +12,7 @@ Public Class Phase_Segmentation
     Public RadioStatePreview As Integer
     Public PhaseNum As Integer
     Public PhaseVal As List(Of Integer) = New List(Of Integer)
-    Public PhaseCol As List(Of String) = New List(Of String)
+    Public PhaseCol As List(Of Integer()) = New List(Of Integer())
     Public PhaseArea As List(Of Integer) = New List(Of Integer)
     Private PhaseSel As List(Of Integer) = New List(Of Integer)
     Private MouseDownflag As Boolean
@@ -20,7 +20,7 @@ Public Class Phase_Segmentation
     Private CurSelPhase As Integer
     Private MouseClicked As Integer
     Private IntialPhaseVal As Integer
-    Private SetCol As String
+    Private SetCol As Integer() = New Integer(2) {300, 0, 0}
     Private SelectPart As Boolean
     Private PrevSelectPart As Boolean
     Private FirstPt As Point
@@ -178,16 +178,18 @@ Public Class Phase_Segmentation
     End Sub
 
     Private Sub BtnNew_Click(sender As Object, e As EventArgs) Handles BtnNew.Click
-        Dim cur_col As String
+        Dim cur_col As Integer()
         Dim item As String
+        Dim SetCol_Copy As Integer() = New Integer(2) {}
         If PhaseNum = 0 Then
             PhaseVal.Add(0)
             PhaseVal.Add(128)
             cur_col = Main_Form.Col_list(PhaseNum + 1)
-            If SetCol = "" Then
+            If SetCol(0) = 300 Then
                 PhaseCol.Add(cur_col)
             Else
-                PhaseCol.Add(SetCol)
+                CopyIntegerArray(SetCol_Copy, SetCol, 3)
+                PhaseCol.Add(SetCol_Copy)
             End If
 
             item = "Phase" & PhaseNum
@@ -202,10 +204,11 @@ Public Class Phase_Segmentation
             End If
             PhaseVal.Add(256)
             cur_col = Main_Form.Col_list(PhaseNum + 1)
-            If SetCol = "" Then
+            If SetCol(0) = 300 Then
                 PhaseCol.Add(cur_col)
             Else
-                PhaseCol.Add(SetCol)
+                CopyIntegerArray(SetCol_Copy, SetCol, 3)
+                PhaseCol.Add(SetCol_Copy)
             End If
             item = "Phase" & PhaseNum
             ComboBox1.Items.Add(item)
@@ -215,14 +218,14 @@ Public Class Phase_Segmentation
 
         End If
         PhaseNum += 1
-        SetCol = ""
+        SetCol(0) = 300
         DrawResult()
-        BtnCol.BackColor = Color.FromName(PhaseCol(PhaseCol.Count - 1))
+        BtnCol.BackColor = Color.FromArgb(PhaseCol(PhaseCol.Count - 1)(2), PhaseCol(PhaseCol.Count - 1)(1), PhaseCol(PhaseCol.Count - 1)(0))
 
     End Sub
 
     Private Sub BtnDel_Click(sender As Object, e As EventArgs) Handles BtnDel.Click
-        Dim cur_col As String = "white"
+        Dim cur_col As Integer() = New Integer() {255, 255, 255}
         Dim item As String
         If PhaseNum > 0 Then
             PhaseVal.RemoveAt(PhaseVal.Count - 1)
@@ -250,7 +253,7 @@ Public Class Phase_Segmentation
         End If
 
         DrawResult()
-        BtnCol.BackColor = Color.FromName(cur_col)
+        BtnCol.BackColor = Color.FromArgb(cur_col(2), cur_col(1), cur_col(0))
     End Sub
 
     Private Sub UpdateNumValue()
@@ -360,7 +363,10 @@ Public Class Phase_Segmentation
             'If PhaseCol.Count > 0 Then
             '    PhaseCol(CurSelPhase) = clrDialog.Color.Name
             'End If
-            SetCol = clrDialog.Color.Name
+            SetCol(0) = clrDialog.Color.B
+            SetCol(1) = clrDialog.Color.G
+            SetCol(2) = clrDialog.Color.R
+
             BtnCol.BackColor = clrDialog.Color
             DrawResult()
         End If
@@ -383,7 +389,7 @@ Public Class Phase_Segmentation
     End Sub
 
     Private Sub Phase_Segmentation_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-
+        Main_Form.Controls.Remove(Me)
     End Sub
 
     Private Sub BtnGraph_Click(sender As Object, e As EventArgs) Handles BtnGraph.Click
