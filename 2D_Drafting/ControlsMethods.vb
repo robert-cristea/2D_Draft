@@ -14,6 +14,31 @@ Imports Size = System.Drawing.Size
 Public Module ControlsMethods
 #Region "PictureBox Methods"
 
+    Public Sub DisposeElemOfList(ByRef Src As List(Of Mat), NewMat As Mat, index As Integer)
+        Dim oldMat = Src(index)
+        Src.RemoveAt(index)
+        If oldMat IsNot Nothing Then
+            oldMat.Dispose()
+        End If
+
+        Src.Insert(index, NewMat)
+    End Sub
+
+    Public Function CalcIntialRatio(picBox As Panel, Ori As Mat) As Single
+        Dim image_w = Ori.Cols
+        Dim image_h = Ori.Rows
+        Dim picturebox_w = picBox.Width
+        Dim picturebox_h = picBox.Height
+        Dim ratio As Single
+
+        If image_w / image_h < picturebox_w / picturebox_h Then
+            ratio = CSng(picturebox_h) / image_h
+        Else
+            ratio = CSng(picturebox_w) / image_w
+        End If
+        Return ratio
+    End Function
+
     ''' <summary>
     ''' Zoom image by zoom_factor.
     ''' </summary>
@@ -22,13 +47,21 @@ Public Module ControlsMethods
     ''' <paramname="cur">The list of images currently used in picturebox.</param>
     ''' <paramname="tab_index">The index of tab control.</param>
     Public Function ZoomImage(ByVal zoom_factor As Double, ByVal ori As List(Of Mat), ByVal cur As List(Of Mat), ByVal tab_index As Integer) As Mat
-        Dim ori_img = ori.ElementAt(tab_index)
+        Dim ori_img = ori.ElementAt(tab_index).Clone()
         Dim s As Size = New Size(Convert.ToInt32(ori_img.Width * zoom_factor), Convert.ToInt32(ori_img.Height * zoom_factor))
-        Dim cur_img = cur.ElementAt(tab_index)
         Dim dst_img As Mat = New Mat()
         CvInvoke.Resize(ori_img, dst_img, s)
+        ori_img.Dispose()
         Return dst_img
     End Function
+
+    Public Function ZoomImage2(Src As Mat, Dst_w As Integer, Dst_h As Integer) As Mat
+        Dim Dst As Mat = New Mat()
+        Dim s As Size = New Size(Dst_w, Dst_h)
+        CvInvoke.Resize(Src, Dst, s)
+        Return Dst
+    End Function
+
 
     ''' <summary>
     ''' put image in the center of picturebox control.

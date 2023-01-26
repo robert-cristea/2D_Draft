@@ -34,29 +34,37 @@ Public Class RoundnessLimit
     End Sub
 
     Private Sub RoundnessLimit_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ObjList.Clear()
-        Dim scr = Main_Form.origin_image(Main_Form.tab_index).ToBitmap()
-        Dim bmpImage As Bitmap = New Bitmap(scr)
-        OriImage = bmpImage.ToImage(Of Bgr, Byte)()
-        bmpImage.Dispose()
-        GrayImage = getGrayScale(OriImage)
-        BinaryImage = GetBinaryWith2Thr(GrayImage, IntenLower, IntenUpper)
+        Try
+            ObjList.Clear()
+            Dim scr = Main_Form.origin_image(Main_Form.tab_index).ToBitmap()
+            Dim bmpImage As Bitmap = New Bitmap(scr)
+            OriImage = bmpImage.ToImage(Of Bgr, Byte)()
+            bmpImage.Dispose()
+            GrayImage = getGrayScale(OriImage)
+            BinaryImage = GetBinaryWith2Thr(GrayImage, IntenLower, IntenUpper)
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Public Sub DrawResult()
-        ObjList.Clear()
-        Dim output As Emgu.CV.Image(Of Bgr, Byte)
-        If DistingshType = False Then
-            output = BlobDetection(OriImage, BinaryImage, ObjList, AreaLimit, RoundLower, RoundUpper)
-        Else
-            output = BlobDetection(OriImage, BinaryImage, ObjList, AreaLimit, 0, 1, PerVsAreaRatioLower, PerVsAreaRatioUpper)
-        End If
+        Try
+            ObjList.Clear()
+            Dim output As Emgu.CV.Image(Of Bgr, Byte)
+            If DistingshType = False Then
+                output = BlobDetection(OriImage, BinaryImage, ObjList, AreaLimit, RoundLower, RoundUpper)
+            Else
+                output = BlobDetection(OriImage, BinaryImage, ObjList, AreaLimit, 0, 1, PerVsAreaRatioLower, PerVsAreaRatioUpper)
+            End If
 
-        Dim sz = New Size(Main_Form.resized_image(Main_Form.tab_index).Width, Main_Form.resized_image(Main_Form.tab_index).Height)
-        CvInvoke.Resize(output, output, sz)
-        Dim Image = GetImageFromEmgu(output)
-        Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = Image
-        Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(Image)
+            Dim sz = New Size(Main_Form.resized_image(Main_Form.tab_index).Width, Main_Form.resized_image(Main_Form.tab_index).Height)
+            CvInvoke.Resize(output, output, sz)
+            Dim Image = GetImageFromEmgu(output)
+            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = Image
+            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(Image)
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub TrackUpper_Scroll(sender As Object, e As EventArgs) Handles TrackUpper.Scroll

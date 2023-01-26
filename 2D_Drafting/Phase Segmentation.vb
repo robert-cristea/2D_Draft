@@ -152,6 +152,9 @@ Public Class Phase_Segmentation
     Private Sub LoadDataToGridView()
         DataGridView1.Rows.Clear()
         Dim str_item = New String(2) {}
+        If Main_Form.resized_image(Main_Form.tab_index) Is Nothing Then
+            Return
+        End If
         Dim squrare = Main_Form.resized_image(Main_Form.tab_index).Width * Main_Form.resized_image(Main_Form.tab_index).Height
 
         For i = 0 To PhaseCol.Count - 1
@@ -164,12 +167,16 @@ Public Class Phase_Segmentation
     End Sub
 
     Private Sub PrviewSegmentation()
-        Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
-        Dim flag As Boolean = False
-        If Main_Form.EdgeRegionDrawed And Main_Form.EdgeRegionDrawReady Then flag = True
-        Dim output = MultiSegment(image, PhaseVal, PhaseCol, PhaseArea, PhaseSel, FirstPt, SecondPt, flag)
-        Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-        Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+        Try
+            Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+            Dim flag As Boolean = False
+            If Main_Form.EdgeRegionDrawed And Main_Form.EdgeRegionDrawReady Then flag = True
+            Dim output = MultiSegment(image, PhaseVal, PhaseCol, PhaseArea, PhaseSel, FirstPt, SecondPt, flag)
+            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
+            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+        Catch ex As Exception
+
+        End Try
     End Sub
     Private Sub DrawResult()
         DrawProcess(PicBoxProgress, PhaseVal, PhaseCol)

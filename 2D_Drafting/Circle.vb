@@ -44,69 +44,81 @@ Public Class Circle
     End Sub
 
     Private Sub ID_SCROLL_ROUNDNESS_Scroll(sender As Object, e As EventArgs) Handles ID_SCROLL_ROUNDNESS.Scroll
-        roundness = ID_SCROLL_ROUNDNESS.Value
-        ID_LABEL_ROUND.Text = roundness.ToString()
-        Main_Form.Obj_Seg.Refresh()
+        Try
+            roundness = ID_SCROLL_ROUNDNESS.Value
+            ID_LABEL_ROUND.Text = roundness.ToString()
+            Main_Form.Obj_Seg.Refresh()
 
-        Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
-        Dim output = IdentifyCicles(image, roundness, thr_cir, Main_Form.Obj_Seg)
-        Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-        Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
-        img_circle = Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image
-        img_active = img_circle
-        subtract = 0
-        InitLabel()
-        LoadDataToGridView()
+            Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+            Dim output = IdentifyCicles(image, roundness, thr_cir, Main_Form.Obj_Seg)
+            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
+            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+            img_circle = Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image
+            img_active = img_circle
+            subtract = 0
+            InitLabel()
+            LoadDataToGridView()
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub ID_SCROLL_THR_SEG_Scroll(sender As Object, e As EventArgs) Handles ID_SCROLL_THR_SEG.Scroll
-        If subtract = 0 Then
-            subtract = 1
+        Try
+            If subtract = 0 Then
+                subtract = 1
 
-            'subtract circles from image
-            Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
-            Dim output = SubtractCircles(image, Main_Form.Obj_Seg, percent_circle)
-            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
-            img_subtracted = output
-            img_circle = img_subtracted
-            img_active = img_subtracted
+                'subtract circles from image
+                Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+                Dim output = SubtractCircles(image, Main_Form.Obj_Seg, percent_circle)
+                Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
+                Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+                img_subtracted = output
+                img_circle = img_subtracted
+                img_active = img_subtracted
 
-        End If
+            End If
 
-        thr_seg = ID_SCROLL_THR_SEG.Value
-        ID_LABEL_THR_SEG.Text = thr_seg.ToString()
+            thr_seg = ID_SCROLL_THR_SEG.Value
+            ID_LABEL_THR_SEG.Text = thr_seg.ToString()
 
-        'when button "ID_BUTTON_SUBTRACT" is clicked
-        If subtract = 1 Then
-            'Segment Remaing Image into Black and White
-            Dim output = SegmentIntoBlackAndWhite(img_subtracted, thr_seg, Main_Form.Obj_Seg, percent_black, percent_white)
-            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
-            'format img_segmented
-            img_segmented = output
-            img_active = img_segmented
+            'when button "ID_BUTTON_SUBTRACT" is clicked
+            If subtract = 1 Then
+                'Segment Remaing Image into Black and White
+                Dim output = SegmentIntoBlackAndWhite(img_subtracted, thr_seg, Main_Form.Obj_Seg, percent_black, percent_white)
+                Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
+                Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+                'format img_segmented
+                img_segmented = output
+                img_active = img_segmented
 
-            LabCircle.Text = percent_circle.ToString()
-            LabWhite.Text = percent_white.ToString()
-            LabBlack.Text = percent_black.ToString()
+                LabCircle.Text = percent_circle.ToString()
+                LabWhite.Text = percent_white.ToString()
+                LabBlack.Text = percent_black.ToString()
 
-        End If
+            End If
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub ID_NUM_THR_CIR_ValueChanged(sender As Object, e As EventArgs) Handles ID_NUM_THR_CIR.ValueChanged
-        thr_cir = CInt(ID_NUM_THR_CIR.Value)
-        Main_Form.Obj_Seg.Refresh()
-        'identify circles 
-        Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
-        Dim output = IdentifyCicles(image, roundness, thr_cir, Main_Form.Obj_Seg)
-        Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-        Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
-        img_circle = Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image
-        img_active = img_circle
-        subtract = 0
-        InitLabel()
-        LoadDataToGridView()
+        Try
+            thr_cir = CInt(ID_NUM_THR_CIR.Value)
+            Main_Form.Obj_Seg.Refresh()
+            'identify circles 
+            Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+            Dim output = IdentifyCicles(image, roundness, thr_cir, Main_Form.Obj_Seg)
+            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
+            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+            img_circle = Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image
+            img_active = img_circle
+            subtract = 0
+            InitLabel()
+            LoadDataToGridView()
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub BtnExcel_Click(sender As Object, e As EventArgs) Handles BtnExcel.Click

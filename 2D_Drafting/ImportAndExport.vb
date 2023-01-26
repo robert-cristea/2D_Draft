@@ -24,13 +24,17 @@ Public Module ImportAndExport
     ''' <paramname="img_import_flag">The flag specify you can import image to target tag.</param>
     <Extension()>
     Public Function LoadImageFromFiles(ByVal pictureBox As PictureBox, ByVal filter As String, ByVal fileDialogTitle As String,
-                                          ByRef origin_image_list As List(Of Mat), ByRef resized_image_list As List(Of Mat),
-                                          ByRef initial_ratio As Single(), ByVal tab_index As Integer, ByVal img_import_flag As Boolean()) As Integer
+                                          ByRef origin_image_list As List(Of Mat), ByRef resized_image_list As List(Of Mat), ByRef current_image_list As List(Of Mat),
+                                          ByRef initial_ratio As Single(), ByVal tab_index As Integer, ByVal img_import_flag As Boolean(),
+                                       ByRef file_names As List(Of String)) As Integer
         Dim openFileDialog As OpenFileDialog = New OpenFileDialog()
         openFileDialog.Filter = filter
         openFileDialog.Title = fileDialogTitle
 
-        openFileDialog.Multiselect = True
+        If tab_index = 0 Then
+            openFileDialog.Multiselect = True
+        End If
+
 
         openFileDialog.FileName = ""
         Dim image_filepaths = New String(24) {}
@@ -59,18 +63,21 @@ Public Module ImportAndExport
 
             Console.WriteLine("image_size:" & image_w.ToString() & ":" & image_h.ToString())
 
-            If image_w / image_h < picturebox_w / picturebox_h Then
-                Dim s As Size = New Size(Convert.ToInt32(image_w * picturebox_h / image_h), picturebox_h)
-                CvInvoke.Resize(origin_image, resized_image, s)
-                initial_ratio(i) = CSng(picturebox_h) / image_h
-            Else
-                Dim sz As Size = New Size(picturebox_w, Convert.ToInt32(image_h * picturebox_w / image_w))
-                CvInvoke.Resize(origin_image, resized_image, sz)
-                initial_ratio(i) = CSng(picturebox_w) / image_w
-            End If
+            'If image_w / image_h < picturebox_w / picturebox_h Then
+            '    Dim s As Size = New Size(Convert.ToInt32(image_w * picturebox_h / image_h), picturebox_h)
+            '    CvInvoke.Resize(origin_image, resized_image, s)
+            '    initial_ratio(i) = CSng(picturebox_h) / image_h
+            'Else
+            '    Dim sz As Size = New Size(picturebox_w, Convert.ToInt32(image_h * picturebox_w / image_w))
+            '    CvInvoke.Resize(origin_image, resized_image, sz)
+            '    initial_ratio(i) = CSng(picturebox_w) / image_w
+            'End If
 
-            origin_image_list(i) = origin_image
-            resized_image_list(i) = resized_image
+            DisposeElemOfList(origin_image_list, origin_image, i)
+            DisposeElemOfList(resized_image_list, origin_image.Clone(), i)
+            DisposeElemOfList(current_image_list, origin_image.Clone(), i)
+
+            file_names(i) = System.IO.Path.GetFileName(image_filepaths(img_cnt))
             i += 1
             img_cnt += 1
         End While
@@ -88,8 +95,8 @@ Public Module ImportAndExport
     ''' <paramname="tab_index">The index of current tab page.</param>
     <Extension()>
     Public Function LoadImageFromFile(ByVal pictureBox As PictureBox, ByVal filename As String,
-                                          ByRef origin_image_list As List(Of Mat), ByRef resized_image_list As List(Of Mat),
-                                          ByRef initial_ratio As Single(), ByVal tab_index As Integer)
+                                          ByRef origin_image_list As List(Of Mat), ByRef resized_image_list As List(Of Mat), ByRef current_image_list As List(Of Mat),
+                                          ByRef initial_ratio As Single(), ByVal tab_index As Integer, ByRef file_names As List(Of String))
 
 
         Dim picturebox_h = pictureBox.Height
@@ -103,19 +110,21 @@ Public Module ImportAndExport
 
         Console.WriteLine("image_size:" & image_w.ToString() & ":" & image_h.ToString())
 
-        If image_w / image_h < picturebox_w / picturebox_h Then
-            Dim s As Size = New Size(Convert.ToInt32(image_w * picturebox_h / image_h), picturebox_h)
-            CvInvoke.Resize(origin_image, resized_image, s)
-            initial_ratio(i) = CSng(picturebox_h) / image_h
-        Else
-            Dim sz As Size = New Size(picturebox_w, Convert.ToInt32(image_h * picturebox_w / image_w))
-            CvInvoke.Resize(origin_image, resized_image, sz)
-            initial_ratio(i) = CSng(picturebox_w) / image_w
-        End If
+        'If image_w / image_h < picturebox_w / picturebox_h Then
+        '    Dim s As Size = New Size(Convert.ToInt32(image_w * picturebox_h / image_h), picturebox_h)
+        '    CvInvoke.Resize(origin_image, resized_image, s)
+        '    initial_ratio(i) = CSng(picturebox_h) / image_h
+        'Else
+        '    Dim sz As Size = New Size(picturebox_w, Convert.ToInt32(image_h * picturebox_w / image_w))
+        '    CvInvoke.Resize(origin_image, resized_image, sz)
+        '    initial_ratio(i) = CSng(picturebox_w) / image_w
+        'End If
 
+        DisposeElemOfList(origin_image_list, origin_image, i)
+        DisposeElemOfList(resized_image_list, origin_image.Clone(), i)
+        DisposeElemOfList(current_image_list, origin_image.Clone(), i)
 
-        origin_image_list(i) = origin_image
-        resized_image_list(i) = resized_image
+        file_names(i) = System.IO.Path.GetFileName(filename)
 
     End Function
 

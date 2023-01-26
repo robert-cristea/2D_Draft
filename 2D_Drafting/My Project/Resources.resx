@@ -121,14 +121,14 @@
   <data name="arc" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arc.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="GrayGradient" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GrayGradient.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="menu_line_ver" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\menu_line_ver.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="menu_tab_remove" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\menu_tab_remove.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="menu_angle" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\menu_angle.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="menu_curve" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\menu_curve.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -144,6 +144,9 @@
   </data>
   <data name="pt_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pt_line.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_zoom_in" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\menu_zoom_in.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="undo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\undo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -166,6 +169,9 @@
   <data name="brightness" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\brightness.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="line_vertical" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\line_vertical.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="C_curve" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\C_curve.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -175,11 +181,8 @@
   <data name="pencil" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pencil.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="menu_CuPoly" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\menu_CuPoly.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="menu_point" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\menu_point.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="import_camera" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\import_camera.JPG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="menu_line_align" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\menu_line_align.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -193,14 +196,14 @@
   <data name="color_picker" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\color_picker.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="zoom_out" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zoom_out.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="import_image" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\import_image.JPG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="line_align" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\line_align.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="line_horizon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\line_horizon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="export_xlsx" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\export_xlsx.JPG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -208,8 +211,8 @@
   <data name="C_point" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\C_point.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="line_horizon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\line_horizon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="zoom_out" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\zoom_out.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="annotation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\annotation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -217,8 +220,8 @@
   <data name="C_cupoly" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\C_cupoly.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="line_vertical" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\line_vertical.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="menu_angle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\menu_angle.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="C_poly1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\C_poly.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -235,20 +238,20 @@
   <data name="line_parallel" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\line_parallel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="angle" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\angle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="menu_angle_far" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\menu_angle_far.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_c_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\menu_c_line.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="tab_remove" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tab_remove.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="import_camera" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\import_camera.JPG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="menu_point" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\menu_point.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="menu_c_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\menu_c_line.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="menu_CuPoly" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\menu_CuPoly.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="menu_zoom_out" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\menu_zoom_out.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -256,8 +259,8 @@
   <data name="menu_tab_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\menu_tab_add.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="tab_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tab_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="angle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\angle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="menu_pt_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\menu_pt_line.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -268,10 +271,10 @@
   <data name="menu_annotation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\menu_annotation.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="menu_zoom_in" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\menu_zoom_in.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="tab_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tab_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="GrayGradient" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GrayGradient.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="menu_zoom_fit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\menu_zoom_fit.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

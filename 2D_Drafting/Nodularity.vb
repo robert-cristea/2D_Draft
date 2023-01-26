@@ -45,37 +45,45 @@ Public Class Nodularity
         InitializeComponent()
     End Sub
     Private Sub Nodularity_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim scr = Main_Form.origin_image(Main_Form.tab_index).ToBitmap()
-        Dim bmpImage As Bitmap = New Bitmap(scr)
-        OriImage = bmpImage.ToImage(Of Bgr, Byte)()
-        bmpImage.Dispose()
-        GrayImage = getGrayScale(OriImage)
-        BinaryImage = GrayImage.CopyBlank()
+        Try
+            Dim scr = Main_Form.origin_image(Main_Form.tab_index).ToBitmap()
+            Dim bmpImage As Bitmap = New Bitmap(scr)
+            OriImage = bmpImage.ToImage(Of Bgr, Byte)()
+            bmpImage.Dispose()
+            GrayImage = getGrayScale(OriImage)
+            BinaryImage = GrayImage.CopyBlank()
+        Catch ex As Exception
+
+        End Try
 
         ColList.Add(New Integer() {0, 0, 255})
         ColList.Add(New Integer() {255, 0, 0})
     End Sub
 
     Private Sub GetBinaryImage()
-        ObjListTotal.Clear()
-        Dim resizedBinary = BinaryImage.Copy()
-        Dim sz = New Size(Main_Form.resized_image(Main_Form.tab_index).Width, Main_Form.resized_image(Main_Form.tab_index).Height)
-        CvInvoke.Resize(BinaryImage, resizedBinary, sz)
-        Dim BinImg = GetImageFromEmgu(resizedBinary)
-        Dim outPut = OverLapSegToOri(Main_Form.resized_image(Main_Form.tab_index).ToBitmap(), BinImg)
-        Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = outPut
-        Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(outPut)
-        BlobDetection(OriImage, BinaryImage, ObjListTotal, AreaLimit)
+        Try
+            ObjListTotal.Clear()
+            Dim resizedBinary = BinaryImage.Copy()
+            Dim sz = New Size(Main_Form.resized_image(Main_Form.tab_index).Width, Main_Form.resized_image(Main_Form.tab_index).Height)
+            CvInvoke.Resize(BinaryImage, resizedBinary, sz)
+            Dim BinImg = GetImageFromEmgu(resizedBinary)
+            Dim outPut = OverLapSegToOri(Main_Form.resized_image(Main_Form.tab_index).ToBitmap(), BinImg)
+            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = outPut
+            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(outPut)
+            BlobDetection(OriImage, BinaryImage, ObjListTotal, AreaLimit)
 
-        Dim maxArea = 0
-        Dim minArea = 99999
-        For i = 0 To ObjListTotal.Count - 1
-            Dim Obj = ObjListTotal(i)
-            If maxArea < Obj.Area Then maxArea = Obj.Area
-            If minArea > Obj.Area Then minArea = Obj.Area
-        Next
-        LabMaxArea.Text = maxArea.ToString()
-        LabMinArea.Text = minArea.ToString()
+            Dim maxArea = 0
+            Dim minArea = 99999
+            For i = 0 To ObjListTotal.Count - 1
+                Dim Obj = ObjListTotal(i)
+                If maxArea < Obj.Area Then maxArea = Obj.Area
+                If minArea > Obj.Area Then minArea = Obj.Area
+            Next
+            LabMaxArea.Text = maxArea.ToString()
+            LabMinArea.Text = minArea.ToString()
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub Initialize()
@@ -171,13 +179,17 @@ Public Class Nodularity
     End Sub
 
     Private Sub BtnManual_Click(sender As Object, e As EventArgs) Handles BtnManual.Click
-        Dim form = New Intensity()
-        If form.ShowDialog() = DialogResult.OK Then
-            IntensityUpper = form.Upper
-            IntensityLower = form.Lower
-        End If
-        BinaryImage = GetBinaryWith2Thr(GrayImage, IntensityLower, IntensityUpper)
-        GetBinaryImage()
+        Try
+            Dim form = New Intensity()
+            If form.ShowDialog() = DialogResult.OK Then
+                IntensityUpper = form.Upper
+                IntensityLower = form.Lower
+            End If
+            BinaryImage = GetBinaryWith2Thr(GrayImage, IntensityLower, IntensityUpper)
+            GetBinaryImage()
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub BtnSetLimit_Click(sender As Object, e As EventArgs) Handles BtnSetLimit.Click

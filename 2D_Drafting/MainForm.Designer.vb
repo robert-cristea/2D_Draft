@@ -37,6 +37,12 @@ Partial Class Main_Form
         Me.SELECTOBJECTSToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EDGEDETECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MOVELINEOBJECTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CIRCLEDETECTIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.INTERSECTIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PHASESEGMENTATIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.COUNTCLASSIFICATIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PARTICIPLESIZEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.NODULARITYToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HELPToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ID_MENU_ACTIVATE = New System.Windows.Forms.ToolStripMenuItem()
         Me.ID_MENU_LICENSE_INFO = New System.Windows.Forms.ToolStripMenuItem()
@@ -90,12 +96,7 @@ Partial Class Main_Form
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ID_STATUS_LABEL = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.CIRCLEDETECTIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.INTERSECTIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PHASESEGMENTATIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.COUNTCLASSIFICATIONToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PARTICIPLESIZEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NODULARITYToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RESIZEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ID_BTN_TEXT_FONT = New System.Windows.Forms.Button()
         Me.ID_BTN_TEXT_COL_PICKER = New System.Windows.Forms.Button()
         Me.ID_BTN_COL_PICKER = New System.Windows.Forms.Button()
@@ -130,6 +131,8 @@ Partial Class Main_Form
         Me.ID_MENU_EXPORT_REPORT = New System.Windows.Forms.ToolStripMenuItem()
         Me.ZOOMINToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ZOOMOUTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ZOOMORIGINALToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ZOOMFITToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HORIZONTALLINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.VERTICALLINEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -149,6 +152,9 @@ Partial Class Main_Form
         Me.CURVEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CURVEPOLYGENToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ID_PICTURE_BOX_CAM = New System.Windows.Forms.PictureBox()
+        Me.CALIBRATIONINFOToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CONFIGINFOToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LEGENDINFOToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -183,6 +189,7 @@ Partial Class Main_Form
         Me.ID_MENU_TO_CURVES.Name = "ID_MENU_TO_CURVES"
         Me.ID_MENU_TO_CURVES.Size = New System.Drawing.Size(160, 22)
         Me.ID_MENU_TO_CURVES.Text = "TO CURVES"
+        Me.ID_MENU_TO_CURVES.Visible = False
         '
         'ID_MENU_EXIT
         '
@@ -192,7 +199,7 @@ Partial Class Main_Form
         '
         'VIEWToolStripMenuItem
         '
-        Me.VIEWToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ZOOMINToolStripMenuItem, Me.ZOOMOUTToolStripMenuItem})
+        Me.VIEWToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ZOOMINToolStripMenuItem, Me.ZOOMOUTToolStripMenuItem, Me.ZOOMORIGINALToolStripMenuItem, Me.ZOOMFITToolStripMenuItem, Me.RESIZEToolStripMenuItem})
         Me.VIEWToolStripMenuItem.Name = "VIEWToolStripMenuItem"
         Me.VIEWToolStripMenuItem.Size = New System.Drawing.Size(46, 20)
         Me.VIEWToolStripMenuItem.Text = "VIEW"
@@ -254,6 +261,42 @@ Partial Class Main_Form
         Me.MOVELINEOBJECTToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
         Me.MOVELINEOBJECTToolStripMenuItem.Text = "MOVE LINE OBJECT"
         '
+        'CIRCLEDETECTIONToolStripMenuItem
+        '
+        Me.CIRCLEDETECTIONToolStripMenuItem.Name = "CIRCLEDETECTIONToolStripMenuItem"
+        Me.CIRCLEDETECTIONToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.CIRCLEDETECTIONToolStripMenuItem.Text = "CIRCLE IDENTIFY"
+        '
+        'INTERSECTIONToolStripMenuItem
+        '
+        Me.INTERSECTIONToolStripMenuItem.Name = "INTERSECTIONToolStripMenuItem"
+        Me.INTERSECTIONToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.INTERSECTIONToolStripMenuItem.Text = "INTERSECTION IDENTIFY"
+        '
+        'PHASESEGMENTATIONToolStripMenuItem
+        '
+        Me.PHASESEGMENTATIONToolStripMenuItem.Name = "PHASESEGMENTATIONToolStripMenuItem"
+        Me.PHASESEGMENTATIONToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.PHASESEGMENTATIONToolStripMenuItem.Text = "PHASE SEGMENTATION"
+        '
+        'COUNTCLASSIFICATIONToolStripMenuItem
+        '
+        Me.COUNTCLASSIFICATIONToolStripMenuItem.Name = "COUNTCLASSIFICATIONToolStripMenuItem"
+        Me.COUNTCLASSIFICATIONToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.COUNTCLASSIFICATIONToolStripMenuItem.Text = "COUNT & CLASSIFICATION"
+        '
+        'PARTICIPLESIZEToolStripMenuItem
+        '
+        Me.PARTICIPLESIZEToolStripMenuItem.Name = "PARTICIPLESIZEToolStripMenuItem"
+        Me.PARTICIPLESIZEToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.PARTICIPLESIZEToolStripMenuItem.Text = "PARTICIPLE SIZE"
+        '
+        'NODULARITYToolStripMenuItem
+        '
+        Me.NODULARITYToolStripMenuItem.Name = "NODULARITYToolStripMenuItem"
+        Me.NODULARITYToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
+        Me.NODULARITYToolStripMenuItem.Text = "NODULARITY"
+        '
         'HELPToolStripMenuItem
         '
         Me.HELPToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ID_MENU_ACTIVATE, Me.ID_MENU_LICENSE_INFO, Me.ID_MENU_SETTING_INFO, Me.ID_MENU_ABOUT})
@@ -264,25 +307,26 @@ Partial Class Main_Form
         'ID_MENU_ACTIVATE
         '
         Me.ID_MENU_ACTIVATE.Name = "ID_MENU_ACTIVATE"
-        Me.ID_MENU_ACTIVATE.Size = New System.Drawing.Size(148, 22)
+        Me.ID_MENU_ACTIVATE.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_ACTIVATE.Text = "ACTIVATE"
         '
         'ID_MENU_LICENSE_INFO
         '
         Me.ID_MENU_LICENSE_INFO.Name = "ID_MENU_LICENSE_INFO"
-        Me.ID_MENU_LICENSE_INFO.Size = New System.Drawing.Size(148, 22)
+        Me.ID_MENU_LICENSE_INFO.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_LICENSE_INFO.Text = "LICENSE INFO"
         '
         'ID_MENU_SETTING_INFO
         '
+        Me.ID_MENU_SETTING_INFO.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CALIBRATIONINFOToolStripMenuItem, Me.CONFIGINFOToolStripMenuItem, Me.LEGENDINFOToolStripMenuItem})
         Me.ID_MENU_SETTING_INFO.Name = "ID_MENU_SETTING_INFO"
-        Me.ID_MENU_SETTING_INFO.Size = New System.Drawing.Size(148, 22)
+        Me.ID_MENU_SETTING_INFO.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_SETTING_INFO.Text = "SETTING INFO"
         '
         'ID_MENU_ABOUT
         '
         Me.ID_MENU_ABOUT.Name = "ID_MENU_ABOUT"
-        Me.ID_MENU_ABOUT.Size = New System.Drawing.Size(148, 22)
+        Me.ID_MENU_ABOUT.Size = New System.Drawing.Size(180, 22)
         Me.ID_MENU_ABOUT.Text = "ABOUT"
         '
         'ContextMenuStrip1
@@ -751,41 +795,11 @@ Partial Class Main_Form
         Me.ID_STATUS_LABEL.Name = "ID_STATUS_LABEL"
         Me.ID_STATUS_LABEL.Size = New System.Drawing.Size(0, 17)
         '
-        'CIRCLEDETECTIONToolStripMenuItem
+        'RESIZEToolStripMenuItem
         '
-        Me.CIRCLEDETECTIONToolStripMenuItem.Name = "CIRCLEDETECTIONToolStripMenuItem"
-        Me.CIRCLEDETECTIONToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.CIRCLEDETECTIONToolStripMenuItem.Text = "CIRCLE IDENTIFY"
-        '
-        'INTERSECTIONToolStripMenuItem
-        '
-        Me.INTERSECTIONToolStripMenuItem.Name = "INTERSECTIONToolStripMenuItem"
-        Me.INTERSECTIONToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.INTERSECTIONToolStripMenuItem.Text = "INTERSECTION IDENTIFY"
-        '
-        'PHASESEGMENTATIONToolStripMenuItem
-        '
-        Me.PHASESEGMENTATIONToolStripMenuItem.Name = "PHASESEGMENTATIONToolStripMenuItem"
-        Me.PHASESEGMENTATIONToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.PHASESEGMENTATIONToolStripMenuItem.Text = "PHASE SEGMENTATION"
-        '
-        'COUNTCLASSIFICATIONToolStripMenuItem
-        '
-        Me.COUNTCLASSIFICATIONToolStripMenuItem.Name = "COUNTCLASSIFICATIONToolStripMenuItem"
-        Me.COUNTCLASSIFICATIONToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.COUNTCLASSIFICATIONToolStripMenuItem.Text = "COUNT & CLASSIFICATION"
-        '
-        'PARTICIPLESIZEToolStripMenuItem
-        '
-        Me.PARTICIPLESIZEToolStripMenuItem.Name = "PARTICIPLESIZEToolStripMenuItem"
-        Me.PARTICIPLESIZEToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.PARTICIPLESIZEToolStripMenuItem.Text = "PARTICIPLE SIZE"
-        '
-        'NODULARITYToolStripMenuItem
-        '
-        Me.NODULARITYToolStripMenuItem.Name = "NODULARITYToolStripMenuItem"
-        Me.NODULARITYToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.NODULARITYToolStripMenuItem.Text = "NODULARITY"
+        Me.RESIZEToolStripMenuItem.Name = "RESIZEToolStripMenuItem"
+        Me.RESIZEToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.RESIZEToolStripMenuItem.Text = "RESIZE"
         '
         'ID_BTN_TEXT_FONT
         '
@@ -1117,15 +1131,29 @@ Partial Class Main_Form
         '
         Me.ZOOMINToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_zoom_in
         Me.ZOOMINToolStripMenuItem.Name = "ZOOMINToolStripMenuItem"
-        Me.ZOOMINToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+        Me.ZOOMINToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ZOOMINToolStripMenuItem.Text = "ZOOM IN"
         '
         'ZOOMOUTToolStripMenuItem
         '
         Me.ZOOMOUTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_zoom_out
         Me.ZOOMOUTToolStripMenuItem.Name = "ZOOMOUTToolStripMenuItem"
-        Me.ZOOMOUTToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+        Me.ZOOMOUTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ZOOMOUTToolStripMenuItem.Text = "ZOOM OUT"
+        '
+        'ZOOMORIGINALToolStripMenuItem
+        '
+        Me.ZOOMORIGINALToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_zoom_fit
+        Me.ZOOMORIGINALToolStripMenuItem.Name = "ZOOMORIGINALToolStripMenuItem"
+        Me.ZOOMORIGINALToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ZOOMORIGINALToolStripMenuItem.Text = "ZOOM ORIGINAL"
+        '
+        'ZOOMFITToolStripMenuItem
+        '
+        Me.ZOOMFITToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_zoom_fit
+        Me.ZOOMFITToolStripMenuItem.Name = "ZOOMFITToolStripMenuItem"
+        Me.ZOOMFITToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ZOOMFITToolStripMenuItem.Text = "ZOOM FIT"
         '
         'LINEToolStripMenuItem
         '
@@ -1261,6 +1289,24 @@ Partial Class Main_Form
         Me.ID_PICTURE_BOX_CAM.Size = New System.Drawing.Size(196, 186)
         Me.ID_PICTURE_BOX_CAM.TabIndex = 12
         Me.ID_PICTURE_BOX_CAM.TabStop = False
+        '
+        'CALIBRATIONINFOToolStripMenuItem
+        '
+        Me.CALIBRATIONINFOToolStripMenuItem.Name = "CALIBRATIONINFOToolStripMenuItem"
+        Me.CALIBRATIONINFOToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CALIBRATIONINFOToolStripMenuItem.Text = "CALIBRATION INFO"
+        '
+        'CONFIGINFOToolStripMenuItem
+        '
+        Me.CONFIGINFOToolStripMenuItem.Name = "CONFIGINFOToolStripMenuItem"
+        Me.CONFIGINFOToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CONFIGINFOToolStripMenuItem.Text = "CONFIG INFO"
+        '
+        'LEGENDINFOToolStripMenuItem
+        '
+        Me.LEGENDINFOToolStripMenuItem.Name = "LEGENDINFOToolStripMenuItem"
+        Me.LEGENDINFOToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.LEGENDINFOToolStripMenuItem.Text = "LEGEND INFO"
         '
         'Main_Form
         '
@@ -1424,4 +1470,10 @@ End Sub
     Friend WithEvents COUNTCLASSIFICATIONToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents PARTICIPLESIZEToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents NODULARITYToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ZOOMORIGINALToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ZOOMFITToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents RESIZEToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CALIBRATIONINFOToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CONFIGINFOToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents LEGENDINFOToolStripMenuItem As ToolStripMenuItem
 End Class

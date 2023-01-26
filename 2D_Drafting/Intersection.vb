@@ -36,42 +36,54 @@ Public Class Intersection
     End Sub
 
     Private Sub ID_SCROLL_THR_SEG_Scroll(sender As Object, e As EventArgs) Handles ID_SCROLL_THR_SEG.Scroll
-        thr_seg = ID_SCROLL_THR_SEG.Value
-        ID_LABEL_THR_SEG.Text = thr_seg.ToString()
-        Main_Form.Obj_Seg.sectObj.thr_seg = thr_seg
+        Try
+            thr_seg = ID_SCROLL_THR_SEG.Value
+            ID_LABEL_THR_SEG.Text = thr_seg.ToString()
+            Main_Form.Obj_Seg.sectObj.thr_seg = thr_seg
 
-        Dim percent_black = 0
-        Dim percent_white = 0
+            Dim percent_black = 0
+            Dim percent_white = 0
 
-        Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
-        Dim output = SegmentIntoBlackAndWhite(image, thr_seg, Main_Form.Obj_Seg, percent_black, percent_white)
-        Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-        Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
-        'format img_segmented
-        img_segmented = output
-        img_active = img_segmented
+            Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+            Dim output = SegmentIntoBlackAndWhite(image, thr_seg, Main_Form.Obj_Seg, percent_black, percent_white)
+            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
+            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+            'format img_segmented
+            img_segmented = output
+            img_active = img_segmented
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub ID_BTN_EDGE_Click(sender As Object, e As EventArgs) Handles ID_BTN_EDGE.Click
-        thr_seg = ID_SCROLL_THR_SEG.Value
+        Try
+            thr_seg = ID_SCROLL_THR_SEG.Value
 
-        Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
-        Dim edge = GetEdgeFromBinary(image, thr_seg)
-        edge = edge
-        Dim output = OverLapSegToOri(image, edge)
-        Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-        Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
-        'format img_segmented
-        img_segmented = output
-        img_active = img_segmented
+            Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+            Dim edge = GetEdgeFromBinary(image, thr_seg)
+            edge = edge
+            Dim output = OverLapSegToOri(image, edge)
+            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
+            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+            'format img_segmented
+            img_segmented = output
+            img_active = img_segmented
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub BtnCount_Click(sender As Object, e As EventArgs) Handles BtnCount.Click
-        Main_Form.Obj_Seg.sectObj.horLine = ID_NUM_HORIZON.Value
-        Main_Form.Obj_Seg.sectObj.verLine = ID_NUM_VERTICAL.Value
-        Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
-        IdentifyInterSections(Main_Form.ID_PICTURE_BOX(Main_Form.tab_index), image, thr_seg, Main_Form.Obj_Seg)
-        LoadDataToGridView()
+        Try
+            Main_Form.Obj_Seg.sectObj.horLine = ID_NUM_HORIZON.Value
+            Main_Form.Obj_Seg.sectObj.verLine = ID_NUM_VERTICAL.Value
+            Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+            IdentifyInterSections(Main_Form.ID_PICTURE_BOX(Main_Form.tab_index), image, thr_seg, Main_Form.Obj_Seg)
+            LoadDataToGridView()
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub BtnExcel_Click(sender As Object, e As EventArgs) Handles BtnExcel.Click

@@ -30,12 +30,16 @@ Public Class Count_Classification
     End Sub
 
     Private Sub Count_Classification_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim scr = Main_Form.origin_image(Main_Form.tab_index).ToBitmap()
-        Dim bmpImage As Bitmap = New Bitmap(scr)
-        OriImage = bmpImage.ToImage(Of Bgr, Byte)()
-        bmpImage.Dispose()
-        GrayImage = getGrayScale(OriImage)
-        BinaryImage = GrayImage.CopyBlank()
+        Try
+            Dim scr = Main_Form.origin_image(Main_Form.tab_index).ToBitmap()
+            Dim bmpImage As Bitmap = New Bitmap(scr)
+            OriImage = bmpImage.ToImage(Of Bgr, Byte)()
+            bmpImage.Dispose()
+            GrayImage = getGrayScale(OriImage)
+            BinaryImage = GrayImage.CopyBlank()
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub GetDistribution()
@@ -84,31 +88,35 @@ Public Class Count_Classification
         GetDistribution()
     End Sub
     Private Sub GetBinaryImage()
-        If RadioManual.Checked Then
-            RadioState = 0
-            Dim form = New Intensity()
-            If form.ShowDialog() = DialogResult.OK Then
-                Upper = form.Upper
-                Lower = form.Lower
+        Try
+            If RadioManual.Checked Then
+                RadioState = 0
+                Dim form = New Intensity()
+                If form.ShowDialog() = DialogResult.OK Then
+                    Upper = form.Upper
+                    Lower = form.Lower
+                End If
+                BinaryImage = GetBinaryWith2Thr(GrayImage, Lower, Upper)
+            ElseIf RadioAutoBright.Checked Then
+                RadioState = 1
+                CvInvoke.Threshold(GrayImage, BinaryImage, 0, 255, ThresholdType.Otsu)
+            ElseIf RadioAutoDark.Checked Then
+                RadioState = 2
+                CvInvoke.Threshold(GrayImage, BinaryImage, 0, 255, ThresholdType.Otsu)
+                BinaryImage = InvertBinary(BinaryImage)
+                'CvInvoke.Imshow("1", BinaryImage)
             End If
-            BinaryImage = GetBinaryWith2Thr(GrayImage, Lower, Upper)
-        ElseIf RadioAutoBright.Checked Then
-            RadioState = 1
-            CvInvoke.Threshold(GrayImage, BinaryImage, 0, 255, ThresholdType.Otsu)
-        ElseIf RadioAutoDark.Checked Then
-            RadioState = 2
-            CvInvoke.Threshold(GrayImage, BinaryImage, 0, 255, ThresholdType.Otsu)
-            BinaryImage = InvertBinary(BinaryImage)
-            'CvInvoke.Imshow("1", BinaryImage)
-        End If
 
-        Dim resizedBinary = BinaryImage.Copy()
-        Dim sz = New Size(Main_Form.resized_image(Main_Form.tab_index).Width, Main_Form.resized_image(Main_Form.tab_index).Height)
-        CvInvoke.Resize(BinaryImage, resizedBinary, sz)
-        Dim BinImg = GetImageFromEmgu(resizedBinary)
-        Dim outPut = OverLapSegToOri(Main_Form.resized_image(Main_Form.tab_index).ToBitmap(), BinImg)
-        Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = outPut
-        Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(outPut)
+            Dim resizedBinary = BinaryImage.Copy()
+            Dim sz = New Size(Main_Form.resized_image(Main_Form.tab_index).Width, Main_Form.resized_image(Main_Form.tab_index).Height)
+            CvInvoke.Resize(BinaryImage, resizedBinary, sz)
+            Dim BinImg = GetImageFromEmgu(resizedBinary)
+            Dim outPut = OverLapSegToOri(Main_Form.resized_image(Main_Form.tab_index).ToBitmap(), BinImg)
+            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = outPut
+            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(outPut)
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub LoadDataToGridView()

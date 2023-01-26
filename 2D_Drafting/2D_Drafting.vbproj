@@ -177,12 +177,6 @@
     <Compile Include="About.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ActiveInfo.Designer.vb">
-      <DependentUpon>ActiveInfo.vb</DependentUpon>
-    </Compile>
-    <Compile Include="ActiveInfo.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Circle.Designer.vb">
       <DependentUpon>Circle.vb</DependentUpon>
     </Compile>
@@ -223,6 +217,12 @@
     <Compile Include="RangeDistribution.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Resize.Designer.vb">
+      <DependentUpon>Resize.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Resize.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ToCurve.Designer.vb">
       <DependentUpon>ToCurve.vb</DependentUpon>
     </Compile>
@@ -260,9 +260,6 @@
     <Compile Include="KeyComparer.vb" />
     <Compile Include="LicGen.vb" />
     <Compile Include="LicInfo.Designer.vb" />
-    <Compile Include="LicInfo.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -313,9 +310,6 @@
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ActiveInfo.resx">
-      <DependentUpon>ActiveInfo.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Circle.resx">
       <DependentUpon>Circle.vb</DependentUpon>
     </EmbeddedResource>
@@ -333,6 +327,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RangeDistribution.resx">
       <DependentUpon>RangeDistribution.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resize.resx">
+      <DependentUpon>Resize.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ToCurve.resx">
       <DependentUpon>ToCurve.vb</DependentUpon>
@@ -640,6 +637,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GrayGradient.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\menu_zoom_fit.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

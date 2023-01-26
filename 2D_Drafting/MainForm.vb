@@ -1,4 +1,5 @@
-﻿Imports System.IO
+﻿Imports System.Data.Common
+Imports System.IO
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 Imports System.Windows.Interop
@@ -244,6 +245,7 @@ Public Class Main_Form
     Public origin_image As List(Of Mat) = New List(Of Mat)()           'original image
     Public resized_image As List(Of Mat) = New List(Of Mat)()          'the image which is resized to fit the picturebox control
     Public current_image As List(Of Mat) = New List(Of Mat)()          'the image which is currently used
+    Public file_names As List(Of String) = New List(Of String)
     Private initial_ratio As Single() = New Single(24) {}               'the ratio of resized_image and original image
     Private zoom_factor As Double() = New Double(24) {}                 'the zooming factor
     Private cur_measure_type As Integer                                 'current measurement type
@@ -312,8 +314,12 @@ Public Class Main_Form
     Private path As String
 
     'member variable for setting.ini
-    Private ini_path As String = "C:\Users\Public\Documents\setting.ini"    'the path of setting.ini
-    Private ini As IniFile
+    Private cali_path As String = "C:\Users\Public\Documents\Calibration.ini"    'the path of setting.ini
+    Private config_path As String = "C:\Users\Public\Documents\Config.ini"    'the path of setting.ini
+    Private legend_path As String = "C:\Users\Public\Documents\Legend.ini"    'the path of setting.ini
+    Private cali_ini As IniFile
+    Private config_ini As IniFile
+    Private legend_ini As IniFile
 
     'member variable for Curves
     Private exe_path As String = "WindowsApp1.exe"
@@ -415,6 +421,7 @@ Public Class Main_Form
             origin_image.Add(mat)
             resized_image.Add(mat)
             current_image.Add(mat)
+            file_names.Add("Blank")
             gamma(i) = 100
             zoom_factor(i) = 1.0
         Next
@@ -455,7 +462,7 @@ Public Class Main_Form
             ID_TAG_PAGE(i).Name = "ID_TAG_PAGE" & i.ToString()
             ID_TAG_PAGE(i).Padding = New Padding(3)
             ID_TAG_PAGE(i).Size = New Size(800, 600)
-            ID_TAG_PAGE(i).Text = "Image" & (i + 1).ToString()
+            ID_TAG_PAGE(i).Text = ""
             ID_TAG_PAGE(i).UseVisualStyleBackColor = True
             ID_TAG_PAGE(i).Controls.Add(ID_PANEL(i))
 
@@ -531,25 +538,13 @@ Public Class Main_Form
     End Sub
 
     'get setting information from ini file
-    Private Sub GetInforFromIni()
-
-        If IO.File.Exists(ini_path) Then
-            ini = New IniFile(ini_path)
-            Dim Keys As ArrayList = ini.GetKeys("Config")
-            Dim myEnumerator As System.Collections.IEnumerator = Keys.GetEnumerator()
-            While myEnumerator.MoveNext()
-                If myEnumerator.Current.Name = "unit" Then
-                    scale_unit = myEnumerator.Current.value
-                Else
-                    digit = CInt(myEnumerator.Current.value)
-                End If
-            End While
-            ID_NUM_DIGIT.Value = digit
-
-            Keys.Clear()
-            Keys = ini.GetKeys("CF")
+    Private Sub GetCalibrationInfo()
+        If IO.File.Exists(cali_path) Then
+            cali_ini = New IniFile(cali_path)
+            Dim Keys As ArrayList = cali_ini.GetKeys("CF")
             Dim cnt As Integer = 0
             Dim index As Integer = 0
+            Dim myEnumerator As System.Collections.IEnumerator = Keys.GetEnumerator()
             myEnumerator = Keys.GetEnumerator()
             While myEnumerator.MoveNext()
                 If myEnumerator.Current.Name = "index" Then
@@ -564,27 +559,9 @@ Public Class Main_Form
                     CF_num.Add(CF_val)
                     ID_COMBOBOX_CF.Items.Add(CF_key)
                 End If
-
             End While
-
-            Keys.Clear()
-            Keys = ini.GetKeys("name")
-            cnt = 0
-            myEnumerator = Keys.GetEnumerator()
-            While myEnumerator.MoveNext()
-                Dim line As String = myEnumerator.Current.value
-                name_list.Add(line)
-            End While
-
             ID_COMBOBOX_CF.SelectedIndex = index
         Else
-            'set default value when ini file does not exist in document folder
-            scale_unit = "cm"
-            digit = 0
-            ID_NUM_DIGIT.Value = digit
-
-            Dim CF_cnt = 9
-
             CF_list.Add("1.0X")
             CF_num.Add(1.0)
             CF_list.Add("1.25X")
@@ -607,14 +584,44 @@ Public Class Main_Form
             For i = 0 To CF_list.Count - 1
                 ID_COMBOBOX_CF.Items.Add(CF_list(i))
             Next
+        End If
+    End Sub
 
-            Dim name_cnt = 4
+    Private Sub GetConfigInfo()
+        If IO.File.Exists(config_path) Then
+            config_ini = New IniFile(config_path)
+            Dim Keys As ArrayList = config_ini.GetKeys("Config")
+            Dim myEnumerator As System.Collections.IEnumerator = Keys.GetEnumerator()
+            While myEnumerator.MoveNext()
+                If myEnumerator.Current.Name = "unit" Then
+                    scale_unit = myEnumerator.Current.value
+                Else
+                    digit = CInt(myEnumerator.Current.value)
+                End If
+            End While
+            ID_NUM_DIGIT.Value = digit
+        Else
+            scale_unit = "cm"
+            digit = 0
+            ID_NUM_DIGIT.Value = digit
+        End If
+    End Sub
+    Private Sub GetLegendInfo()
+        If IO.File.Exists(legend_path) Then
+            legend_ini = New IniFile(legend_path)
+            Dim Keys As ArrayList = legend_ini.GetKeys("name")
+            Dim myEnumerator As System.Collections.IEnumerator = Keys.GetEnumerator()
+            Dim cnt As Integer = 0
+            myEnumerator = Keys.GetEnumerator()
+            While myEnumerator.MoveNext()
+                Dim line As String = myEnumerator.Current.value
+                name_list.Add(line)
+            End While
+        Else
             name_list.Add("Line")
             name_list.Add("Angle")
             name_list.Add("Arc")
             name_list.Add("Scale")
-
-            ID_COMBOBOX_CF.SelectedIndex = 0
         End If
 
     End Sub
@@ -626,7 +633,9 @@ Public Class Main_Form
             Initialize_Button_Colors()
             Timer1.Interval = 30
             Timer1.Start()
-            GetInforFromIni()
+            GetCalibrationInfo()
+            GetConfigInfo()
+            GetLegendInfo()
             initVar()
         Catch ex As Exception
 
@@ -745,9 +754,11 @@ Public Class Main_Form
             If Not My.Settings.camresindex.Equals("") Then
                 CameraResolutionsCB.SelectedIndex = My.Settings.camresindex + 1
             End If
+            ID_TAG_PAGE(0).Text = "WebCam"
         Catch excpt As Exception
             MessageBox.Show(excpt.Message)
         End Try
+
     End Sub
 
     'close camera
@@ -756,9 +767,11 @@ Public Class Main_Form
             CloseCamera()
             ID_PICTURE_BOX(0).Image = Nothing
             ID_PICTURE_BOX_CAM.Image = Nothing
+            ID_TAG_PAGE(0).Text = ""
         Catch excpt As Exception
             MessageBox.Show(excpt.Message)
         End Try
+
     End Sub
 
     'import image and draw it to picturebox
@@ -772,7 +785,7 @@ Public Class Main_Form
         Dim start As Integer = tab_index
         img_import_flag(tab_index) = True
 
-        Dim img_cnt = ID_PICTURE_BOX(0).LoadImageFromFiles(filter, title, origin_image, resized_image, initial_ratio, start, img_import_flag)
+        Dim img_cnt = ID_PICTURE_BOX(0).LoadImageFromFiles(filter, title, origin_image, resized_image, current_image, initial_ratio, start, img_import_flag, file_names)
 
         If img_cnt >= 1 Then
             ID_PICTURE_BOX(tab_index).Image = Nothing
@@ -796,23 +809,23 @@ Public Class Main_Form
                 tag_page_flag(start) = True
             End If
 
-            Dim img = resized_image.ElementAt(start)
+            Dim img = origin_image.ElementAt(start)
             ID_PICTURE_BOX(start).Invoke(New Action(Sub() ID_PICTURE_BOX(start).Image = img.ToBitmap()))
 
             left_top = ID_PICTURE_BOX(start).CenteringImage(ID_PANEL(start))
-            current_image(start) = img
             cur_obj_num(start) = 0
             Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, start).Clear()
             brightness(start) = 0
             contrast(start) = 0
             gamma(start) = 100
             img_import_flag(start) = False
+            ID_TAG_PAGE(start).Text = file_names(start)
 
             start = start + 1
             added_tag = added_tag + 1
         End While
 
-        start = start - 1
+        start = Math.Max(start - 1, 0)
         ID_LISTVIEW.LoadObjectList(object_list.ElementAt(start), CF, digit, scale_unit, name_list)
         ID_TAG_CTRL.SelectedTab = ID_TAG_PAGE(start)
     End Sub
@@ -1067,12 +1080,15 @@ Public Class Main_Form
         ID_STATUS_LABEL.Text = "Duplicating Curve Line Object"
     End Sub
 
+
     'zoom image
     Private Sub Zoom_Image()
         Try
             Dim ratio = zoom_factor(tab_index)
             Dim zoomed = ZoomImage(ratio, current_image, current_image, tab_index)
-            'Dim Image = Enumerable.ElementAt(current_image, tab_index).ToBitmap()
+            Dim zoomed_ori = ZoomImage(ratio, origin_image, resized_image, tab_index)
+            DisposeElemOfList(resized_image, zoomed_ori, tab_index)
+
             Dim Image = zoomed.ToBitmap()
             Dim Adjusted = AdjustBrightnessAndContrast(Image, brightness(tab_index), contrast(tab_index), gamma(tab_index))
 
@@ -1090,6 +1106,8 @@ Public Class Main_Form
                 Dim st_pt As Point = New Point(obj_anno.draw_point.X * ID_PICTURE_BOX(tab_index).Width, obj_anno.draw_point.Y * ID_PICTURE_BOX(tab_index).Height)
                 ID_MY_TEXTBOX(tab_index).UpdateLocation(st_pt, left_top, scroll_pos)
             End If
+            zoomed.Dispose()
+            'Image.Dispose()
         Catch ex As Exception
             MessageBox.Show(ex.Message.ToString())
         End Try
@@ -1127,6 +1145,87 @@ Public Class Main_Form
         ID_STATUS_LABEL.Text = "Zoom Out"
     End Sub
 
+    Private Sub ZOOMORIGINALToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZOOMORIGINALToolStripMenuItem.Click
+        menu_click = True
+        zoom_factor(tab_index) = 1.0
+        Zoom_Image()
+        ID_STATUS_LABEL.Text = "Zoom Original"
+    End Sub
+
+    Private Sub ZOOMFITToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZOOMFITToolStripMenuItem.Click
+        menu_click = True
+        zoom_factor(tab_index) = CalcIntialRatio(ID_PANEL(tab_index), origin_image(tab_index))
+        Zoom_Image()
+        ID_STATUS_LABEL.Text = "Zoom Fit"
+    End Sub
+
+    Private Sub CustomeResize(Dst_w As Single, Dst_h As Single, Optional State As Boolean = False)
+        Try
+            If State = False Then
+                zoom_factor(tab_index) = 1.0
+            End If
+
+            Dim Dst_w_ori, Dst_h_ori, Dst_w_cur, Dst_h_cur, Dst_w_res, Dst_h_res As Integer
+            If State Then
+                Dst_w_ori = origin_image(tab_index).Width * Dst_w
+                Dst_h_ori = origin_image(tab_index).Height * Dst_h
+                Dst_w_cur = origin_image(tab_index).Width * Dst_w
+                Dst_h_cur = origin_image(tab_index).Height * Dst_h
+                Dst_w_res = resized_image(tab_index).Width * Dst_w
+                Dst_h_res = resized_image(tab_index).Height * Dst_h
+            Else
+                Dst_w_ori = Dst_w
+                Dst_h_ori = Dst_h
+                Dst_w_cur = Dst_w
+                Dst_h_cur = Dst_h
+                Dst_w_res = Dst_w
+                Dst_h_res = Dst_h
+            End If
+            Dim zoomed_ori = ZoomImage2(origin_image(tab_index), Dst_w_ori, Dst_h_ori)
+            Dim zoomed_cur = ZoomImage2(current_image(tab_index), Dst_w_cur, Dst_h_cur)
+            Dim zoomed_res = ZoomImage2(resized_image(tab_index), Dst_w_res, Dst_h_res)
+
+            DisposeElemOfList(resized_image, zoomed_res, tab_index)
+            DisposeElemOfList(origin_image, zoomed_ori, tab_index)
+            DisposeElemOfList(current_image, zoomed_cur, tab_index)
+
+            Dim Image = zoomed_cur.ToBitmap()
+            Dim Adjusted = AdjustBrightnessAndContrast(Image, brightness(tab_index), contrast(tab_index), gamma(tab_index))
+
+            ID_PICTURE_BOX(tab_index).Image = Adjusted
+            left_top = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
+            scroll_pos.X = ID_PANEL(tab_index).HorizontalScroll.Value
+            scroll_pos.Y = ID_PANEL(tab_index).VerticalScroll.Value
+            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+            Dim flag = False
+            If sel_index >= 0 Then flag = True
+            ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, flag)
+            If ID_MY_TEXTBOX(tab_index).Visible = True Then
+                Dim obj_anno = object_list.ElementAt(tab_index).ElementAt(anno_num)
+                Dim st_pt As Point = New Point(obj_anno.draw_point.X * ID_PICTURE_BOX(tab_index).Width, obj_anno.draw_point.Y * ID_PICTURE_BOX(tab_index).Height)
+                ID_MY_TEXTBOX(tab_index).UpdateLocation(st_pt, left_top, scroll_pos)
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message.ToString())
+        End Try
+    End Sub
+
+    Private Sub RESIZEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RESIZEToolStripMenuItem.Click
+        Try
+            Dim form As New Resize
+            If form.ShowDialog = DialogResult.OK Then
+                If form.RadioState Then
+                    CustomeResize(CSng(form.PixHor), CSng(form.PixVer))
+                Else
+                    CustomeResize(form.PerHor / 100.0, form.PerVer / 100.0, True)
+                End If
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message.ToString())
+        End Try
+
+    End Sub
     'undo last object and last row of listview
     Private Sub Undo()
         If undo_num > 0 Then
@@ -1810,10 +1909,10 @@ Public Class Main_Form
         End If
 
         If tag_page_flag(tab_index) = True Then
+            DisposeElemOfList(current_image, Nothing, tab_index)
+            DisposeElemOfList(resized_image, Nothing, tab_index)
+            DisposeElemOfList(origin_image, Nothing, tab_index)
 
-            current_image(tab_index) = Nothing
-            resized_image(tab_index) = Nothing
-            origin_image(tab_index) = Nothing
             cur_obj_num(tab_index) = 0
             Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, tab_index).Clear()
             brightness(tab_index) = 0
@@ -1821,6 +1920,7 @@ Public Class Main_Form
             gamma(tab_index) = 100
             img_import_flag(tab_index) = True
             ID_PICTURE_BOX(tab_index).Image = Nothing
+            ID_TAG_PAGE(tab_index).Text = ""
 
             If tab_index = 0 Then
                 ID_TAG_CTRL.SelectedIndex = 0
@@ -1854,34 +1954,53 @@ Public Class Main_Form
     Private Sub Main_Form_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         On Error Resume Next
 
-        If IO.File.Exists(ini_path) Then
-            If ini IsNot Nothing Then
-                ini.ChangeValue("unit", "Config", scale_unit)
-                ini.ChangeValue("digit", "Config", digit.ToString())
-                ini.ChangeValue("index", "CF", ID_COMBOBOX_CF.SelectedIndex)
-                ini.Save(ini_path)
+        If IO.File.Exists(cali_path) Then
+            If cali_ini IsNot Nothing Then
+                cali_ini.ChangeValue("index", "CF", ID_COMBOBOX_CF.SelectedIndex)
+                cali_ini.Save(cali_path)
             End If
         Else
             'set default value when ini file does Not exist in document folder
-            ini = New IniFile(ini_path)
-            ini.AddSection("Config")
-            ini.AddKey("unit", scale_unit, "Config")
-            ini.AddKey("digit", digit.ToString(), "Config")
+            cali_ini = New IniFile(cali_path)
 
-            ini.AddSection("CF")
-            ini.AddKey("index", ID_COMBOBOX_CF.SelectedIndex, "CF")
+            cali_ini.AddSection("CF")
+            cali_ini.AddKey("index", ID_COMBOBOX_CF.SelectedIndex, "CF")
             For i = 0 To CF_list.Count - 1
                 Dim key = "No" & (i + 1)
                 Dim value = CF_list(i) & ":" & CF_num(i)
-                ini.AddKey(key, value, "CF")
+                cali_ini.AddKey(key, value, "CF")
             Next
-            ini.AddSection("name")
-            ini.AddKey("No1", "Line", "name")
-            ini.AddKey("No2", "Angle", "name")
-            ini.AddKey("No3", "Arc", "name")
-            ini.AddKey("No4", "Scale", "name")
-            ini.Sort()
-            ini.Save(ini_path)
+
+            cali_ini.Sort()
+            cali_ini.Save(cali_path)
+        End If
+
+        If IO.File.Exists(config_path) Then
+            If config_ini IsNot Nothing Then
+                config_ini.ChangeValue("unit", "Config", scale_unit)
+                config_ini.ChangeValue("digit", "Config", digit.ToString())
+                config_ini.Save(config_path)
+            End If
+        Else
+            config_ini = New IniFile(config_path)
+            config_ini.AddSection("Config")
+            config_ini.AddKey("unit", scale_unit, "Config")
+            config_ini.AddKey("digit", digit.ToString(), "Config")
+            config_ini.Sort()
+            config_ini.Save(config_path)
+        End If
+
+        If IO.File.Exists(legend_path) Then
+
+        Else
+            legend_ini = New IniFile(legend_path)
+            legend_ini.AddSection("name")
+            legend_ini.AddKey("No1", "Line", "name")
+            legend_ini.AddKey("No2", "Angle", "name")
+            legend_ini.AddKey("No3", "Arc", "name")
+            legend_ini.AddKey("No4", "Scale", "name")
+            legend_ini.Sort()
+            legend_ini.Save(legend_path)
         End If
 
         If videoDevice Is Nothing Then
@@ -2002,48 +2121,75 @@ Public Class Main_Form
         End If
         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
     End Sub
-
-    'display setting.ini
-    Private Sub ID_MENU_SETTING_INFO_Click(sender As Object, e As EventArgs) Handles ID_MENU_SETTING_INFO.Click
-
+    Private Sub CALIBRATIONINFOToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CALIBRATIONINFOToolStripMenuItem.Click
         Try
             Dim alive As System.Diagnostics.Process
-            If System.IO.File.Exists(ini_path) = True Then
-                alive = Process.Start(ini_path)
-            Else
-                'set default value when ini file does Not exist in document folder
-                ini = New IniFile(ini_path)
-                ini.AddSection("Config")
-                ini.AddKey("unit", scale_unit, "Config")
-                ini.AddKey("digit", digit.ToString(), "Config")
-
-                ini.AddSection("CF")
-                ini.AddKey("index", ID_COMBOBOX_CF.SelectedIndex, "CF")
+            If System.IO.File.Exists(cali_path) = False Then
+                cali_ini = New IniFile(cali_path)
+                cali_ini.AddSection("CF")
+                cali_ini.AddKey("index", ID_COMBOBOX_CF.SelectedIndex, "CF")
                 For i = 0 To CF_list.Count - 1
                     Dim key = "No" & (i + 1)
                     Dim value = CF_list(i) & ":" & CF_num(i)
-                    ini.AddKey(key, value, "CF")
+                    cali_ini.AddKey(key, value, "CF")
                 Next
-                ini.AddSection("name")
-                ini.AddKey("No1", "Line", "name")
-                ini.AddKey("No2", "Angle", "name")
-                ini.AddKey("No3", "Arc", "name")
-                ini.AddKey("No4", "Scale", "name")
-                ini.Sort()
-                ini.Save(ini_path)
-                alive = Process.Start(ini_path)
+                cali_ini.Sort()
+                cali_ini.Save(cali_path)
             End If
-
+            alive = Process.Start(cali_path)
             alive.WaitForExit()
-            name_list.Clear()
             ID_COMBOBOX_CF.Items.Clear()
             CF_list.Clear()
             CF_num.Clear()
-            GetInforFromIni()
+            GetCalibrationInfo()
         Catch ex As Exception
             MessageBox.Show(ex.Message.ToString())
         End Try
     End Sub
+
+    Private Sub CONFIGINFOToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CONFIGINFOToolStripMenuItem.Click
+        Try
+            Dim alive As System.Diagnostics.Process
+            If System.IO.File.Exists(config_path) = False Then
+                config_ini = New IniFile(config_path)
+                config_ini.AddSection("Config")
+                config_ini.AddKey("unit", scale_unit, "Config")
+                config_ini.AddKey("digit", digit.ToString(), "Config")
+
+                config_ini.Sort()
+                config_ini.Save(config_path)
+            End If
+            alive = Process.Start(config_path)
+            alive.WaitForExit()
+            GetConfigInfo()
+        Catch ex As Exception
+            MessageBox.Show(ex.Message.ToString())
+        End Try
+    End Sub
+
+    Private Sub LEGENDINFOToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LEGENDINFOToolStripMenuItem.Click
+        Try
+            Dim alive As System.Diagnostics.Process
+            If System.IO.File.Exists(legend_path) = False Then
+                legend_ini = New IniFile(legend_path)
+                legend_ini.AddSection("name")
+                legend_ini.AddKey("No1", "Line", "name")
+                legend_ini.AddKey("No2", "Angle", "name")
+                legend_ini.AddKey("No3", "Arc", "name")
+                legend_ini.AddKey("No4", "Scale", "name")
+
+                legend_ini.Sort()
+                legend_ini.Save(legend_path)
+            End If
+            alive = Process.Start(legend_path)
+            alive.WaitForExit()
+            name_list.Clear()
+            GetLegendInfo()
+        Catch ex As Exception
+            MessageBox.Show(ex.Message.ToString())
+        End Try
+    End Sub
+
 #End Region
 
 #Region "Webcam Methods"
@@ -2179,8 +2325,8 @@ Public Class Main_Form
                 page_num = tab_index
             End If
 
-            ID_PICTURE_BOX(page_num).LoadImageFromFile(ID_LISTVIEW_IMAGE.SelectedItems(0).Tag, origin_image, resized_image,
-                                                         initial_ratio, page_num)
+            ID_PICTURE_BOX(page_num).LoadImageFromFile(ID_LISTVIEW_IMAGE.SelectedItems(0).Tag, origin_image, resized_image, current_image,
+                                                         initial_ratio, page_num, file_names)
 
             Dim img = resized_image.ElementAt(page_num)
 
@@ -2188,13 +2334,13 @@ Public Class Main_Form
 
             left_top = ID_PICTURE_BOX(page_num).CenteringImage(ID_PANEL(page_num))
 
-            current_image(page_num) = img
             cur_obj_num(page_num) = 0
             Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, page_num).Clear()
             brightness(page_num) = 0
             contrast(page_num) = 0
             gamma(page_num) = 100
             img_import_flag(page_num) = False
+            ID_TAG_PAGE(page_num).Text = file_names(page_num)
             ID_LISTVIEW.LoadObjectList(object_list.ElementAt(page_num), CF, digit, scale_unit, name_list)
 
             ID_TAG_CTRL.SelectedTab = ID_TAG_PAGE(page_num)
@@ -2255,7 +2401,7 @@ Public Class Main_Form
             photoList.Images.RemoveAt(v.ImageIndex)
             Dim FileDelete As String = v.Tag
             If File.Exists(FileDelete) = True Then
-                File.Delete(FileDelete)
+                'File.Delete(FileDelete)
             End If
         Next
 
@@ -2309,57 +2455,17 @@ Public Class Main_Form
 
 #Region "Keygen Methods"
     'check for license
-    Private Sub Init()
-        licState = licGen.getLicState(licModel)
-        MessageBox.Show("License State : " + licState.ToString)
-        If licState = licState.Success Then
-            ID_GROUP_BOX_CONTROL.Enabled = True
-        Else
-            ID_GROUP_BOX_CONTROL.Enabled = False
-        End If
-        path = Application.StartupPath + "img\image1.jpg"
-    End Sub
+
 
     'show activate dialog
     Private Sub ID_MENU_ACTIVATE_Click(sender As Object, e As EventArgs) Handles ID_MENU_ACTIVATE.Click
-        Dim ad As New ActiveInfo
-        If ad.ShowDialog() = DialogResult.OK Then
-            Dim OfDLicense As New OpenFileDialog()
-            OfDLicense.Filter = "License (*.lic)|*.lic"
-            OfDLicense.FilterIndex = 1
-            OfDLicense.RestoreDirectory = True
-            Dim dest As String = System.IO.Path.Combine(Application.StartupPath, licpath)
-            If OfDLicense.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
-                Dim file = New FileInfo(OfDLicense.FileName)
-                file = file.CopyTo(dest, True)
 
-            End If
-        End If
-
-
-        Init()
     End Sub
 
     'show license info dialog
     Private Sub ID_MENU_LICENSE_INFO_Click(sender As Object, e As EventArgs) Handles ID_MENU_LICENSE_INFO.Click
 
-        Dim ld As New LicInfo()
-        ld.mParent = Me
-        If licState = licState.NoFile Or licState = licState.Incorrect Then
-            ld.bInfo = False
-            ld.serial = licGen.getSn
-            ld.machine = licGen.getMn
 
-        Else
-            ld.bInfo = True
-            ld.serial = licModel.sn
-            ld.machine = licModel.mn
-            ld.customer = licModel.cname
-            ld.email = licModel.cmail
-
-        End If
-
-        ld.ShowDialog()
     End Sub
 #End Region
 
@@ -2372,12 +2478,11 @@ Public Class Main_Form
                 Dim alive = Process.Start(exe_path)
 
                 alive.WaitForExit()
-                ID_PICTURE_BOX(tab_index).LoadImageFromFile(ReturnedImg_path, origin_image, resized_image,
-                                                         initial_ratio, tab_index)
+                ID_PICTURE_BOX(tab_index).LoadImageFromFile(ReturnedImg_path, origin_image, resized_image, current_image,
+                                                         initial_ratio, tab_index, file_names)
                 Dim img = resized_image.ElementAt(tab_index)
                 ID_PICTURE_BOX(tab_index).Image = img.ToBitmap()
                 left_top = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
-                current_image(tab_index) = img
                 AppendDataToObjList(ReturnedTxt_path, object_list(tab_index), cur_obj_num(tab_index))
                 ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
 
