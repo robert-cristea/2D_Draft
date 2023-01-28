@@ -44,10 +44,10 @@ Public Class Intersection
             Dim percent_black = 0
             Dim percent_white = 0
 
-            Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+            Dim image = Main_Form.resizedImage.ToBitmap()
             Dim output = SegmentIntoBlackAndWhite(image, thr_seg, Main_Form.Obj_Seg, percent_black, percent_white)
             Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+            Main_Form.currentImage = GetMatFromSDImage(output)
             'format img_segmented
             img_segmented = output
             img_active = img_segmented
@@ -60,12 +60,12 @@ Public Class Intersection
         Try
             thr_seg = ID_SCROLL_THR_SEG.Value
 
-            Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+            Dim image = Main_Form.resizedImage.ToBitmap()
             Dim edge = GetEdgeFromBinary(image, thr_seg)
             edge = edge
             Dim output = OverLapSegToOri(image, edge)
             Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+            Main_Form.currentImage = GetMatFromSDImage(output)
             'format img_segmented
             img_segmented = output
             img_active = img_segmented
@@ -78,7 +78,7 @@ Public Class Intersection
         Try
             Main_Form.Obj_Seg.sectObj.horLine = ID_NUM_HORIZON.Value
             Main_Form.Obj_Seg.sectObj.verLine = ID_NUM_VERTICAL.Value
-            Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+            Dim image = Main_Form.resizedImage.ToBitmap()
             IdentifyInterSections(Main_Form.ID_PICTURE_BOX(Main_Form.tab_index), image, thr_seg, Main_Form.Obj_Seg)
             LoadDataToGridView()
         Catch ex As Exception

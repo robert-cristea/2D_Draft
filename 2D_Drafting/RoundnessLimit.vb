@@ -36,7 +36,7 @@ Public Class RoundnessLimit
     Private Sub RoundnessLimit_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
             ObjList.Clear()
-            Dim scr = Main_Form.origin_image(Main_Form.tab_index).ToBitmap()
+            Dim scr = Main_Form.originalImage.ToBitmap()
             Dim bmpImage As Bitmap = New Bitmap(scr)
             OriImage = bmpImage.ToImage(Of Bgr, Byte)()
             bmpImage.Dispose()
@@ -57,11 +57,11 @@ Public Class RoundnessLimit
                 output = BlobDetection(OriImage, BinaryImage, ObjList, AreaLimit, 0, 1, PerVsAreaRatioLower, PerVsAreaRatioUpper)
             End If
 
-            Dim sz = New Size(Main_Form.resized_image(Main_Form.tab_index).Width, Main_Form.resized_image(Main_Form.tab_index).Height)
+            Dim sz = New Size(Main_Form.resizedImage.Width, Main_Form.resizedImage.Height)
             CvInvoke.Resize(output, output, sz)
             Dim Image = GetImageFromEmgu(output)
             Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = Image
-            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(Image)
+            Main_Form.currentImage = GetMatFromSDImage(Image)
         Catch ex As Exception
 
         End Try

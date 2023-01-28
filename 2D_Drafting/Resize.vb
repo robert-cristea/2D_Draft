@@ -9,8 +9,8 @@
     Public RadioState As Boolean
 
     Private Sub Resize_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ImgWidth = Main_Form.resized_image(Main_Form.tab_index).Width
-        ImgHeight = Main_Form.resized_image(Main_Form.tab_index).Height
+        ImgWidth = Main_Form.resizedImage.Width
+        ImgHeight = Main_Form.resizedImage.Height
     End Sub
     Private Sub RadioPercent_CheckedChanged(sender As Object, e As EventArgs) Handles RadioPercent.CheckedChanged
         If RadioPercent.Checked Then

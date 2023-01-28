@@ -49,10 +49,10 @@ Public Class Circle
             ID_LABEL_ROUND.Text = roundness.ToString()
             Main_Form.Obj_Seg.Refresh()
 
-            Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+            Dim image = Main_Form.resizedImage.ToBitmap()
             Dim output = IdentifyCicles(image, roundness, thr_cir, Main_Form.Obj_Seg)
             Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+            Main_Form.currentImage = GetMatFromSDImage(output)
             img_circle = Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image
             img_active = img_circle
             subtract = 0
@@ -69,10 +69,10 @@ Public Class Circle
                 subtract = 1
 
                 'subtract circles from image
-                Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+                Dim image = Main_Form.resizedImage.ToBitmap()
                 Dim output = SubtractCircles(image, Main_Form.Obj_Seg, percent_circle)
                 Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-                Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+                Main_Form.currentImage = GetMatFromSDImage(output)
                 img_subtracted = output
                 img_circle = img_subtracted
                 img_active = img_subtracted
@@ -87,7 +87,7 @@ Public Class Circle
                 'Segment Remaing Image into Black and White
                 Dim output = SegmentIntoBlackAndWhite(img_subtracted, thr_seg, Main_Form.Obj_Seg, percent_black, percent_white)
                 Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-                Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+                Main_Form.currentImage = GetMatFromSDImage(output)
                 'format img_segmented
                 img_segmented = output
                 img_active = img_segmented
@@ -107,10 +107,10 @@ Public Class Circle
             thr_cir = CInt(ID_NUM_THR_CIR.Value)
             Main_Form.Obj_Seg.Refresh()
             'identify circles 
-            Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+            Dim image = Main_Form.resizedImage.ToBitmap()
             Dim output = IdentifyCicles(image, roundness, thr_cir, Main_Form.Obj_Seg)
             Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+            Main_Form.currentImage = GetMatFromSDImage(output)
             img_circle = Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image
             img_active = img_circle
             subtract = 0

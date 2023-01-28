@@ -43,11 +43,10 @@ Public Module ControlsMethods
     ''' Zoom image by zoom_factor.
     ''' </summary>
     ''' <paramname="zoom_factor">The factor for zooming in or zooming out.</param>
-    ''' <paramname="ori">The list of original images.</param>
-    ''' <paramname="cur">The list of images currently used in picturebox.</param>
-    ''' <paramname="tab_index">The index of tab control.</param>
-    Public Function ZoomImage(ByVal zoom_factor As Double, ByVal ori As List(Of Mat), ByVal cur As List(Of Mat), ByVal tab_index As Integer) As Mat
-        Dim ori_img = ori.ElementAt(tab_index).Clone()
+    ''' <paramname="Scr">The list of original images.</param>
+
+    Public Function ZoomImage(ByVal zoom_factor As Double, ByVal Scr As Mat) As Mat
+        Dim ori_img = Scr.Clone()
         Dim s As Size = New Size(Convert.ToInt32(ori_img.Width * zoom_factor), Convert.ToInt32(ori_img.Height * zoom_factor))
         Dim dst_img As Mat = New Mat()
         CvInvoke.Resize(ori_img, dst_img, s)
@@ -925,9 +924,9 @@ Public Module ControlsMethods
         Obj.length = Math.Sqrt(Math.Pow(Obj.startPoint.X * width - Obj.endPoint.X * width, 2) + Math.Pow(Obj.startPoint.Y * height - Obj.endPoint.Y * height, 2))
 
         Dim graph As Graphics = pictureBox.CreateGraphics()
-        Main_Form.show_legend = True
+        Main_Form.showLegend = True
         DrawObjItem(graph, pictureBox, Obj, digit, CF)
-        Main_Form.show_legend = False
+        Main_Form.showLegend = False
         graph.Dispose()
     End Sub
 
@@ -936,18 +935,16 @@ Public Module ControlsMethods
     ''' </summary>
     ''' <paramname="pictureBox">The pictureBox control in which you want to draw object list.</param>
     ''' <paramname="object_list">The list of objects which you are going to draw.</param>
-    ''' <paramname="graphPen">The pen for drawing objects.</param>
-    ''' <paramname="graphPen_line">The pen for drawing lines.</param>
     ''' <paramname="digit">The digit of decimal numbers.</param>
     ''' <paramname="CF">The factor of measuring scale.</param>
     ''' <paramname="flag">The flag determines refresh.</param>
 
     <Extension()>
-    Public Sub DrawObjList(ByVal pictureBox As PictureBox, ByVal object_list As List(Of MeasureObject), ByVal graphPen As Pen, ByVal graphPen_line As Pen, ByVal digit As Integer, ByVal CF As Double, ByVal flag As Boolean)
+    Public Sub DrawObjList(ByVal pictureBox As PictureBox, ByVal object_list As List(Of MeasureObject), ByVal digit As Integer, ByVal CF As Double, ByVal flag As Boolean)
         pictureBox.Refresh()
 
         Dim graph As Graphics = pictureBox.CreateGraphics()
-        DrawObjList2(graph, pictureBox, object_list, graphPen, graphPen_line, digit, CF)
+        DrawObjList2(graph, pictureBox, object_list, digit, CF)
 
         graph.Dispose()
     End Sub
@@ -1039,7 +1036,7 @@ Public Module ControlsMethods
                 length_decimal = item.scaleObject.length
             End If
 
-            If Main_Form.show_legend = True Then
+            If Main_Form.showLegend = True Then
                 Dim output = item.name + " " + length_decimal.ToString()
                 Dim textSize As SizeF = graph.MeasureString(output, graphFont)
                 graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
@@ -1086,7 +1083,7 @@ Public Module ControlsMethods
             Dim trans_pt = GetRotationTransform(draw_pt, item.angleObject.trans_angle)
             Dim length_decimal = GetDecimalNumber(Math.Abs(item.angleObject.sweep_angle), digit, 1)
 
-            If Main_Form.show_legend = True Then
+            If Main_Form.showLegend = True Then
                 Dim output = item.name + " " + length_decimal.ToString()
                 Dim textSize As SizeF = graph.MeasureString(output, graphFont)
                 graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
@@ -1171,7 +1168,7 @@ Public Module ControlsMethods
 
                 Dim length_decimal = GetDecimalNumber(item.arc, digit, CF)
 
-                If Main_Form.show_legend = True Then
+                If Main_Form.showLegend = True Then
                     Dim output = item.name + " " + length_decimal.ToString()
                     Dim textSize As SizeF = graph.MeasureString(output, graphFont)
                     graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
@@ -1244,7 +1241,7 @@ Public Module ControlsMethods
             Dim trans_pt = GetRotationTransform(draw_pt, trans_angle)
 
             Dim length_decimal = GetDecimalNumber(item.length, digit, CF)
-            If Main_Form.show_legend = True Then
+            If Main_Form.showLegend = True Then
                 Dim output = item.name + " " + length_decimal.ToString()
                 Dim textSize As SizeF = graph.MeasureString(output, graphFont)
                 graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
@@ -1282,7 +1279,7 @@ Public Module ControlsMethods
             'Dim length_decimal = item.scaleObject.length
             Dim length_decimal = GetDecimalNumber(item.scaleObject.length, digit, 1)
 
-            If Main_Form.show_legend = True Then
+            If Main_Form.showLegend = True Then
                 Dim output = item.name + " " + length_decimal.ToString()
                 Dim textSize As SizeF = graph.MeasureString(output, graphFont)
                 graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
@@ -1307,11 +1304,9 @@ Public Module ControlsMethods
     ''' <paramname="graph">The graphics for drawing object list.</param>
     ''' <paramname="pictureBox">The pictureBox control in which you want to draw object list.</param>
     ''' <paramname="object_list">The list of objects which you are going to draw.</param>
-    ''' <paramname="graphPen">The pen for drawing objects.</param>
-    ''' <paramname="graphPen_line">The pen for drawing lines.</param>
     ''' <paramname="digit">The digit of decimal numbers.</param>
     ''' <paramname="CF">The factor of measuring scale.</param>
-    Public Sub DrawObjList2(ByVal graph As Graphics, ByVal pictureBox As PictureBox, ByVal object_list As List(Of MeasureObject), ByVal graphPen As Pen, ByVal graphPen_line As Pen, ByVal digit As Integer, ByVal CF As Double)
+    Public Sub DrawObjList2(ByVal graph As Graphics, ByVal pictureBox As PictureBox, ByVal object_list As List(Of MeasureObject), ByVal digit As Integer, ByVal CF As Double)
         For Each item In object_list
             DrawObjItem(graph, pictureBox, item, digit, CF)
         Next

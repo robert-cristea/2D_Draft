@@ -10,7 +10,7 @@ Public Class Intensity
 
     Private Sub Intensity_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
-            Dim scr = Main_Form.origin_image(Main_Form.tab_index).ToBitmap()
+            Dim scr = Main_Form.originalImage.ToBitmap()
             Dim bmpImage As Bitmap = New Bitmap(scr)
             OriImage = bmpImage.ToImage(Of Bgr, Byte)()
             bmpImage.Dispose()
@@ -25,12 +25,12 @@ Public Class Intensity
         Try
             BinaryImage = GetBinaryWith2Thr(GrayImage, Lower, Upper)
             Dim resizedBinary = BinaryImage.Copy()
-            Dim sz = New Size(Main_Form.resized_image(Main_Form.tab_index).Width, Main_Form.resized_image(Main_Form.tab_index).Height)
+            Dim sz = New Size(Main_Form.resizedImage.Width, Main_Form.resizedImage.Height)
             CvInvoke.Resize(BinaryImage, resizedBinary, sz)
             Dim BinImg = GetImageFromEmgu(resizedBinary)
-            Dim outPut = OverLapSegToOri(Main_Form.resized_image(Main_Form.tab_index).ToBitmap(), BinImg)
+            Dim outPut = OverLapSegToOri(Main_Form.resizedImage.ToBitmap(), BinImg)
             Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = outPut
-            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(outPut)
+            Main_Form.currentImage = GetMatFromSDImage(outPut)
         Catch ex As Exception
 
         End Try

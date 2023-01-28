@@ -45,7 +45,7 @@ Public Class Phase_Segmentation
         Try
             Timer1.Interval = 30
             Timer1.Start()
-            Dim scr = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+            Dim scr = Main_Form.resizedImage.ToBitmap()
             Dim bmpImage As Bitmap = New Bitmap(scr)
             OriImage = bmpImage.ToImage(Of Bgr, Byte)()
             bmpImage.Dispose()
@@ -75,7 +75,7 @@ Public Class Phase_Segmentation
                 SecondPt = Main_Form.SecondPtOfEdge
             End If
         ElseIf RadioStateSeg = 0 Then
-                SelectPart = False
+            SelectPart = False
         End If
 
         If PrevSelectPart <> SelectPart Then
@@ -152,10 +152,10 @@ Public Class Phase_Segmentation
     Private Sub LoadDataToGridView()
         DataGridView1.Rows.Clear()
         Dim str_item = New String(2) {}
-        If Main_Form.resized_image(Main_Form.tab_index) Is Nothing Then
+        If Main_Form.resizedImage Is Nothing Then
             Return
         End If
-        Dim squrare = Main_Form.resized_image(Main_Form.tab_index).Width * Main_Form.resized_image(Main_Form.tab_index).Height
+        Dim squrare = Main_Form.resizedImage.Width * Main_Form.resizedImage.Height
 
         For i = 0 To PhaseCol.Count - 1
             str_item(0) = ComboBox1.Items(i).ToString
@@ -168,12 +168,12 @@ Public Class Phase_Segmentation
 
     Private Sub PrviewSegmentation()
         Try
-            Dim image = Main_Form.resized_image(Main_Form.tab_index).ToBitmap()
+            Dim image = Main_Form.resizedImage.ToBitmap()
             Dim flag As Boolean = False
             If Main_Form.EdgeRegionDrawed And Main_Form.EdgeRegionDrawReady Then flag = True
             Dim output = MultiSegment(image, PhaseVal, PhaseCol, PhaseArea, PhaseSel, FirstPt, SecondPt, flag)
             Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
-            Main_Form.current_image(Main_Form.tab_index) = GetMatFromSDImage(output)
+            Main_Form.currentImage = GetMatFromSDImage(output)
         Catch ex As Exception
 
         End Try
@@ -389,7 +389,7 @@ Public Class Phase_Segmentation
     End Sub
 
     Private Sub BtnSelPha_Click(sender As Object, e As EventArgs) Handles BtnSelPha.Click
-        CurSelPhase = GetCurrentSelPhase(GrayImage, Main_Form.m_cur_drag, PhaseVal)
+        CurSelPhase = GetCurrentSelPhase(GrayImage, Main_Form.mCurDragPt, PhaseVal)
 
         RadioCurrent.Checked = True
         CheckRadioStatePreview()

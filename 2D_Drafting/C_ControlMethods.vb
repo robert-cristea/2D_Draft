@@ -134,7 +134,7 @@ Public Module C_ControlMethods
             End If
             Dim DrawPt = New Point((startPt.X + EndPt.X) / 2, (startPt.Y + EndPt.Y) / 2)
             Dim length = GetDecimalNumber(item.length, digit, CF)
-            If Main_Form.show_legend = True Then
+            If Main_Form.showLegend = True Then
                 Dim output = item.name + " " + length.ToString()
                 Dim textSize As SizeF = graph.MeasureString(output, graphFont)
                 graph.DrawString(output, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
@@ -360,6 +360,27 @@ Public Module C_ControlMethods
         Main_Form.CuPolyReadySelectArrayIndx_L = -1
 
         Main_Form.COutPointFlag = False
+
+        Main_Form.annoNum = -1
+        Main_Form.curMeasureType = -1
+        Main_Form.MeasureTypePrev = -1
+        Main_Form.ID_BTN_CUR_COL.BackColor = Color.Black
+        Main_Form.ID_BTN_TEXT_COL.BackColor = Color.Black
+        Main_Form.ID_COMBO_LINE_SHAPE.SelectedIndex = 0
+
+        Main_Form.initialRatio = 1
+        Main_Form.curObjNum = 0
+        Main_Form.brightness = 0
+        Main_Form.contrast = 0
+        Main_Form.gamma = 100
+        Main_Form.zoomFactor = 1.0
+
+        Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = Nothing
+        Main_Form.objSelected.Refresh()
+        Main_Form.objectList.Clear()
+        Main_Form.curMeasureType = -1
+        Main_Form.selIndex = -1
+        Main_Form.curve_selIndex = -1
 
     End Sub
 #End Region

@@ -15,53 +15,48 @@ Imports TextBox = System.Windows.Forms.TextBox
 'enum for specify the measuring types
 
 Public Class Main_Form
-    Public origin_image As List(Of Mat) = New List(Of Mat)()           'original image
-    Public resized_image As List(Of Mat) = New List(Of Mat)()          'the image which is resized to fit the picturebox control
-    Public current_image As List(Of Mat) = New List(Of Mat)()          'the image which is currently used
-    Public file_names As List(Of String) = New List(Of String)
-    Private initial_ratio As Single() = New Single(24) {}               'the ratio of resized_image and original image
-    Private zoom_factor As Double() = New Double(24) {}                 'the zooming factor
-    Private cur_measure_type As Integer                                 'current measurement type
-    Private cur_measure_type_prev As Integer                            'backup of current measurement type
-    Private cur_obj_num As Integer() = New Integer(24) {}               'the number of current object
-    Private obj_selected As MeasureObject = New MeasureObject()         'current measurement object
-    Private obj_selected2 As MeasureObject = New MeasureObject()         'current measurement object
-    Private object_list As List(Of List(Of MeasureObject)) = New List(Of List(Of MeasureObject))()        'the list of measurement objects
-    Private ID_MY_TEXTBOX As TextBox() = New TextBox(24) {}             'textbox for editing annotation
-    Private left_top As Point = New Point()                             'the position left top cornor of picture control in panel
-    Private scroll_pos As Point = New Point()                           'the position of scroll bar
-    Private anno_num As Integer                                         'the number of annotation object in the list
-    Private graphFont As Font                                           'the font for text
-    Private undo_num As Integer = 0                                     'count number of undo clicked and reset
-    Private graphPen As Pen = New Pen(Color.Black, 1)                   'pen for drawing objects
-    Private graphPen_line As Pen = New Pen(Color.Black, 1)              'pen for drawing lines
-    Private dashValues As Single() = {5, 2}                             'format dash style of line
-    Private line_infor As LineStyle = New LineStyle(1)                  'include the information of style, width, color ...
-    Private side_drag As Boolean = False                                'flag of side drawing
-    Public show_legend As Boolean = False                              'flag of show legend
-    Private scale_style As String = "horizontal"                        'the style of measuring scale horizontal or vertical
-    Private scale_value As Integer = 0                                  'the value of measuring scale
-    Private scale_unit As String = "cm"                                 'unit of measuring scale may be cm, mm, ...
-    Private ID_TAG_PAGE As TabPage() = New TabPage(24) {}               'tab includes panel
-    Private ID_PANEL As Panel() = New Panel(24) {}                      'panel includes picturebox
+    Public originalImage As Mat                                         'original image
+    Public resizedImage As Mat                                          'the image which is resized to fit the picturebox control
+    Public currentImage As Mat                                          'the image which is currently used
+    Public initialRatio As Single                                      'the ratio of resized_image and original image
+    Public zoomFactor As Double                                        'the zooming factor
+    Public curMeasureType As Integer                                   'current measurement type
+    Public MeasureTypePrev As Integer                                  'backup of current measurement type
+    Public curObjNum As Integer                                        'the number of current object
+    Public objSelected As MeasureObject = New MeasureObject()         'current measurement object
+    Public objSelected2 As MeasureObject = New MeasureObject()         'current measurement object
+    Public objectList As List(Of MeasureObject) = New List(Of MeasureObject)()        'the list of measurement objects
+    Public ID_MY_TEXTBOX As TextBox() = New TextBox(24) {}             'textbox for editing annotation
+    Public leftTop As Point = New Point()                             'the position left top cornor of picture control in panel
+    Public scrollPos As Point = New Point()                           'the position of scroll bar
+    Public annoNum As Integer                                         'the number of annotation object in the list
+    Public graphFont As Font                                           'the font for text
+    Public undoNum As Integer = 0                                     'count number of undo clicked and reset
+    Public dashValues As Single() = {5, 2}                             'format dash style of line
+    Public lineInfor As LineStyle = New LineStyle(1)                  'include the information of style, width, color ...
+    Public sideDrag As Boolean = False                                'flag of side drawing
+    Public showLegend As Boolean = False                              'flag of show legend
+    Public scaleStyle As String = "horizontal"                        'the style of measuring scale horizontal or vertical
+    Public scaleValue As Integer = 0                                  'the value of measuring scale
+    Public scaleUnit As String = "cm"                                 'unit of measuring scale may be cm, mm, ...
+    Public ID_TAG_PAGE As TabPage() = New TabPage(24) {}               'tab includes panel
+    Public ID_PANEL As Panel() = New Panel(24) {}                      'panel includes picturebox
     Public ID_PICTURE_BOX As PictureBox() = New PictureBox(24) {}      'picturebox for drawing objects
     Public tab_index As Integer = 0                                    'selected index of tab control
-    Private CF As Double = 1.0                                          'the ratio of per pixel by per unit
-    Private digit As Integer                                            'The digit of decimal numbers
-    Private font_infor As FontInfor = New FontInfor(10)                 'include the information font and color
-    Private brightness As Integer() = New Integer(24) {}                'brightness of current image
-    Private contrast As Integer() = New Integer(24) {}                  'contrast of current image
-    Private gamma As Integer() = New Integer(24) {}                     'gamma of current image
-    Private sel_index As Integer = -1                                   'selected index for object
-    Public m_cur_drag As PointF = New PointF()                         'the position of mouse cursor
-    Private redraw_flag As Boolean                                      'flag for redrawing objects
-    Private sel_pt_index As Integer = -1                                'selected index of a point of object
-    Private tag_page_flag As Boolean() = New Boolean(24) {}             'specify that target tag page is opened
-    Private img_import_flag As Boolean() = New Boolean(24) {}           'specify that you can import image in target tag
-    Private name_list As List(Of String) = New List(Of String)          'specify the list of item names
-    Private CF_list As List(Of String) = New List(Of String)            'specify the names of CF
-    Private CF_num As List(Of Double) = New List(Of Double)             'specify the values of CF
-    Private menu_click As Boolean = False                               'specify whether the menu item is clicked
+    Public CF As Double = 1.0                                          'the ratio of per pixel by per unit
+    Public digit As Integer                                            'The digit of decimal numbers
+    Public fontInfor As FontInfor = New FontInfor(10)                 'include the information font and color
+    Public brightness As Integer                                       'brightness of current image
+    Public contrast As Integer                                           'contrast of current image
+    Public gamma As Integer                                             'gamma of current image
+    Public selIndex As Integer = -1                                   'selected index for object
+    Public mCurDragPt As PointF = New PointF()                         'the position of mouse cursor
+    Public redrawFlag As Boolean                                      'flag for redrawing objects
+    Public selPtIndex As Integer = -1                                'selected index of a point of object
+    Public nameList As List(Of String) = New List(Of String)          'specify the list of item names
+    Public CF_list As List(Of String) = New List(Of String)            'specify the names of CF
+    Public CF_num As List(Of Double) = New List(Of Double)             'specify the values of CF
+    Public menu_click As Boolean = False                               'specify whether the menu item is clicked
 
     'member variable for webcam
     Private videoDevices As FilterInfoCollection                        'usable video devices
@@ -155,7 +150,7 @@ Public Class Main_Form
     Private C_LineObj As LineObj = New LineObj()
     Private C_CuPolyObj As CuPolyObj = New CuPolyObj()
     Private C_CurveObj As CurveObj = New CurveObj()
-    Private curve_sel_index As Integer
+    Public curve_selIndex As Integer
     Private move_line As Boolean
     Private StartPtOfMove As PointF = New PointF()
     Private EndPtOfMove As PointF = New PointF()
@@ -175,30 +170,6 @@ Public Class Main_Form
     Public Sub New()
         InitializeComponent()
         InitializeCustomeComeponent()
-
-        anno_num = -1
-        cur_measure_type = -1
-        cur_measure_type_prev = -1
-        graphPen_line.DashStyle = Drawing2D.DashStyle.Dot
-        ID_BTN_CUR_COL.BackColor = Color.Black
-        ID_BTN_TEXT_COL.BackColor = Color.Black
-        ID_COMBO_LINE_SHAPE.SelectedIndex = 0
-        Dim mat As Mat = Nothing
-
-        For i = 0 To 24
-
-            Dim list As List(Of MeasureObject) = New List(Of MeasureObject)()
-            initial_ratio(i) = 1
-            object_list.Add(list)
-            cur_obj_num(i) = 0
-            origin_image.Add(mat)
-            resized_image.Add(mat)
-            current_image.Add(mat)
-            file_names.Add("Blank")
-            gamma(i) = 100
-            zoom_factor(i) = 1.0
-        Next
-
     End Sub
 
     Private Const EM_GETLINECOUNT As Integer = &HBA
@@ -279,12 +250,8 @@ Public Class Main_Form
         'remove unnessary tab pages
         For i = 1 To 24
             ID_TAG_CTRL.TabPages.Remove(ID_TAG_PAGE(i))
-            tag_page_flag(i) = False
-            img_import_flag(i) = True
-        Next
 
-        tag_page_flag(0) = True
-        img_import_flag(0) = True
+        Next
 
 
     End Sub
@@ -367,14 +334,14 @@ Public Class Main_Form
             Dim myEnumerator As System.Collections.IEnumerator = Keys.GetEnumerator()
             While myEnumerator.MoveNext()
                 If myEnumerator.Current.Name = "unit" Then
-                    scale_unit = myEnumerator.Current.value
+                    scaleUnit = myEnumerator.Current.value
                 Else
                     digit = CInt(myEnumerator.Current.value)
                 End If
             End While
             ID_NUM_DIGIT.Value = digit
         Else
-            scale_unit = "cm"
+            scaleUnit = "cm"
             digit = 0
             ID_NUM_DIGIT.Value = digit
         End If
@@ -388,13 +355,13 @@ Public Class Main_Form
             myEnumerator = Keys.GetEnumerator()
             While myEnumerator.MoveNext()
                 Dim line As String = myEnumerator.Current.value
-                name_list.Add(line)
+                nameList.Add(line)
             End While
         Else
-            name_list.Add("Line")
-            name_list.Add("Angle")
-            name_list.Add("Arc")
-            name_list.Add("Scale")
+            nameList.Add("Line")
+            nameList.Add("Angle")
+            nameList.Add("Arc")
+            nameList.Add("Scale")
         End If
 
     End Sub
@@ -402,7 +369,6 @@ Public Class Main_Form
     'check license information when main dialog is loading
     Private Sub Main_Form_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
-            'Init()
             Initialize_Button_Colors()
             Timer1.Interval = 30
             Timer1.Start()
@@ -438,8 +404,8 @@ Public Class Main_Form
             txtbx_imagepath.Text = My.Settings.imagefilepath
         End If
 
-        obj_seg.circleObj = New CircleObj()
-        obj_seg.sectObj = New InterSectionObj()
+        Obj_Seg.circleObj = New CircleObj()
+        Obj_Seg.sectObj = New InterSectionObj()
         Obj_Seg.phaseSegObj = New PhaseSegObj()
         Obj_Seg.BlobSegObj = New BlobSegObj()
         Dim colType As Type = GetType(System.Drawing.Color)
@@ -458,10 +424,10 @@ Public Class Main_Form
 
     'change the color of button when it is clicked
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        If cur_measure_type_prev <> cur_measure_type Then
+        If MeasureTypePrev <> curMeasureType Then
             Initialize_Button_Colors()
-            cur_measure_type_prev = cur_measure_type
-            Select Case cur_measure_type
+            MeasureTypePrev = curMeasureType
+            Select Case curMeasureType
                 Case MeasureType.lineAlign
                     If menu_click = False Then ID_BTN_LINE_ALIGN.BackColor = Color.DodgerBlue
                     ID_STATUS_LABEL.Text = "Calculates a line through two input points."
@@ -550,78 +516,38 @@ Public Class Main_Form
     'import image and draw it to picturebox
     'format variables
     Private Sub ID_MENU_OPEN_Click(sender As Object, e As EventArgs) Handles ID_MENU_OPEN.Click
-        cur_measure_type = -1
+        curMeasureType = -1
 
         Dim filter = "JPEG Files|*.jpg|PNG Files|*.png|BMP Files|*.bmp|All Files|*.*"
         Dim title = "Open"
 
-        Dim start As Integer = tab_index
-        img_import_flag(tab_index) = True
+        ID_PICTURE_BOX(0).LoadImageFromFiles(filter, title, originalImage, resizedImage, currentImage)
 
-        Dim img_cnt = ID_PICTURE_BOX(0).LoadImageFromFiles(filter, title, origin_image, resized_image, current_image, initial_ratio, start, img_import_flag, file_names)
+        initVar()
+        ID_PICTURE_BOX(0).Invoke(New Action(Sub() ID_PICTURE_BOX(0).Image = originalImage.ToBitmap()))
 
-        If img_cnt >= 1 Then
-            ID_PICTURE_BOX(tab_index).Image = Nothing
-            obj_selected.Refresh()
-            cur_measure_type = -1
-            sel_index = -1
-            curve_sel_index = -1
-            initVar()
-        End If
-        Dim added_tag = 0
-        While added_tag < img_cnt
-            If start > 24 Then Exit While
-
-            If tag_page_flag(start) = True AndAlso ID_PICTURE_BOX(start).Image IsNot Nothing Then
-                start = start + 1
-                Continue While
-            End If
-
-            If tag_page_flag(start) = False Then
-                ID_TAG_CTRL.TabPages.Add(ID_TAG_PAGE(start))
-                tag_page_flag(start) = True
-            End If
-
-            Dim img = origin_image.ElementAt(start)
-            ID_PICTURE_BOX(start).Invoke(New Action(Sub() ID_PICTURE_BOX(start).Image = img.ToBitmap()))
-
-            left_top = ID_PICTURE_BOX(start).CenteringImage(ID_PANEL(start))
-            cur_obj_num(start) = 0
-            Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, start).Clear()
-            brightness(start) = 0
-            contrast(start) = 0
-            gamma(start) = 100
-            img_import_flag(start) = False
-            ID_TAG_PAGE(start).Text = file_names(start)
-
-            start = start + 1
-            added_tag = added_tag + 1
-        End While
-
-        start = Math.Max(start - 1, 0)
-        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(start), CF, digit, scale_unit, name_list)
-        ID_TAG_CTRL.SelectedTab = ID_TAG_PAGE(start)
+        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
     End Sub
 
     'export image to jpg
     Private Sub ID_MENU_SAVE_Click(sender As Object, e As EventArgs) Handles ID_MENU_SAVE.Click
         Dim filter = "JPEG Files|*.jpg"
         Dim title = "Save"
-        ID_PICTURE_BOX(tab_index).SaveImageInFile(filter, title, object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF)
+        ID_PICTURE_BOX(tab_index).SaveImageInFile(filter, title, objectList, digit, CF)
     End Sub
 
     'save object information as excel file
     Private Sub ID_MENU_SAVE_XLSX_Click(sender As Object, e As EventArgs) Handles ID_MENU_SAVE_XLSX.Click
         Dim filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
         Dim title = "Save"
-        ID_PICTURE_BOX.SaveListToExcel(object_list, filter, title, CF, digit, scale_unit)
+        ID_PICTURE_BOX(tab_index).SaveListToExcel(objectList, filter, title, CF, digit, scaleUnit)
     End Sub
 
     'save object list and image as excel file
     Private Sub ID_MENU_EXPORT_REPORT_Click(sender As Object, e As EventArgs) Handles ID_MENU_EXPORT_REPORT.Click
         Dim filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
         Dim title = "Save"
-        ID_PICTURE_BOX.SaveReportToExcel(filter, title, object_list, graphPen, graphPen_line, digit, CF, scale_unit)
+        ID_PICTURE_BOX(tab_index).SaveReportToExcel(filter, title, objectList, digit, CF, scaleUnit)
     End Sub
 
     'exit the program
@@ -633,153 +559,153 @@ Public Class Main_Form
     'reset the current object
     Private Sub ID_BTN_LINE_ALIGN_Click(sender As Object, e As EventArgs) Handles ID_BTN_LINE_ALIGN.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.lineAlign
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.lineAlign
+        objSelected.measuringType = curMeasureType
     End Sub
 
     Private Sub LINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LINEToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.lineAlign
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.lineAlign
+        objSelected.measuringType = curMeasureType
     End Sub
 
     'set current measurement type as line_horizontal
     'reset the current object
     Private Sub ID_BTN_LINE_HOR_Click(sender As Object, e As EventArgs) Handles ID_BTN_LINE_HOR.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.lineHorizontal
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.lineHorizontal
+        objSelected.measuringType = curMeasureType
     End Sub
 
     Private Sub HORIZONTALLINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles HORIZONTALLINEToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.lineHorizontal
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.lineHorizontal
+        objSelected.measuringType = curMeasureType
     End Sub
 
     'set current measurement type as line_vertical
     'reset the current object
     Private Sub ID_BTN_LINE_VER_Click(sender As Object, e As EventArgs) Handles ID_BTN_LINE_VER.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.lineVertical
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.lineVertical
+        objSelected.measuringType = curMeasureType
     End Sub
 
     Private Sub VERTICALLINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VERTICALLINEToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.lineVertical
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.lineVertical
+        objSelected.measuringType = curMeasureType
     End Sub
 
     'set current measurement type as line parallel
     'reset the current object
     Private Sub ID_BTN_LINE_PARA_Click(sender As Object, e As EventArgs) Handles ID_BTN_LINE_PARA.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.lineParallel
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.lineParallel
+        objSelected.measuringType = curMeasureType
     End Sub
 
     Private Sub PARALLELLINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PARALLELLINEToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.lineParallel
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.lineParallel
+        objSelected.measuringType = curMeasureType
     End Sub
 
     'set current measurement type as angle
     'reset the current object
     Private Sub ID_BTN_ARC_Click(sender As Object, e As EventArgs) Handles ID_BTN_ARC.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.angle
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.angle
+        objSelected.measuringType = curMeasureType
     End Sub
 
     Private Sub ANGLETHROUGHTHREEPOINTSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ANGLETHROUGHTHREEPOINTSToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.angle
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.angle
+        objSelected.measuringType = curMeasureType
     End Sub
 
     'set current measurement type as angle far
     'reset the current object
     Private Sub ID_BTN_ANGLE_Click(sender As Object, e As EventArgs) Handles ID_BTN_ANGLE.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.angle2Line
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.angle2Line
+        objSelected.measuringType = curMeasureType
     End Sub
 
     Private Sub ANGLETHROUGHTWOLINESToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ANGLETHROUGHTWOLINESToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.angle2Line
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.angle2Line
+        objSelected.measuringType = curMeasureType
     End Sub
 
     'set current measurement type as radius
     'reset the current object
     Private Sub ID_BTN_RADIUS_Click(sender As Object, e As EventArgs) Handles ID_BTN_RADIUS.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.arc
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.arc
+        objSelected.measuringType = curMeasureType
     End Sub
 
     Private Sub ARCToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ARCToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.arc
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.arc
+        objSelected.measuringType = curMeasureType
     End Sub
 
     'set current measurement type as annotation
     'reset the current object
     Private Sub ID_BTN_ANNOTATION_Click(sender As Object, e As EventArgs) Handles ID_BTN_ANNOTATION.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.annotation
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.annotation
+        objSelected.measuringType = curMeasureType
     End Sub
 
     Private Sub ANNOTATIONToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ANNOTATIONToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.annotation
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.annotation
+        objSelected.measuringType = curMeasureType
     End Sub
 
     'set current measurement type as draw line
     'reset the current object
     Private Sub ID_BTN_PENCIL_Click(sender As Object, e As EventArgs) Handles ID_BTN_PENCIL.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.pencil
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.pencil
+        objSelected.measuringType = curMeasureType
     End Sub
 
     'set current measurement type as point to line
     'reset the current object
     Private Sub ID_BTN_P_LINE_Click(sender As Object, e As EventArgs) Handles ID_BTN_P_LINE.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.ptToLine
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.ptToLine
+        objSelected.measuringType = curMeasureType
     End Sub
 
     Private Sub DISTANCEFROMPOINTTOLINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DISTANCEFROMPOINTTOLINEToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.ptToLine
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.ptToLine
+        objSelected.measuringType = curMeasureType
     End Sub
 
     'set measureing scale 
@@ -787,18 +713,18 @@ Public Class Main_Form
     'reset the current object
     Private Sub ID_BTN_SCALE_Click(sender As Object, e As EventArgs) Handles ID_BTN_SCALE.Click
         menu_click = False
-        Dim form As ID_FORM_SCALE = New ID_FORM_SCALE(scale_unit)
+        Dim form As ID_FORM_SCALE = New ID_FORM_SCALE(scaleUnit)
         If form.ShowDialog() = DialogResult.OK Then
-            scale_style = form.scale_style
-            scale_value = form.scale_value
-            scale_unit = form.scale_unit
+            scaleStyle = form.scaleStyle
+            scaleValue = form.scaleValue
+            scaleUnit = form.scaleUnit
 
-            obj_selected.Refresh()
-            cur_measure_type = MeasureType.measureScale
-            obj_selected.measuringType = cur_measure_type
+            objSelected.Refresh()
+            curMeasureType = MeasureType.measureScale
+            objSelected.measuringType = curMeasureType
 
-            obj_selected.scaleObject.style = scale_style
-            obj_selected.scaleObject.length = scale_value
+            objSelected.scaleObject.style = scaleStyle
+            objSelected.scaleObject.length = scaleValue
         End If
 
     End Sub
@@ -806,44 +732,44 @@ Public Class Main_Form
     'set current measurement type as circle_fixed
     Private Sub ANGLEOFFIXEDDIAMETERToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ANGLEOFFIXEDDIAMETERToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.arcFixed
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.arcFixed
+        objSelected.measuringType = curMeasureType
 
         ID_STATUS_LABEL.Text = "Drawing a circle which has fixed radius"
         Dim form = New LenDiameter()
         If form.ShowDialog() = DialogResult.OK Then
-            obj_selected.scaleObject.length = CSng(form.ID_TEXT_FIXED.Text)
-            obj_selected.arc = obj_selected.scaleObject.length / ID_PICTURE_BOX(tab_index).Width
+            objSelected.scaleObject.length = CSng(form.ID_TEXT_FIXED.Text)
+            objSelected.arc = objSelected.scaleObject.length / ID_PICTURE_BOX(tab_index).Width
         End If
     End Sub
 
     'set current measurement type as line_fixed
     Private Sub LINEOFFIXEDLENGTHToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LINEOFFIXEDLENGTHToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.lineFixed
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.lineFixed
+        objSelected.measuringType = curMeasureType
 
         ID_STATUS_LABEL.Text = "Drawing a line which has fixed length"
         Dim form = New LenDiameter()
         If form.ShowDialog() = DialogResult.OK Then
-            obj_selected.scaleObject.length = CSng(form.ID_TEXT_FIXED.Text)
-            obj_selected.length = obj_selected.scaleObject.length / ID_PICTURE_BOX(tab_index).Width
+            objSelected.scaleObject.length = CSng(form.ID_TEXT_FIXED.Text)
+            objSelected.length = objSelected.scaleObject.length / ID_PICTURE_BOX(tab_index).Width
         End If
     End Sub
 
     'set current measurement type as angle_fixed
     Private Sub FIXEDANGLEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FIXEDANGLEToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.angleFixed
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.angleFixed
+        objSelected.measuringType = curMeasureType
 
         ID_STATUS_LABEL.Text = "Drawing a angle which has fixed angle"
         Dim form = New LenDiameter()
         If form.ShowDialog() = DialogResult.OK Then
-            obj_selected.angle = CSng(form.ID_TEXT_FIXED.Text)
+            objSelected.angle = CSng(form.ID_TEXT_FIXED.Text)
         End If
     End Sub
 
@@ -857,27 +783,25 @@ Public Class Main_Form
     'zoom image
     Private Sub Zoom_Image()
         Try
-            Dim ratio = zoom_factor(tab_index)
-            Dim zoomed = ZoomImage(ratio, current_image, current_image, tab_index)
-            Dim zoomed_ori = ZoomImage(ratio, origin_image, resized_image, tab_index)
-            DisposeElemOfList(resized_image, zoomed_ori, tab_index)
+            Dim ratio = zoomFactor
+            Dim zoomed = ZoomImage(ratio, currentImage)
+            resizedImage = ZoomImage(ratio, originalImage)
 
             Dim Image = zoomed.ToBitmap()
-            Dim Adjusted = AdjustBrightnessAndContrast(Image, brightness(tab_index), contrast(tab_index), gamma(tab_index))
+            Dim Adjusted = AdjustBrightnessAndContrast(Image, brightness, contrast, gamma)
 
-            'ID_PICTURE_BOX(tab_index).Invoke(New Action(Sub() ID_PICTURE_BOX(tab_index).Image = Enumerable.ElementAt(current_image, tab_index).ToBitmap()))
             ID_PICTURE_BOX(tab_index).Image = Adjusted
-            left_top = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
-            scroll_pos.X = ID_PANEL(tab_index).HorizontalScroll.Value
-            scroll_pos.Y = ID_PANEL(tab_index).VerticalScroll.Value
-            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+            leftTop = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
+            scrollPos.X = ID_PANEL(tab_index).HorizontalScroll.Value
+            scrollPos.Y = ID_PANEL(tab_index).VerticalScroll.Value
+            ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
             Dim flag = False
-            If sel_index >= 0 Then flag = True
-            ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, flag)
+            If selIndex >= 0 Then flag = True
+            ID_PICTURE_BOX(tab_index).DrawObjSelected(objSelected, flag)
             If ID_MY_TEXTBOX(tab_index).Visible = True Then
-                Dim obj_anno = object_list.ElementAt(tab_index).ElementAt(anno_num)
+                Dim obj_anno = objectList.ElementAt(annoNum)
                 Dim st_pt As Point = New Point(obj_anno.drawPoint.X * ID_PICTURE_BOX(tab_index).Width, obj_anno.drawPoint.Y * ID_PICTURE_BOX(tab_index).Height)
-                ID_MY_TEXTBOX(tab_index).UpdateLocation(st_pt, left_top, scroll_pos)
+                ID_MY_TEXTBOX(tab_index).UpdateLocation(st_pt, leftTop, scrollPos)
             End If
             zoomed.Dispose()
             'Image.Dispose()
@@ -889,7 +813,7 @@ Public Class Main_Form
     'zoom in image and draw it to picturebox
     Private Sub ID_BTN_ZOON_IN_Click(sender As Object, e As EventArgs) Handles ID_BTN_ZOON_IN.Click
         menu_click = False
-        zoom_factor(tab_index) *= 1.1
+        zoomFactor *= 1.1
         Zoom_Image()
         ID_STATUS_LABEL.Text = "Zoom In"
     End Sub
@@ -897,7 +821,7 @@ Public Class Main_Form
     'zoom out image and draw it to picturebox
     Private Sub ID_BTN_ZOOM_OUT_Click(sender As Object, e As EventArgs) Handles ID_BTN_ZOOM_OUT.Click
         menu_click = False
-        zoom_factor(tab_index) /= 1.1
+        zoomFactor /= 1.1
         Zoom_Image()
         ID_STATUS_LABEL.Text = "Zoom Out"
     End Sub
@@ -905,7 +829,7 @@ Public Class Main_Form
     'zoom in
     Private Sub ZOOMINToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZOOMINToolStripMenuItem.Click
         menu_click = True
-        zoom_factor(tab_index) *= 1.1
+        zoomFactor *= 1.1
         Zoom_Image()
         ID_STATUS_LABEL.Text = "Zoom In"
     End Sub
@@ -913,21 +837,21 @@ Public Class Main_Form
     'zoom out
     Private Sub ZOOMOUTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZOOMOUTToolStripMenuItem.Click
         menu_click = True
-        zoom_factor(tab_index) /= 1.1
+        zoomFactor /= 1.1
         Zoom_Image()
         ID_STATUS_LABEL.Text = "Zoom Out"
     End Sub
 
     Private Sub ZOOMORIGINALToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZOOMORIGINALToolStripMenuItem.Click
         menu_click = True
-        zoom_factor(tab_index) = 1.0
+        zoomFactor = 1.0
         Zoom_Image()
         ID_STATUS_LABEL.Text = "Zoom Original"
     End Sub
 
     Private Sub ZOOMFITToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZOOMFITToolStripMenuItem.Click
         menu_click = True
-        zoom_factor(tab_index) = CalcIntialRatio(ID_PANEL(tab_index), origin_image(tab_index))
+        zoomFactor = CalcIntialRatio(ID_PANEL(tab_index), originalImage)
         Zoom_Image()
         ID_STATUS_LABEL.Text = "Zoom Fit"
     End Sub
@@ -935,17 +859,17 @@ Public Class Main_Form
     Private Sub CustomeResize(Dst_w As Single, Dst_h As Single, Optional State As Boolean = False)
         Try
             If State = False Then
-                zoom_factor(tab_index) = 1.0
+                zoomFactor = 1.0
             End If
 
             Dim Dst_w_ori, Dst_h_ori, Dst_w_cur, Dst_h_cur, Dst_w_res, Dst_h_res As Integer
             If State Then
-                Dst_w_ori = origin_image(tab_index).Width * Dst_w
-                Dst_h_ori = origin_image(tab_index).Height * Dst_h
-                Dst_w_cur = origin_image(tab_index).Width * Dst_w
-                Dst_h_cur = origin_image(tab_index).Height * Dst_h
-                Dst_w_res = resized_image(tab_index).Width * Dst_w
-                Dst_h_res = resized_image(tab_index).Height * Dst_h
+                Dst_w_ori = originalImage.Width * Dst_w
+                Dst_h_ori = originalImage.Height * Dst_h
+                Dst_w_cur = originalImage.Width * Dst_w
+                Dst_h_cur = originalImage.Height * Dst_h
+                Dst_w_res = resizedImage.Width * Dst_w
+                Dst_h_res = resizedImage.Height * Dst_h
             Else
                 Dst_w_ori = Dst_w
                 Dst_h_ori = Dst_h
@@ -954,29 +878,25 @@ Public Class Main_Form
                 Dst_w_res = Dst_w
                 Dst_h_res = Dst_h
             End If
-            Dim zoomed_ori = ZoomImage2(origin_image(tab_index), Dst_w_ori, Dst_h_ori)
-            Dim zoomed_cur = ZoomImage2(current_image(tab_index), Dst_w_cur, Dst_h_cur)
-            Dim zoomed_res = ZoomImage2(resized_image(tab_index), Dst_w_res, Dst_h_res)
+            originalImage = ZoomImage2(originalImage, Dst_w_ori, Dst_h_ori)
+            currentImage = ZoomImage2(currentImage, Dst_w_cur, Dst_h_cur)
+            resizedImage = ZoomImage2(resizedImage, Dst_w_res, Dst_h_res)
 
-            DisposeElemOfList(resized_image, zoomed_res, tab_index)
-            DisposeElemOfList(origin_image, zoomed_ori, tab_index)
-            DisposeElemOfList(current_image, zoomed_cur, tab_index)
-
-            Dim Image = zoomed_cur.ToBitmap()
-            Dim Adjusted = AdjustBrightnessAndContrast(Image, brightness(tab_index), contrast(tab_index), gamma(tab_index))
+            Dim Image = currentImage.ToBitmap()
+            Dim Adjusted = AdjustBrightnessAndContrast(Image, brightness, contrast, gamma)
 
             ID_PICTURE_BOX(tab_index).Image = Adjusted
-            left_top = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
-            scroll_pos.X = ID_PANEL(tab_index).HorizontalScroll.Value
-            scroll_pos.Y = ID_PANEL(tab_index).VerticalScroll.Value
-            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+            leftTop = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
+            scrollPos.X = ID_PANEL(tab_index).HorizontalScroll.Value
+            scrollPos.Y = ID_PANEL(tab_index).VerticalScroll.Value
+            ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
             Dim flag = False
-            If sel_index >= 0 Then flag = True
-            ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, flag)
+            If selIndex >= 0 Then flag = True
+            ID_PICTURE_BOX(tab_index).DrawObjSelected(objSelected, flag)
             If ID_MY_TEXTBOX(tab_index).Visible = True Then
-                Dim obj_anno = object_list.ElementAt(tab_index).ElementAt(anno_num)
+                Dim obj_anno = objectList.ElementAt(annoNum)
                 Dim st_pt As Point = New Point(obj_anno.drawPoint.X * ID_PICTURE_BOX(tab_index).Width, obj_anno.drawPoint.Y * ID_PICTURE_BOX(tab_index).Height)
-                ID_MY_TEXTBOX(tab_index).UpdateLocation(st_pt, left_top, scroll_pos)
+                ID_MY_TEXTBOX(tab_index).UpdateLocation(st_pt, leftTop, scrollPos)
             End If
 
         Catch ex As Exception
@@ -1001,17 +921,17 @@ Public Class Main_Form
     End Sub
     'undo last object and last row of listview
     Private Sub Undo()
-        If undo_num > 0 Then
-            obj_selected.Refresh()
-            sel_index = -1
-            sel_pt_index = -1
-            curve_sel_index = -1
-            Dim flag = RemoveObjFromList(object_list.ElementAt(tab_index))
+        If undoNum > 0 Then
+            objSelected.Refresh()
+            selIndex = -1
+            selPtIndex = -1
+            curve_selIndex = -1
+            Dim flag = RemoveObjFromList(objectList)
             If flag = True Then
-                ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
-                undo_num -= 1
-                cur_obj_num(tab_index) -= 1
+                ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+                ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
+                undoNum -= 1
+                curObjNum -= 1
             End If
         End If
     End Sub
@@ -1031,15 +951,15 @@ Public Class Main_Form
     'reset current object
     Private Sub ID_BTN_RESEL_Click(sender As Object, e As EventArgs) Handles ID_BTN_RESEL.Click
         menu_click = False
-        obj_selected.Refresh()
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+        objSelected.Refresh()
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
         ID_STATUS_LABEL.Text = "Reselect"
     End Sub
 
     Private Sub RESELECTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RESELECTToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+        objSelected.Refresh()
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
         ID_STATUS_LABEL.Text = "Reselect"
     End Sub
 
@@ -1048,15 +968,15 @@ Public Class Main_Form
     Private Sub ID_NUM_DIGIT_ValueChanged(sender As Object, e As EventArgs) Handles ID_NUM_DIGIT.ValueChanged
         menu_click = False
         digit = CInt(ID_NUM_DIGIT.Value)
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
         ID_STATUS_LABEL.Text = "Changing the digit of decimal numbers."
     End Sub
 
     'set the width of line
     Private Sub ID_NUM_LINE_WIDTH_ValueChanged(sender As Object, e As EventArgs) Handles ID_NUM_LINE_WIDTH.ValueChanged
         menu_click = False
-        line_infor.line_width = CInt(ID_NUM_LINE_WIDTH.Value)
+        lineInfor.line_width = CInt(ID_NUM_LINE_WIDTH.Value)
         ID_STATUS_LABEL.Text = "Changing the width of drawing line."
     End Sub
 
@@ -1068,7 +988,7 @@ Public Class Main_Form
         'show the colour dialog and check that user clicked ok
         If clrDialog.ShowDialog() = DialogResult.OK Then
             'save the colour that the user chose
-            line_infor.line_color = clrDialog.Color
+            lineInfor.line_color = clrDialog.Color
             ID_BTN_CUR_COL.BackColor = clrDialog.Color
         End If
         ID_STATUS_LABEL.Text = "Changing the color of drawing line."
@@ -1079,13 +999,9 @@ Public Class Main_Form
         menu_click = False
         Dim comboIndex = ID_COMBO_LINE_SHAPE.SelectedIndex
         If comboIndex = 0 Then
-            graphPen_line.DashStyle = Drawing2D.DashStyle.Dot
-            'obj_selected.line_shape = "dotted";
-            line_infor.line_style = "dotted"
+            lineInfor.line_style = "dotted"
         ElseIf comboIndex = 1 Then
-            graphPen_line.DashPattern = dashValues
-            'obj_selected.line_shape = "dashed";
-            line_infor.line_style = "dashed"
+            lineInfor.line_style = "dashed"
         End If
         ID_STATUS_LABEL.Text = "Changing the shape of drawing line."
     End Sub
@@ -1097,7 +1013,7 @@ Public Class Main_Form
         'show the colour dialog and check that user clicked ok
         If clrDialog.ShowDialog() = DialogResult.OK Then
             'save the colour that the user chose
-            font_infor.font_color = clrDialog.Color
+            fontInfor.font_color = clrDialog.Color
             ID_BTN_TEXT_COL.BackColor = clrDialog.Color
         End If
         ID_STATUS_LABEL.Text = "Changing the color of text."
@@ -1108,49 +1024,49 @@ Public Class Main_Form
         Dim fontDialog As FontDialog = New FontDialog()
 
         If fontDialog.ShowDialog() = DialogResult.OK Then
-            font_infor.text_font = fontDialog.Font
+            fontInfor.text_font = fontDialog.Font
         End If
         ID_STATUS_LABEL.Text = "Changing the font of text."
     End Sub
 
     'redraw objects
     Private Sub ID_PANEL_Scroll(sender As Object, e As ScrollEventArgs)
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
         Dim flag = False
-        If sel_index >= 0 Then flag = True
-        ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, flag)
+        If selIndex >= 0 Then flag = True
+        ID_PICTURE_BOX(tab_index).DrawObjSelected(objSelected, flag)
     End Sub
 
     'keep the image in the center when the panel size in changed
     'redraw objects
     Private Sub ID_PANEL_SizeChanged(sender As Object, e As EventArgs)
-        left_top = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
-        scroll_pos.X = ID_PANEL(tab_index).HorizontalScroll.Value
-        scroll_pos.Y = ID_PANEL(tab_index).VerticalScroll.Value
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+        leftTop = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
+        scrollPos.X = ID_PANEL(tab_index).HorizontalScroll.Value
+        scrollPos.Y = ID_PANEL(tab_index).VerticalScroll.Value
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
         Dim flag = False
-        If sel_index >= 0 Then flag = True
-        ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, flag)
+        If selIndex >= 0 Then flag = True
+        ID_PICTURE_BOX(tab_index).DrawObjSelected(objSelected, flag)
         If ID_MY_TEXTBOX(tab_index).Visible = True Then
-            Dim obj_anno = object_list.ElementAt(tab_index).ElementAt(anno_num)
+            Dim obj_anno = objectList.ElementAt(annoNum)
             Dim st_pt As Point = New Point(obj_anno.drawPoint.X * ID_PICTURE_BOX(tab_index).Width, obj_anno.drawPoint.Y * ID_PICTURE_BOX(tab_index).Height)
-            ID_MY_TEXTBOX(tab_index).UpdateLocation(st_pt, left_top, scroll_pos)
+            ID_MY_TEXTBOX(tab_index).UpdateLocation(st_pt, leftTop, scrollPos)
         End If
     End Sub
 
     'redraw objects
     Private Sub ID_PANEL_MouseWheel(sender As Object, e As MouseEventArgs)
         Dim flag = False
-        If sel_index >= 0 Then flag = True
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-        ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, flag)
+        If selIndex >= 0 Then flag = True
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+        ID_PICTURE_BOX(tab_index).DrawObjSelected(objSelected, flag)
     End Sub
 
     'detect edge of selected region
     Private Sub EDGEDETECTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EDGEDETECTToolStripMenuItem.Click
         EdgeRegionDrawReady = True
-        obj_selected.Refresh()
-        obj_selected.measuringType = MeasureType.objCurve
+        objSelected.Refresh()
+        objSelected.measuringType = MeasureType.objCurve
         ID_STATUS_LABEL.Text = "Detect edge."
     End Sub
 
@@ -1158,7 +1074,7 @@ Public Class Main_Form
     'when mouse is clicked on annotation insert textbox there to you can edit it
     'draw objects and load list of objects to listview
     Private Sub ID_PICTURE_BOX_MouseDown(sender As Object, e As MouseEventArgs)
-        If ID_PICTURE_BOX(tab_index).Image Is Nothing OrElse current_image(tab_index) Is Nothing Then
+        If ID_PICTURE_BOX(tab_index).Image Is Nothing OrElse currentImage Is Nothing Then
             Return
         End If
         If e.Button = MouseButtons.Left Then
@@ -1168,60 +1084,60 @@ Public Class Main_Form
             m_pt.Y = CSng(e.Y) / ID_PICTURE_BOX(tab_index).Height
             m_pt.X = Math.Min(Math.Max(m_pt.X, 0), 1)
             m_pt.Y = Math.Min(Math.Max(m_pt.Y, 0), 1)
-            m_cur_drag = m_pt
+            mCurDragPt = m_pt
 
             Dim m_pt2 As Point = New Point(e.X, e.Y)
 
-            If cur_measure_type >= 0 Then
-                If cur_measure_type < MeasureType.objLine Then
-                    Dim completed = ModifyObjSelected(obj_selected, cur_measure_type, m_pt, Enumerable.ElementAt(origin_image, tab_index).Width, Enumerable.ElementAt(origin_image, tab_index).Height, line_infor, font_infor, CF)
+            If curMeasureType >= 0 Then
+                If curMeasureType < MeasureType.objLine Then
+                    Dim completed = ModifyObjSelected(objSelected, curMeasureType, m_pt, originalImage.Width, originalImage.Height, lineInfor, fontInfor, CF)
 
                     If completed Then
-                        obj_selected.objNum = cur_obj_num(tab_index)
-                        object_list(tab_index).Add(obj_selected)
-                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
-                        obj_selected.Refresh()
-                        cur_measure_type = -1
-                        cur_obj_num(tab_index) += 1
-                        If undo_num < 2 Then undo_num += 1
+                        objSelected.objNum = curObjNum
+                        objectList.Add(objSelected)
+                        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+                        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
+                        objSelected.Refresh()
+                        curMeasureType = -1
+                        curObjNum += 1
+                        If undoNum < 2 Then undoNum += 1
                     Else
-                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                        ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, False)
+                        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+                        ID_PICTURE_BOX(tab_index).DrawObjSelected(objSelected, False)
                     End If
                 Else    'Curve objects
-                    If cur_measure_type = MeasureType.objPoly Then
+                    If curMeasureType = MeasureType.objPoly Then
                         If PolyPreviousPoint IsNot Nothing Then
                             C_PolyObj.PolyPoint(C_PolyObj.PolyPointIndx) = m_pt
                             C_PolyObj.PolyPointIndx += 1
                             PolyPreviousPoint = Nothing
                         End If
-                    ElseIf cur_measure_type = MeasureType.objCuPoly Then
+                    ElseIf curMeasureType = MeasureType.objCuPoly Then
                         CuPolyDrawEndFlag = False
                         C_CuPolyObj.CuPolyPointIndx_j += 1
                         C_CuPolyObj.CuPolyPoint(C_CuPolyObj.CuPolyPointIndx_j, 0) = m_pt
-                    ElseIf cur_measure_type = MeasureType.objPoint Then
+                    ElseIf curMeasureType = MeasureType.objPoint Then
                         C_PointObj.PointPoint = m_pt
-                    ElseIf cur_measure_type = MeasureType.objLine Then
+                    ElseIf curMeasureType = MeasureType.objLine Then
                         If LinePreviousPoint Is Nothing Then
                             LinePreviousPoint = e.Location
                             C_LineObj.FirstPointOfLine = m_pt
                         End If
-                    ElseIf cur_measure_type = MeasureType.objSel Then
-                        If curve_sel_index >= 0 Then
-                            Dim obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index)
+                    ElseIf curMeasureType = MeasureType.objSel Then
+                        If curve_selIndex >= 0 Then
+                            Dim obj = objectList.ElementAt(curve_selIndex)
                             If obj.measuringType = MeasureType.objCuPoly Then
-                                CuPolyRealSelectArrayIndx = curve_sel_index
+                                CuPolyRealSelectArrayIndx = curve_selIndex
                             ElseIf obj.measuringType = MeasureType.objCurve Then
-                                CRealSelectArrayIndx = curve_sel_index
+                                CRealSelectArrayIndx = curve_selIndex
                             ElseIf obj.measuringType = MeasureType.objLine Then
-                                LRealSelectArrayIndx = curve_sel_index
+                                LRealSelectArrayIndx = curve_selIndex
                             ElseIf obj.measuringType = MeasureType.objPoint Then
-                                PRealSelectArrayIndx = curve_sel_index
+                                PRealSelectArrayIndx = curve_selIndex
                             ElseIf obj.measuringType = MeasureType.objPoly Then
-                                PolyRealSelectArrayIndx = curve_sel_index
+                                PolyRealSelectArrayIndx = curve_selIndex
                             End If
-                            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                            ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
                             DrawCurveObjSelected(ID_PICTURE_BOX(tab_index), obj, digit, CF)
                         End If
                     End If
@@ -1230,29 +1146,29 @@ Public Class Main_Form
 
             Else
                 'select point of selected object
-                If sel_index >= 0 Then
-                    sel_pt_index = ID_PICTURE_BOX(tab_index).CheckPointInPos(object_list.ElementAt(tab_index).ElementAt(sel_index), m_pt2)
-                    If sel_pt_index >= 0 Then
-                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                        ID_PICTURE_BOX(tab_index).HightLightItem(object_list.ElementAt(tab_index).ElementAt(sel_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
-                        ID_PICTURE_BOX(tab_index).DrawObjSelected(object_list.ElementAt(tab_index).ElementAt(sel_index), True)
-                        ID_PICTURE_BOX(tab_index).HighlightTargetPt(object_list.ElementAt(tab_index).ElementAt(sel_index), sel_pt_index)
+                If selIndex >= 0 Then
+                    selPtIndex = ID_PICTURE_BOX(tab_index).CheckPointInPos(objectList.ElementAt(selIndex), m_pt2)
+                    If selPtIndex >= 0 Then
+                        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+                        ID_PICTURE_BOX(tab_index).HightLightItem(objectList.ElementAt(selIndex), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
+                        ID_PICTURE_BOX(tab_index).DrawObjSelected(objectList.ElementAt(selIndex), True)
+                        ID_PICTURE_BOX(tab_index).HighlightTargetPt(objectList.ElementAt(selIndex), selPtIndex)
                         Return
                     End If
                 End If
 
-                sel_index = CheckItemInPos(m_pt, object_list.ElementAt(tab_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
-                If sel_index >= 0 Then
-                    ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                    ID_PICTURE_BOX(tab_index).HightLightItem(object_list.ElementAt(tab_index).ElementAt(sel_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
-                    ID_PICTURE_BOX(tab_index).DrawObjSelected(object_list.ElementAt(tab_index).ElementAt(sel_index), True)
+                selIndex = CheckItemInPos(m_pt, objectList, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
+                If selIndex >= 0 Then
+                    ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+                    ID_PICTURE_BOX(tab_index).HightLightItem(objectList.ElementAt(selIndex), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
+                    ID_PICTURE_BOX(tab_index).DrawObjSelected(objectList.ElementAt(selIndex), True)
                 Else
-                    If anno_num >= 0 Then
-                        ID_MY_TEXTBOX(tab_index).DisableTextBox(object_list.ElementAt(tab_index), anno_num, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-                        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
-                        anno_num = -1
+                    If annoNum >= 0 Then
+                        ID_MY_TEXTBOX(tab_index).DisableTextBox(objectList, annoNum, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+                        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
+                        annoNum = -1
                     End If
-                    ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                    ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
                 End If
             End If
 
@@ -1262,34 +1178,34 @@ Public Class Main_Form
             End If
             MouseDownFlag = True
 
-            If move_line = True And curve_sel_index >= 0 Then
-                Dim obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index)
+            If move_line = True And curve_selIndex >= 0 Then
+                Dim obj = objectList.ElementAt(curve_selIndex)
                 If obj.measuringType = MeasureType.objLine Then
                     StartPtOfMove = m_pt
                     C_LineObj.Refresh()
                     C_LineObj = CloneLineObj(obj.curveObject.LineItem(0))
-                    obj_selected2.Refresh()
-                    InitializeLineObj(obj_selected2, C_LineObj.LDrawPos, line_infor, font_infor)
+                    objSelected2.Refresh()
+                    InitializeLineObj(objSelected2, C_LineObj.LDrawPos, lineInfor, fontInfor)
                 End If
             End If
         Else    'right click
-            If cur_measure_type = MeasureType.objPoly Then
+            If curMeasureType = MeasureType.objPoly Then
                 PolyPreviousPoint = Nothing
                 C_PolyObj.PolyDrawPos = PolyGetPos(C_PolyObj)
                 Dim tempObj = ClonePolyObj(C_PolyObj)
-                obj_selected.curveObject = New CurveObject()
-                obj_selected.curveObject.PolyItem.Add(tempObj)
-                obj_selected.name = "PL" & cur_obj_num(tab_index)
+                objSelected.curveObject = New CurveObject()
+                objSelected.curveObject.PolyItem.Add(tempObj)
+                objSelected.name = "PL" & curObjNum
                 AddCurveToList()
                 C_PolyObj.Refresh()
                 PolyDrawEndFlag = True
-            ElseIf cur_measure_type = MeasureType.objCuPoly Then
+            ElseIf curMeasureType = MeasureType.objCuPoly Then
                 CuPolyPreviousPoint = Nothing
                 C_CuPolyObj.CuPolyDrawPos = CuPolyGetPos(C_CuPolyObj)
                 Dim tempObj = CloneCuPolyObj(C_CuPolyObj)
-                obj_selected.curveObject = New CurveObject()
-                obj_selected.curveObject.CuPolyItem.Add(tempObj)
-                obj_selected.name = "CP" & cur_obj_num(tab_index)
+                objSelected.curveObject = New CurveObject()
+                objSelected.curveObject.CuPolyItem.Add(tempObj)
+                objSelected.name = "CP" & curObjNum
                 AddCurveToList()
                 C_CuPolyObj.Refresh()
                 CuPolyDrawEndFlag = True
@@ -1302,51 +1218,51 @@ Public Class Main_Form
     Private Sub ID_PICTURE_BOX_MouseUp(ByVal sender As Object, ByVal e As MouseEventArgs)
         Call ReleaseCapture()
 
-        If cur_measure_type = MeasureType.objPoint Then
+        If curMeasureType = MeasureType.objPoint Then
             C_PointObj.PDrawPos = PGetPos(C_PointObj.PointPoint)
             Dim tempObj = ClonePointObj(C_PointObj)
-            obj_selected.curveObject = New CurveObject()
-            obj_selected.curveObject.PointItem.Add(tempObj)
-            obj_selected.name = "P" & cur_obj_num(tab_index)
+            objSelected.curveObject = New CurveObject()
+            objSelected.curveObject.PointItem.Add(tempObj)
+            objSelected.name = "P" & curObjNum
             AddCurveToList()
             C_PointObj.Refresh()
-        ElseIf cur_measure_type = MeasureType.objLine Then
+        ElseIf curMeasureType = MeasureType.objLine Then
             If C_LineObj.SecndPointOfLine.X <> 0 And C_LineObj.SecndPointOfLine.Y <> 0 Then
                 LinePreviousPoint = Nothing
                 C_LineObj.LDrawPos = LGetPos(C_LineObj)
                 Dim tempObj = CloneLineObj(C_LineObj)
-                obj_selected.curveObject = New CurveObject()
-                obj_selected.curveObject.LineItem.Add(tempObj)
-                obj_selected.name = "L" & cur_obj_num(tab_index)
+                objSelected.curveObject = New CurveObject()
+                objSelected.curveObject.LineItem.Add(tempObj)
+                objSelected.name = "L" & curObjNum
                 AddCurveToList()
                 C_LineObj.Refresh()
             End If
-        ElseIf cur_measure_type = MeasureType.objCurve Then
+        ElseIf curMeasureType = MeasureType.objCurve Then
             CurvePreviousPoint = Nothing
             C_CurveObj.CDrawPos = CGetPos(C_CurveObj)
             Dim tempObj = CloneCurveObj(C_CurveObj)
-            obj_selected.curveObject = New CurveObject()
-            obj_selected.curveObject.CurveItem.Add(tempObj)
-            obj_selected.name = "C" & cur_obj_num(tab_index)
+            objSelected.curveObject = New CurveObject()
+            objSelected.curveObject.CurveItem.Add(tempObj)
+            objSelected.name = "C" & curObjNum
             AddCurveToList()
             C_CurveObj.Refresh()
-        ElseIf cur_measure_type = MeasureType.objCuPoly Then
+        ElseIf curMeasureType = MeasureType.objCuPoly Then
             CuPolyPreviousPoint = Nothing
         End If
 
         If EdgeRegionDrawReady = True And SecondPtOfEdge.X <> 0 And SecondPtOfEdge.Y <> 0 Then
             'run code for detect edge
-            If obj_selected.measuringType = MeasureType.objCurve Then
-                Dim input As Image = resized_image(tab_index).ToBitmap()
-                Dim Adjusted = AdjustBrightnessAndContrast(input, brightness(tab_index), contrast(tab_index), gamma(tab_index))
+            If objSelected.measuringType = MeasureType.objCurve Then
+                Dim input As Image = resizedImage.ToBitmap()
+                Dim Adjusted = AdjustBrightnessAndContrast(input, brightness, contrast, gamma)
                 C_CurveObj = Canny(Adjusted, FirstPtOfEdge, SecondPtOfEdge)
 
                 CurvePreviousPoint = Nothing
                 C_CurveObj.CDrawPos = CGetPos(C_CurveObj)
                 Dim tempObj = CloneCurveObj(C_CurveObj)
-                obj_selected.curveObject = New CurveObject()
-                obj_selected.curveObject.CurveItem.Add(tempObj)
-                obj_selected.name = "C" & cur_obj_num(tab_index)
+                objSelected.curveObject = New CurveObject()
+                objSelected.curveObject.CurveItem.Add(tempObj)
+                objSelected.name = "C" & curObjNum
                 AddCurveToList()
                 C_CurveObj.Refresh()
                 EdgeRegionDrawReady = False
@@ -1358,13 +1274,13 @@ Public Class Main_Form
                 Dim result = form.ShowDialog()
                 If result = DialogResult.Cancel Then
                     Undo()
-                    undo_num += 1
+                    undoNum += 1
 
                 ElseIf result = DialogResult.Retry Then
                     Undo()
-                    undo_num += 1
+                    undoNum += 1
                     EdgeRegionDrawReady = True
-                    obj_selected.measuringType = MeasureType.objCurve
+                    objSelected.measuringType = MeasureType.objCurve
                 End If
             Else
                 EdgeRegionDrawed = True
@@ -1372,18 +1288,18 @@ Public Class Main_Form
         End If
 
         If move_line = True And EndPtOfMove.X <> 0 And EndPtOfMove.Y <> 0 Then
-            obj_selected2.objNum = cur_obj_num(tab_index)
-            object_list(tab_index).Add(obj_selected2)
-            obj_selected2.Refresh()
-            cur_measure_type = -1
-            cur_obj_num(tab_index) += 1
-            If undo_num < 2 Then undo_num += 1
+            objSelected2.objNum = curObjNum
+            objectList.Add(objSelected2)
+            objSelected2.Refresh()
+            curMeasureType = -1
+            curObjNum += 1
+            If undoNum < 2 Then undoNum += 1
 
             C_LineObj.LDrawPos = LGetPos(C_LineObj)
             Dim tempObj = CloneLineObj(C_LineObj)
-            obj_selected.curveObject = New CurveObject()
-            obj_selected.curveObject.LineItem.Add(tempObj)
-            obj_selected.name = "L" & cur_obj_num(tab_index)
+            objSelected.curveObject = New CurveObject()
+            objSelected.curveObject.LineItem.Add(tempObj)
+            objSelected.name = "L" & curObjNum
             AddCurveToList()
             C_LineObj.Refresh()
             StartPtOfMove.X = 0
@@ -1402,20 +1318,20 @@ Public Class Main_Form
         m_pt.Y = CSng(e.Y) / ID_PICTURE_BOX(tab_index).Height
         m_pt.X = Math.Min(Math.Max(m_pt.X, 0), 1)
         m_pt.Y = Math.Min(Math.Max(m_pt.Y, 0), 1)
-        Dim dx = m_pt.X - m_cur_drag.X
-        Dim dy = m_pt.Y - m_cur_drag.Y
+        Dim dx = m_pt.X - mCurDragPt.X
+        Dim dy = m_pt.Y - mCurDragPt.Y
 
         Dim m_pt2 = New Point(e.X, e.Y)
 
         If GetCapture() = ID_PICTURE_BOX(tab_index).Handle Then
-            If cur_measure_type < 0 Then
-                If sel_index >= 0 Then
-                    m_cur_drag = m_pt
-                    If sel_pt_index >= 0 Then
+            If curMeasureType < 0 Then
+                If selIndex >= 0 Then
+                    mCurDragPt = m_pt
+                    If selPtIndex >= 0 Then
                         ID_PICTURE_BOX(tab_index).Refresh()
-                        MovePoint(object_list.ElementAt(tab_index), sel_index, sel_pt_index, dx, dy)
-                        ModifyObjSelected(object_list.ElementAt(tab_index), sel_index, Enumerable.ElementAt(origin_image, tab_index).Width, Enumerable.ElementAt(origin_image, tab_index).Height)
-                        Dim obj = object_list.ElementAt(tab_index).ElementAt(sel_index)
+                        MovePoint(objectList, selIndex, selPtIndex, dx, dy)
+                        ModifyObjSelected(objectList, selIndex, originalImage.Width, originalImage.Height)
+                        Dim obj = objectList.ElementAt(selIndex)
                         Dim target_pt As Point = New Point()
                         If obj.measuringType = MeasureType.angle Then
 
@@ -1442,47 +1358,47 @@ Public Class Main_Form
                         Else
                             target_pt = New Point(obj.drawPoint.X * ID_PICTURE_BOX(tab_index).Width, obj.drawPoint.Y * ID_PICTURE_BOX(tab_index).Height)
                         End If
-                        ID_PICTURE_BOX(tab_index).DrawTempFinal(obj, target_pt, side_drag, digit, CF, False)
-                        object_list(tab_index)(sel_index) = obj
-                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+                        ID_PICTURE_BOX(tab_index).DrawTempFinal(obj, target_pt, sideDrag, digit, CF, False)
+                        objectList(selIndex) = obj
+                        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+                        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
 
                     Else
-                        MoveObject(object_list.ElementAt(tab_index), sel_index, dx, dy)
-                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                        MoveObject(objectList, selIndex, dx, dy)
+                        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
                     End If
-                    ID_PICTURE_BOX(tab_index).HightLightItem(object_list.ElementAt(tab_index).ElementAt(sel_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
-                    ID_PICTURE_BOX(tab_index).DrawObjSelected(object_list.ElementAt(tab_index).ElementAt(sel_index), True)
+                    ID_PICTURE_BOX(tab_index).HightLightItem(objectList.ElementAt(selIndex), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
+                    ID_PICTURE_BOX(tab_index).DrawObjSelected(objectList.ElementAt(selIndex), True)
                 End If
             End If
 
-            If cur_measure_type = MeasureType.objCurve Then
+            If curMeasureType = MeasureType.objCurve Then
                 If CurvePreviousPoint Is Nothing Then
                     CurvePreviousPoint = e.Location
                     C_CurveObj.CurvePoint(0) = m_pt
                 Else
-                    ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                    DrawCurveObj(ID_PICTURE_BOX(tab_index), line_infor, C_CurveObj)
-                    DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, CurvePreviousPoint.Value, e.Location)
+                    ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+                    DrawCurveObj(ID_PICTURE_BOX(tab_index), lineInfor, C_CurveObj)
+                    DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), lineInfor, CurvePreviousPoint.Value, e.Location)
                     C_CurveObj.CPointIndx += 1
                     CurvePreviousPoint = e.Location
                     C_CurveObj.CurvePoint(C_CurveObj.CPointIndx) = m_pt
                 End If
-            ElseIf cur_measure_type = MeasureType.objLine Then
+            ElseIf curMeasureType = MeasureType.objLine Then
                 If LinePreviousPoint IsNot Nothing Then
                     C_LineObj.SecndPointOfLine = m_pt
-                    ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                    DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, LinePreviousPoint.Value, e.Location)
+                    ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+                    DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), lineInfor, LinePreviousPoint.Value, e.Location)
                 End If
-            ElseIf cur_measure_type = MeasureType.objCuPoly Then
+            ElseIf curMeasureType = MeasureType.objCuPoly Then
                 If CuPolyDrawEndFlag = False Then
                     If CuPolyPreviousPoint Is Nothing Then
                         CuPolyPreviousPoint = e.Location
                         C_CuPolyObj.CuPolyPoint(C_CuPolyObj.CuPolyPointIndx_j, 0) = m_pt
                     Else
-                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                        DrawCuPolyObj(ID_PICTURE_BOX(tab_index), line_infor, C_CuPolyObj)
-                        DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, CuPolyPreviousPoint.Value, e.Location)
+                        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+                        DrawCuPolyObj(ID_PICTURE_BOX(tab_index), lineInfor, C_CuPolyObj)
+                        DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), lineInfor, CuPolyPreviousPoint.Value, e.Location)
                         C_CuPolyObj.CuPolyPointIndx_k(C_CuPolyObj.CuPolyPointIndx_j) += 1
                         CuPolyPreviousPoint = e.Location
                         C_CuPolyObj.CuPolyPoint(C_CuPolyObj.CuPolyPointIndx_j, C_CuPolyObj.CuPolyPointIndx_k(C_CuPolyObj.CuPolyPointIndx_j)) = m_pt
@@ -1492,37 +1408,37 @@ Public Class Main_Form
 
             If EdgeRegionDrawReady = True Then
                 SecondPtOfEdge = m_pt2
-                ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
                 ID_PICTURE_BOX(tab_index).DrawRectangle(FirstPtOfEdge, SecondPtOfEdge)
             End If
 
-            If move_line = True And curve_sel_index >= 0 And StartPtOfMove.X <> 0 And StartPtOfMove.Y <> 0 Then
+            If move_line = True And curve_selIndex >= 0 And StartPtOfMove.X <> 0 And StartPtOfMove.Y <> 0 Then
                 EndPtOfMove = m_pt
-                Dim Obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index).curveObject.LineItem(0)
+                Dim Obj = objectList.ElementAt(curve_selIndex).curveObject.LineItem(0)
                 C_LineObj.FirstPointOfLine.X = (EndPtOfMove.X - StartPtOfMove.X) + Obj.FirstPointOfLine.X
                 C_LineObj.FirstPointOfLine.Y = (EndPtOfMove.Y - StartPtOfMove.Y) + Obj.FirstPointOfLine.Y
                 C_LineObj.SecndPointOfLine.X = (EndPtOfMove.X - StartPtOfMove.X) + Obj.SecndPointOfLine.X
                 C_LineObj.SecndPointOfLine.Y = (EndPtOfMove.Y - StartPtOfMove.Y) + Obj.SecndPointOfLine.Y
-                ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
                 DrawLineObject(ID_PICTURE_BOX(tab_index), C_LineObj)
                 Dim Delta = GetNormalFromPointToLine(New Point(Obj.FirstPointOfLine.X * ID_PICTURE_BOX(tab_index).Width, Obj.FirstPointOfLine.Y * ID_PICTURE_BOX(tab_index).Height),
                                                      New Point(Obj.SecndPointOfLine.X * ID_PICTURE_BOX(tab_index).Width, Obj.SecndPointOfLine.Y * ID_PICTURE_BOX(tab_index).Height), m_pt2)
-                DrawLengthBetweenLines(ID_PICTURE_BOX(tab_index), obj_selected2, CDbl(Delta.Width / ID_PICTURE_BOX(tab_index).Width), CDbl(Delta.Height / ID_PICTURE_BOX(tab_index).Height), origin_image(tab_index).Width, origin_image(tab_index).Height, digit, CF)
+                DrawLengthBetweenLines(ID_PICTURE_BOX(tab_index), objSelected2, CDbl(Delta.Width / ID_PICTURE_BOX(tab_index).Width), CDbl(Delta.Height / ID_PICTURE_BOX(tab_index).Height), originalImage.Width, originalImage.Height, digit, CF)
             End If
         Else    'mouse is not clicked
 
-            If sel_index >= 0 Then
-                ID_PICTURE_BOX(tab_index).HightLightItem(object_list.ElementAt(tab_index).ElementAt(sel_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
-                ID_PICTURE_BOX(tab_index).DrawObjSelected(object_list.ElementAt(tab_index).ElementAt(sel_index), True)
+            If selIndex >= 0 Then
+                ID_PICTURE_BOX(tab_index).HightLightItem(objectList.ElementAt(selIndex), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, CF)
+                ID_PICTURE_BOX(tab_index).DrawObjSelected(objectList.ElementAt(selIndex), True)
             End If
 
-            If cur_measure_type >= 0 Then
-                If cur_measure_type < MeasureType.objLine Then
+            If curMeasureType >= 0 Then
+                If curMeasureType < MeasureType.objLine Then
                     Dim temp As Point = New Point(e.X, e.Y)
-                    ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                    ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, False)
-                    ID_PICTURE_BOX(tab_index).DrawTempFinal(obj_selected, temp, side_drag, digit, CF, True)
-                ElseIf cur_measure_type = MeasureType.objPoly Then
+                    ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+                    ID_PICTURE_BOX(tab_index).DrawObjSelected(objSelected, False)
+                    ID_PICTURE_BOX(tab_index).DrawTempFinal(objSelected, temp, sideDrag, digit, CF, True)
+                ElseIf curMeasureType = MeasureType.objPoly Then
                     'If PolyDrawEndFlag = False Then
                     If PolyPreviousPoint Is Nothing Then
                         PolyPreviousPoint = e.Location
@@ -1530,13 +1446,13 @@ Public Class Main_Form
                         C_PolyObj.PolyPoint(C_PolyObj.PolyPointIndx) = ptF
                     Else
                         If C_PolyObj.PolyPointIndx >= 1 Then
-                            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                            DrawPolyObj(ID_PICTURE_BOX(tab_index), line_infor, C_PolyObj)
-                            DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, PolyPreviousPoint.Value, e.Location)
+                            ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+                            DrawPolyObj(ID_PICTURE_BOX(tab_index), lineInfor, C_PolyObj)
+                            DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), lineInfor, PolyPreviousPoint.Value, e.Location)
                         End If
                     End If
                     'End If
-                ElseIf cur_measure_type = MeasureType.objCuPoly Then
+                ElseIf curMeasureType = MeasureType.objCuPoly Then
                     If CuPolyDrawEndFlag = False Then
                         Dim temp As Point
                         If C_CuPolyObj.CuPolyPointIndx_j > 0 Then
@@ -1546,26 +1462,26 @@ Public Class Main_Form
                             temp = dumyPoint
                         End If
                         If temp <> dumyPoint Then
-                            ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-                            DrawCuPolyObj(ID_PICTURE_BOX(tab_index), line_infor, C_CuPolyObj)
-                            DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), line_infor, temp, e.Location)
+                            ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+                            DrawCuPolyObj(ID_PICTURE_BOX(tab_index), lineInfor, C_CuPolyObj)
+                            DrawLineBetweenTwoPoints(ID_PICTURE_BOX(tab_index), lineInfor, temp, e.Location)
                         End If
                     End If
-                ElseIf cur_measure_type = MeasureType.objSel Then
-                    curve_sel_index = CheckCurveItemInPos(ID_PICTURE_BOX(tab_index), m_pt, object_list.ElementAt(tab_index))
-                    If curve_sel_index >= 0 Then
-                        Dim obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index)
-                        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                ElseIf curMeasureType = MeasureType.objSel Then
+                    curve_selIndex = CheckCurveItemInPos(ID_PICTURE_BOX(tab_index), m_pt, objectList)
+                    If curve_selIndex >= 0 Then
+                        Dim obj = objectList.ElementAt(curve_selIndex)
+                        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
                         DrawCurveObjSelected(ID_PICTURE_BOX(tab_index), obj, digit, CF)
                     End If
                 End If
             End If
 
             If move_line Then
-                curve_sel_index = CheckCurveItemInPos(ID_PICTURE_BOX(tab_index), m_pt, object_list.ElementAt(tab_index))
-                If curve_sel_index >= 0 Then
-                    Dim obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index)
-                    ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+                curve_selIndex = CheckCurveItemInPos(ID_PICTURE_BOX(tab_index), m_pt, objectList)
+                If curve_selIndex >= 0 Then
+                    Dim obj = objectList.ElementAt(curve_selIndex)
+                    ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
                     DrawCurveObjSelected(ID_PICTURE_BOX(tab_index), obj, digit, CF)
                 End If
             End If
@@ -1580,17 +1496,17 @@ Public Class Main_Form
         m_pt.X = Math.Min(Math.Max(m_pt.X, 0), 1)
         m_pt.Y = Math.Min(Math.Max(m_pt.Y, 0), 1)
 
-        Dim an_num = CheckAnnotation(m_pt, object_list.ElementAt(tab_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-        If an_num >= 0 AndAlso Enumerable.ElementAt(Of MeasureObject)(Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, tab_index), an_num).measuringType = MeasureType.annotation Then
-            ID_MY_TEXTBOX(tab_index).Font = font_infor.text_font
-            ID_MY_TEXTBOX(tab_index).EnableTextBox(object_list.ElementAt(tab_index).ElementAt(an_num), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, left_top, scroll_pos)
-            anno_num = an_num
+        Dim an_num = CheckAnnotation(m_pt, objectList, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+        If an_num >= 0 AndAlso Enumerable.ElementAt(Of MeasureObject)(Enumerable.ElementAt(Of List(Of MeasureObject))(objectList, tab_index), an_num).measuringType = MeasureType.annotation Then
+            ID_MY_TEXTBOX(tab_index).Font = fontInfor.text_font
+            ID_MY_TEXTBOX(tab_index).EnableTextBox(objectList.ElementAt(an_num), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, leftTop, scrollPos)
+            annoNum = an_num
         End If
     End Sub
 
     'draw objects to picturebox when ID_FORM_BRIGHTNESS is actived
     Private Sub ID_PICTURE_BOX_Paint(ByVal sender As Object, ByVal e As PaintEventArgs)
-        If redraw_flag Then ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, True)
+        If redrawFlag Then ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, True)
     End Sub
 
     'change the size of textbox when the text is changed
@@ -1607,119 +1523,35 @@ Public Class Main_Form
         tab_name = tab_name.Substring(11)
         tab_index = CInt(tab_name)
         ID_MY_TEXTBOX(tab_index).Visible = False
-        left_top = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
-        obj_selected.Refresh()
-        cur_measure_type = -1
-        sel_index = -1
-        curve_sel_index = -1
+        leftTop = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
+        objSelected.Refresh()
+        curMeasureType = -1
+        selIndex = -1
+        curve_selIndex = -1
         initVar()
     End Sub
 
     'set brightness, contrast and gamma to current image
     Private Sub ID_BTN_BRIGHTNESS_Click(sender As Object, e As EventArgs) Handles ID_BTN_BRIGHTNESS.Click
-        redraw_flag = True
-        Dim ratio = zoom_factor(tab_index)
-        Dim zoomed = ZoomImage(ratio, resized_image, current_image, tab_index)
+        redrawFlag = True
+        Dim ratio = zoomFactor
+        Dim zoomed = ZoomImage(ratio, currentImage)
         Dim Image = zoomed.ToBitmap()
-        Dim form As ID_FORM_BRIGHTNESS = New ID_FORM_BRIGHTNESS(ID_PICTURE_BOX(tab_index), Image, brightness(tab_index), contrast(tab_index), gamma(tab_index))
-        'Dim image = origin_image(tab_index).Clone().ToBitmap()
+        Dim form As ID_FORM_BRIGHTNESS = New ID_FORM_BRIGHTNESS(ID_PICTURE_BOX(tab_index), Image, brightness, contrast, gamma)
 
-        Dim InitialImage = AdjustBrightnessAndContrast(Image, brightness(tab_index), contrast(tab_index), gamma(tab_index))
+        Dim InitialImage = AdjustBrightnessAndContrast(Image, brightness, contrast, gamma)
         If form.ShowDialog() = DialogResult.OK Then
-            brightness(tab_index) = form.brightness
-            contrast(tab_index) = form.contrast
-            gamma(tab_index) = form.gamma
-            'current_image(tab_index) = GetMatFromSDImage(ID_PICTURE_BOX(tab_index).Image)
+            brightness = form.brightness
+            contrast = form.contrast
+            gamma = form.gamma
 
-            'Dim UpdatedImage = AdjustBrightnessAndContrast(image, brightness(tab_index), contrast(tab_index), gamma(tab_index))
-            'origin_image(tab_index) = GetMatFromSDImage(UpdatedImage)
         Else
             ID_PICTURE_BOX(tab_index).Image = form.InitialImage
-            'origin_image(tab_index) = GetMatFromSDImage(InitialImage)
         End If
-        redraw_flag = False
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-    End Sub
-
-    'add new tab
-    Private Sub Add_Tab()
-        If tab_index >= 24 Then
-            Return
-        End If
-
-        tab_index += 1
-        If tag_page_flag(tab_index) = False Then
-            tag_page_flag(tab_index) = True
-
-            ID_PICTURE_BOX(tab_index).Image = Nothing
-            current_image(tab_index) = Nothing
-            resized_image(tab_index) = Nothing
-            origin_image(tab_index) = Nothing
-            cur_obj_num(tab_index) = 0
-            Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, tab_index).Clear()
-            brightness(tab_index) = 0
-            contrast(tab_index) = 0
-            gamma(tab_index) = 100
-            img_import_flag(tab_index) = True
-
-            ID_TAG_CTRL.TabPages.Add(ID_TAG_PAGE(tab_index))
-            ID_TAG_CTRL.SelectedTab = ID_TAG_PAGE(tab_index)
-        End If
-    End Sub
-
-    'add tag page at the end
-    Private Sub ID_BTN_TAB_ADD_Click(sender As Object, e As EventArgs) Handles ID_BTN_TAB_ADD.Click
-        Add_Tab()
-        ID_STATUS_LABEL.Text = "Add tab."
-    End Sub
-
-    'remove tab
-    Private Sub Remove_Tab()
-        If tab_index < 0 Then
-            Return
-        End If
-
-        If tag_page_flag(tab_index) = True Then
-            DisposeElemOfList(current_image, Nothing, tab_index)
-            DisposeElemOfList(resized_image, Nothing, tab_index)
-            DisposeElemOfList(origin_image, Nothing, tab_index)
-
-            cur_obj_num(tab_index) = 0
-            Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, tab_index).Clear()
-            brightness(tab_index) = 0
-            contrast(tab_index) = 0
-            gamma(tab_index) = 100
-            img_import_flag(tab_index) = True
-            ID_PICTURE_BOX(tab_index).Image = Nothing
-            ID_TAG_PAGE(tab_index).Text = ""
-
-            If tab_index = 0 Then
-                ID_TAG_CTRL.SelectedIndex = 0
-            Else
-                tag_page_flag(tab_index) = False
-                Dim cur_index = ID_TAG_CTRL.SelectedIndex
-                ID_TAG_CTRL.TabPages.Remove(ID_TAG_PAGE(tab_index))
-                ID_TAG_CTRL.SelectedIndex = cur_index - 1
-            End If
-
-        End If
-    End Sub
-    'remove last tag page
-    Private Sub ID_BTN_TAB_REMOVE_Click(sender As Object, e As EventArgs) Handles ID_BTN_TAB_REMOVE.Click
-        Remove_Tab()
-        ID_STATUS_LABEL.Text = "Remove tab."
-    End Sub
-
-    Private Sub ADDTAGToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ADDTAGToolStripMenuItem.Click
-        Add_Tab()
-        ID_STATUS_LABEL.Text = "Add tab."
-    End Sub
-
-    Private Sub REMOVETAGToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles REMOVETAGToolStripMenuItem.Click
-        Remove_Tab()
-        ID_STATUS_LABEL.Text = "Remove tab."
+        redrawFlag = False
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
     End Sub
 
     'save setting information to setting.ini
@@ -1750,14 +1582,14 @@ Public Class Main_Form
 
         If IO.File.Exists(config_path) Then
             If config_ini IsNot Nothing Then
-                config_ini.ChangeValue("unit", "Config", scale_unit)
+                config_ini.ChangeValue("unit", "Config", scaleUnit)
                 config_ini.ChangeValue("digit", "Config", digit.ToString())
                 config_ini.Save(config_path)
             End If
         Else
             config_ini = New IniFile(config_path)
             config_ini.AddSection("Config")
-            config_ini.AddKey("unit", scale_unit, "Config")
+            config_ini.AddKey("unit", scaleUnit, "Config")
             config_ini.AddKey("digit", digit.ToString(), "Config")
             config_ini.Sort()
             config_ini.Save(config_path)
@@ -1823,11 +1655,11 @@ Public Class Main_Form
                 End If
 
                 cell.Value = e.FormattedValue
-                Dim obj_list = object_list.ElementAt(tab_index)
+                Dim obj_list = objectList
                 Dim obj = obj_list.ElementAt(e.RowIndex)
                 obj.name = cell.Value
                 obj_list(e.RowIndex) = obj
-                object_list(tab_index) = obj_list
+                objectList = obj_list
 
             End If
         ElseIf e.ColumnIndex = 5 Then
@@ -1840,11 +1672,11 @@ Public Class Main_Form
                 End If
 
                 cell.Value = e.FormattedValue
-                Dim obj_list = object_list.ElementAt(tab_index)
+                Dim obj_list = objectList
                 Dim obj = obj_list.ElementAt(e.RowIndex)
                 obj.remarks = cell.Value
                 obj_list(e.RowIndex) = obj
-                object_list(tab_index) = obj_list
+                objectList = obj_list
 
             End If
         End If
@@ -1863,8 +1695,8 @@ Public Class Main_Form
     Private Sub ID_COMBOBOX_CF_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ID_COMBOBOX_CF.SelectedIndexChanged
         Dim index = ID_COMBOBOX_CF.SelectedIndex()
         CF = CF_num(index)
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
         ID_STATUS_LABEL.Text = "Changing CF."
     End Sub
 
@@ -1879,20 +1711,20 @@ Public Class Main_Form
     'side dragging for small thickness when ID_CHECK_SIDE is checked
     Private Sub ID_CHECK_SIDE_CheckedChanged(sender As Object, e As EventArgs) Handles ID_CHECK_SIDE.CheckedChanged
         If ID_CHECK_SIDE.Checked = True Then
-            side_drag = True
+            sideDrag = True
         Else
-            side_drag = False
+            sideDrag = False
         End If
     End Sub
 
-    'show legend when ID_CHECK_SHOW_LEGEND is checked
-    Private Sub ID_CHECK_SHOW_LEGEND_CheckedChanged(sender As Object, e As EventArgs) Handles ID_CHECK_SHOW_LEGEND.CheckedChanged
+    'show legend when ID_CHECK_showLegend is checked
+    Private Sub ID_CHECK_showLegend_CheckedChanged(sender As Object, e As EventArgs) Handles ID_CHECK_SHOW_LEGEND.CheckedChanged
         If ID_CHECK_SHOW_LEGEND.Checked = True Then
-            show_legend = True
+            showLegend = True
         Else
-            show_legend = False
+            showLegend = False
         End If
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
     End Sub
     Private Sub CALIBRATIONINFOToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CALIBRATIONINFOToolStripMenuItem.Click
         Try
@@ -1926,7 +1758,7 @@ Public Class Main_Form
             If System.IO.File.Exists(config_path) = False Then
                 config_ini = New IniFile(config_path)
                 config_ini.AddSection("Config")
-                config_ini.AddKey("unit", scale_unit, "Config")
+                config_ini.AddKey("unit", scaleUnit, "Config")
                 config_ini.AddKey("digit", digit.ToString(), "Config")
 
                 config_ini.Sort()
@@ -1956,7 +1788,7 @@ Public Class Main_Form
             End If
             alive = Process.Start(legend_path)
             alive.WaitForExit()
-            name_list.Clear()
+            nameList.Clear()
             GetLegendInfo()
         Catch ex As Exception
             MessageBox.Show(ex.Message.ToString())
@@ -2072,51 +1904,15 @@ Public Class Main_Form
             Dim Image As Image = Image.FromFile(ID_LISTVIEW_IMAGE.SelectedItems(0).Tag)
             ID_PICTURE_BOX_CAM.Image = Image
 
-            Dim page_num = tab_index
+            initVar()
 
-            If tab_index = 0 Or img_import_flag(tab_index) = False Then
-                For i = 1 To 24
-                    If img_import_flag(i) = True Then
-                        page_num = i
-                        tag_page_flag(i) = True
+            ID_PICTURE_BOX(0).LoadImageFromFile(ID_LISTVIEW_IMAGE.SelectedItems(0).Tag, originalImage, resizedImage, currentImage)
 
-                        ID_PICTURE_BOX(i).Image = Nothing
-                        current_image(i) = Nothing
-                        resized_image(i) = Nothing
-                        origin_image(i) = Nothing
-                        cur_obj_num(i) = 0
-                        Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, i).Clear()
-                        brightness(i) = 0
-                        contrast(i) = 0
-                        gamma(i) = 100
+            ID_PICTURE_BOX(0).Image = originalImage.ToBitmap()
+            leftTop = ID_PICTURE_BOX(0).CenteringImage(ID_PANEL(0))
 
-                        ID_TAG_CTRL.TabPages.Add(ID_TAG_PAGE(i))
-                        Exit For
-                    End If
-                Next
-            Else
-                page_num = tab_index
-            End If
+            ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
 
-            ID_PICTURE_BOX(page_num).LoadImageFromFile(ID_LISTVIEW_IMAGE.SelectedItems(0).Tag, origin_image, resized_image, current_image,
-                                                         initial_ratio, page_num, file_names)
-
-            Dim img = resized_image.ElementAt(page_num)
-
-            ID_PICTURE_BOX(page_num).Image = img.ToBitmap()
-
-            left_top = ID_PICTURE_BOX(page_num).CenteringImage(ID_PANEL(page_num))
-
-            cur_obj_num(page_num) = 0
-            Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, page_num).Clear()
-            brightness(page_num) = 0
-            contrast(page_num) = 0
-            gamma(page_num) = 100
-            img_import_flag(page_num) = False
-            ID_TAG_PAGE(page_num).Text = file_names(page_num)
-            ID_LISTVIEW.LoadObjectList(object_list.ElementAt(page_num), CF, digit, scale_unit, name_list)
-
-            ID_TAG_CTRL.SelectedTab = ID_TAG_PAGE(page_num)
         Catch ex As Exception
             MessageBox.Show(ex.ToString())
         End Try
@@ -2243,46 +2039,22 @@ Public Class Main_Form
 #End Region
 
 #Region "Curves Methods"
-    Private Sub ID_MENU_TO_CURVES_Click(sender As Object, e As EventArgs) Handles ID_MENU_TO_CURVES.Click
-
-        If System.IO.File.Exists(exe_path) = True Then
-            Try
-                ID_PICTURE_BOX(tab_index).SaveImageForCurves(ToCurveImg_path, object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF)
-                Dim alive = Process.Start(exe_path)
-
-                alive.WaitForExit()
-                ID_PICTURE_BOX(tab_index).LoadImageFromFile(ReturnedImg_path, origin_image, resized_image, current_image,
-                                                         initial_ratio, tab_index, file_names)
-                Dim img = resized_image.ElementAt(tab_index)
-                ID_PICTURE_BOX(tab_index).Image = img.ToBitmap()
-                left_top = ID_PICTURE_BOX(tab_index).CenteringImage(ID_PANEL(tab_index))
-                AppendDataToObjList(ReturnedTxt_path, object_list(tab_index), cur_obj_num(tab_index))
-                ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
-
-            Catch ex As Exception
-
-                MessageBox.Show(ex.Message.ToString())
-            End Try
-        End If
-
-    End Sub
-
 
     ''' <summary>
     ''' set current measurement type as C_Line
     ''' </summary>
     Private Sub ID_BTN_C_LINE_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_LINE.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.objLine
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.objLine
+        objSelected.measuringType = curMeasureType
 
     End Sub
     Private Sub LINEToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles LINEToolStripMenuItem1.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.objLine
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.objLine
+        objSelected.measuringType = curMeasureType
 
     End Sub
 
@@ -2291,17 +2063,17 @@ Public Class Main_Form
     ''' </summary>
     Private Sub ID_BTN_C_POLY_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_POLY.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.objPoly
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.objPoly
+        objSelected.measuringType = curMeasureType
 
     End Sub
 
     Private Sub POLYGENToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles POLYGENToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.objPoly
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.objPoly
+        objSelected.measuringType = curMeasureType
 
     End Sub
 
@@ -2310,17 +2082,17 @@ Public Class Main_Form
     ''' </summary>
     Private Sub ID_BTN_C_POINT_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_POINT.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.objPoint
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.objPoint
+        objSelected.measuringType = curMeasureType
 
     End Sub
 
     Private Sub POINTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles POINTToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.objPoint
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.objPoint
+        objSelected.measuringType = curMeasureType
 
     End Sub
 
@@ -2329,17 +2101,17 @@ Public Class Main_Form
     ''' </summary>
     Private Sub ID_BTN_C_CURVE_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_CURVE.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.objCurve
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.objCurve
+        objSelected.measuringType = curMeasureType
 
     End Sub
 
     Private Sub CURVEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CURVEToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.objCurve
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.objCurve
+        objSelected.measuringType = curMeasureType
 
     End Sub
 
@@ -2348,17 +2120,17 @@ Public Class Main_Form
     ''' </summary>
     Private Sub ID_BTN_C_CUPOLY_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_CUPOLY.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.objCuPoly
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.objCuPoly
+        objSelected.measuringType = curMeasureType
 
     End Sub
 
     Private Sub CURVEPOLYGENToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CURVEPOLYGENToolStripMenuItem.Click
         menu_click = True
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.objCuPoly
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.objCuPoly
+        objSelected.measuringType = curMeasureType
 
     End Sub
 
@@ -2367,9 +2139,9 @@ Public Class Main_Form
     ''' </summary>
     Private Sub ID_BTN_C_SEL_Click(sender As Object, e As EventArgs) Handles ID_BTN_C_SEL.Click
         menu_click = False
-        obj_selected.Refresh()
-        cur_measure_type = MeasureType.objSel
-        obj_selected.measuringType = cur_measure_type
+        objSelected.Refresh()
+        curMeasureType = MeasureType.objSel
+        objSelected.measuringType = curMeasureType
 
     End Sub
 
@@ -2379,18 +2151,18 @@ Public Class Main_Form
     Private Sub AddCurveToList()
         AddMaxMinToList()
 
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
     End Sub
 
     Private Sub AddMaxMinToList()
-        obj_selected.objNum = cur_obj_num(tab_index)
-        SetLineAndFont(obj_selected, line_infor, font_infor)
-        object_list(tab_index).Add(obj_selected)
-        obj_selected.Refresh()
-        cur_measure_type = -1
-        cur_obj_num(tab_index) += 1
-        If undo_num < 2 Then undo_num += 1
+        objSelected.objNum = curObjNum
+        SetLineAndFont(objSelected, lineInfor, fontInfor)
+        objectList.Add(objSelected)
+        objSelected.Refresh()
+        curMeasureType = -1
+        curObjNum += 1
+        If undoNum < 2 Then undoNum += 1
     End Sub
 
     ''' <summary>
@@ -2400,56 +2172,56 @@ Public Class Main_Form
         ID_STATUS_LABEL.Text = "Calculate minimum distance between selected objects."
 
         If CuPolyRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            obj_selected = CalcMinBetweenCuPolyAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CuPolyRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(LRealSelectArrayIndx)
+            objSelected = CalcMinBetweenCuPolyAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CuPolyRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            obj_selected = CalcMinBetweenCuPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CuPolyRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PRealSelectArrayIndx)
+            objSelected = CalcMinBetweenCuPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            obj_selected = CalcMinBetweenCurveAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(LRealSelectArrayIndx)
+            objSelected = CalcMinBetweenCurveAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            obj_selected = CalcMinBetweenCurveAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PRealSelectArrayIndx)
+            objSelected = CalcMinBetweenCurveAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If PRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            obj_selected = CalcMinBetweenPointAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(PRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(LRealSelectArrayIndx)
+            objSelected = CalcMinBetweenPointAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If PRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
-            obj_selected = CalcMinBetweenPointAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(PRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PolyRealSelectArrayIndx)
+            objSelected = CalcMinBetweenPointAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If LRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
-            obj_selected = CalcMinBetweenLineAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(LRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PolyRealSelectArrayIndx)
+            objSelected = CalcMinBetweenLineAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
-            obj_selected = CalcMinBetweenCurveAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PolyRealSelectArrayIndx)
+            objSelected = CalcMinBetweenCurveAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
 
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
     End Sub
 
     ''' <summary>
@@ -2459,55 +2231,55 @@ Public Class Main_Form
         ID_STATUS_LABEL.Text = "Calculate maximum distance between selected objects."
 
         If CuPolyRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            obj_selected = CalcMaxBetweenCuPolyAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CuPolyRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(LRealSelectArrayIndx)
+            objSelected = CalcMaxBetweenCuPolyAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CuPolyRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            obj_selected = CalcMaxBetweenCuPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CuPolyRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PRealSelectArrayIndx)
+            objSelected = CalcMaxBetweenCuPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            obj_selected = CalcMaxBetweenCurveAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(LRealSelectArrayIndx)
+            objSelected = CalcMaxBetweenCurveAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            obj_selected = CalcMaxBetweenCurveAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PRealSelectArrayIndx)
+            objSelected = CalcMaxBetweenCurveAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
-            obj_selected = CalcMaxBetweenCurveAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PolyRealSelectArrayIndx)
+            objSelected = CalcMaxBetweenCurveAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If LRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            obj_selected = CalcMaxBetweenLineAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(LRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PRealSelectArrayIndx)
+            objSelected = CalcMaxBetweenLineAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If LRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
-            obj_selected = CalcMaxBetweenLineAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(LRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PolyRealSelectArrayIndx)
+            objSelected = CalcMaxBetweenLineAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If PolyRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            obj_selected = CalcMaxBetweenPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(PolyRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PRealSelectArrayIndx)
+            objSelected = CalcMaxBetweenPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
     End Sub
 
     ''' <summary>
@@ -2517,56 +2289,56 @@ Public Class Main_Form
         ID_STATUS_LABEL.Text = "Calculate perpendicular minimum distance between selected objects."
 
         If CuPolyRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            obj_selected = CalcPMinBetweenCuPolyAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CuPolyRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(LRealSelectArrayIndx)
+            objSelected = CalcPMinBetweenCuPolyAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CuPolyRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            obj_selected = CalcPMinBetweenCuPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CuPolyRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PRealSelectArrayIndx)
+            objSelected = CalcPMinBetweenCuPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            obj_selected = CalcPMinBetweenCurveAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(LRealSelectArrayIndx)
+            objSelected = CalcPMinBetweenCurveAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            obj_selected = CalcPMinBetweenCurveAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PRealSelectArrayIndx)
+            objSelected = CalcPMinBetweenCurveAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If PRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            obj_selected = CalcPMinBetweenPointAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(PRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(LRealSelectArrayIndx)
+            objSelected = CalcPMinBetweenPointAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If PRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
-            obj_selected = CalcPMinBetweenPointAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(PRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PolyRealSelectArrayIndx)
+            objSelected = CalcPMinBetweenPointAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If LRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
-            obj_selected = CalcPMinBetweenLineAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(LRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PolyRealSelectArrayIndx)
+            objSelected = CalcPMinBetweenLineAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
-            obj_selected = CalcPMinBetweenCurveAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PolyRealSelectArrayIndx)
+            objSelected = CalcPMinBetweenCurveAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
 
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
     End Sub
 
     ''' <summary>
@@ -2576,55 +2348,55 @@ Public Class Main_Form
         ID_STATUS_LABEL.Text = "Calculate perpendicular maximum distance between selected objects."
 
         If CuPolyRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            obj_selected = CalcPMaxBetweenCuPolyAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CuPolyRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(LRealSelectArrayIndx)
+            objSelected = CalcPMaxBetweenCuPolyAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CuPolyRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CuPolyRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            obj_selected = CalcPMaxBetweenCuPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CuPolyRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PRealSelectArrayIndx)
+            objSelected = CalcPMaxBetweenCuPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And LRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            obj_selected = CalcPMaxBetweenCurveAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(LRealSelectArrayIndx)
+            objSelected = CalcPMaxBetweenCurveAndLine(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            obj_selected = CalcPMaxBetweenCurveAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PRealSelectArrayIndx)
+            objSelected = CalcPMaxBetweenCurveAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If CRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(CRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
-            obj_selected = CalcPMaxBetweenCurveAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(CRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PolyRealSelectArrayIndx)
+            objSelected = CalcPMaxBetweenCurveAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If LRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            obj_selected = CalcPMaxBetweenLineAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(LRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PRealSelectArrayIndx)
+            objSelected = CalcPMaxBetweenLineAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If LRealSelectArrayIndx >= 0 And PolyRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(LRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
-            obj_selected = CalcPMaxBetweenLineAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(LRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PolyRealSelectArrayIndx)
+            objSelected = CalcPMaxBetweenLineAndPoly(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
         If PolyRealSelectArrayIndx >= 0 And PRealSelectArrayIndx >= 0 Then
-            Dim obj1 = object_list.ElementAt(tab_index).ElementAt(PolyRealSelectArrayIndx)
-            Dim obj2 = object_list.ElementAt(tab_index).ElementAt(PRealSelectArrayIndx)
-            obj_selected = CalcPMaxBetweenPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
+            Dim obj1 = objectList.ElementAt(PolyRealSelectArrayIndx)
+            Dim obj2 = objectList.ElementAt(PRealSelectArrayIndx)
+            objSelected = CalcPMaxBetweenPolyAndPoint(obj1, obj2, ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
             AddMaxMinToList()
         End If
-        ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
-        ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
+        ID_PICTURE_BOX(tab_index).DrawObjList(objectList, digit, CF, False)
+        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
     End Sub
 #End Region
 
