@@ -150,11 +150,11 @@ Public Class Main_Form
     Public PDotY As Integer                                            'Y-coordinate of point which is used for drawing dotted line in case of polygen object
     Public POutFlag As Boolean                                         'flag specifies whether the foot of perpendicular is in range of polygen object or not
 
-    Private C_PolyObj As C_PolyObject = New C_PolyObject()
-    Private C_PointObj As C_PointObject = New C_PointObject()
-    Private C_LineObj As C_LineObject = New C_LineObject()
-    Private C_CuPolyObj As C_CuPolyObject = New C_CuPolyObject()
-    Private C_CurveObj As C_CurveObject = New C_CurveObject()
+    Private C_PolyObj As PolyObj = New PolyObj()
+    Private C_PointObj As PointObj = New PointObj()
+    Private C_LineObj As LineObj = New LineObj()
+    Private C_CuPolyObj As CuPolyObj = New CuPolyObj()
+    Private C_CurveObj As CurveObj = New CurveObj()
     Private curve_sel_index As Integer
     Private move_line As Boolean
     Private StartPtOfMove As PointF = New PointF()
@@ -440,8 +440,8 @@ Public Class Main_Form
 
         obj_seg.circleObj = New CircleObj()
         obj_seg.sectObj = New InterSectionObj()
-        Obj_Seg.phaseSegObj = New PhaseSeg()
-        Obj_Seg.BlobSegObj = New BlobSeg()
+        Obj_Seg.phaseSegObj = New PhaseSegObj()
+        Obj_Seg.BlobSegObj = New BlobSegObj()
         Dim colType As Type = GetType(System.Drawing.Color)
 
         For Each prop As PropertyInfo In colType.GetProperties()
@@ -635,14 +635,14 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.lineAlign
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     Private Sub LINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LINEToolStripMenuItem.Click
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.lineAlign
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     'set current measurement type as line_horizontal
@@ -651,14 +651,14 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.lineHorizontal
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     Private Sub HORIZONTALLINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles HORIZONTALLINEToolStripMenuItem.Click
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.lineHorizontal
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     'set current measurement type as line_vertical
@@ -667,14 +667,14 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.lineVertical
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     Private Sub VERTICALLINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VERTICALLINEToolStripMenuItem.Click
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.lineVertical
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     'set current measurement type as line parallel
@@ -683,14 +683,14 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.lineParallel
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     Private Sub PARALLELLINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PARALLELLINEToolStripMenuItem.Click
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.lineParallel
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     'set current measurement type as angle
@@ -699,14 +699,14 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.angle
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     Private Sub ANGLETHROUGHTHREEPOINTSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ANGLETHROUGHTHREEPOINTSToolStripMenuItem.Click
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.angle
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     'set current measurement type as angle far
@@ -715,14 +715,14 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.angle2Line
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     Private Sub ANGLETHROUGHTWOLINESToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ANGLETHROUGHTWOLINESToolStripMenuItem.Click
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.angle2Line
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     'set current measurement type as radius
@@ -731,14 +731,14 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.arc
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     Private Sub ARCToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ARCToolStripMenuItem.Click
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.arc
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     'set current measurement type as annotation
@@ -747,14 +747,14 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.annotation
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     Private Sub ANNOTATIONToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ANNOTATIONToolStripMenuItem.Click
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.annotation
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     'set current measurement type as draw line
@@ -763,7 +763,7 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.pencil
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     'set current measurement type as point to line
@@ -772,14 +772,14 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.ptToLine
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     Private Sub DISTANCEFROMPOINTTOLINEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DISTANCEFROMPOINTTOLINEToolStripMenuItem.Click
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.ptToLine
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
     End Sub
 
     'set measureing scale 
@@ -795,10 +795,10 @@ Public Class Main_Form
 
             obj_selected.Refresh()
             cur_measure_type = MeasureType.measureScale
-            obj_selected.measure_type = cur_measure_type
+            obj_selected.measuringType = cur_measure_type
 
-            obj_selected.scale_object.style = scale_style
-            obj_selected.scale_object.length = scale_value
+            obj_selected.scaleObject.style = scale_style
+            obj_selected.scaleObject.length = scale_value
         End If
 
     End Sub
@@ -808,13 +808,13 @@ Public Class Main_Form
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.arcFixed
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
         ID_STATUS_LABEL.Text = "Drawing a circle which has fixed radius"
         Dim form = New LenDiameter()
         If form.ShowDialog() = DialogResult.OK Then
-            obj_selected.scale_object.length = CSng(form.ID_TEXT_FIXED.Text)
-            obj_selected.radius = obj_selected.scale_object.length / ID_PICTURE_BOX(tab_index).Width
+            obj_selected.scaleObject.length = CSng(form.ID_TEXT_FIXED.Text)
+            obj_selected.arc = obj_selected.scaleObject.length / ID_PICTURE_BOX(tab_index).Width
         End If
     End Sub
 
@@ -823,13 +823,13 @@ Public Class Main_Form
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.lineFixed
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
         ID_STATUS_LABEL.Text = "Drawing a line which has fixed length"
         Dim form = New LenDiameter()
         If form.ShowDialog() = DialogResult.OK Then
-            obj_selected.scale_object.length = CSng(form.ID_TEXT_FIXED.Text)
-            obj_selected.length = obj_selected.scale_object.length / ID_PICTURE_BOX(tab_index).Width
+            obj_selected.scaleObject.length = CSng(form.ID_TEXT_FIXED.Text)
+            obj_selected.length = obj_selected.scaleObject.length / ID_PICTURE_BOX(tab_index).Width
         End If
     End Sub
 
@@ -838,7 +838,7 @@ Public Class Main_Form
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.angleFixed
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
         ID_STATUS_LABEL.Text = "Drawing a angle which has fixed angle"
         Dim form = New LenDiameter()
@@ -876,7 +876,7 @@ Public Class Main_Form
             ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, flag)
             If ID_MY_TEXTBOX(tab_index).Visible = True Then
                 Dim obj_anno = object_list.ElementAt(tab_index).ElementAt(anno_num)
-                Dim st_pt As Point = New Point(obj_anno.draw_point.X * ID_PICTURE_BOX(tab_index).Width, obj_anno.draw_point.Y * ID_PICTURE_BOX(tab_index).Height)
+                Dim st_pt As Point = New Point(obj_anno.drawPoint.X * ID_PICTURE_BOX(tab_index).Width, obj_anno.drawPoint.Y * ID_PICTURE_BOX(tab_index).Height)
                 ID_MY_TEXTBOX(tab_index).UpdateLocation(st_pt, left_top, scroll_pos)
             End If
             zoomed.Dispose()
@@ -975,7 +975,7 @@ Public Class Main_Form
             ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, flag)
             If ID_MY_TEXTBOX(tab_index).Visible = True Then
                 Dim obj_anno = object_list.ElementAt(tab_index).ElementAt(anno_num)
-                Dim st_pt As Point = New Point(obj_anno.draw_point.X * ID_PICTURE_BOX(tab_index).Width, obj_anno.draw_point.Y * ID_PICTURE_BOX(tab_index).Height)
+                Dim st_pt As Point = New Point(obj_anno.drawPoint.X * ID_PICTURE_BOX(tab_index).Width, obj_anno.drawPoint.Y * ID_PICTURE_BOX(tab_index).Height)
                 ID_MY_TEXTBOX(tab_index).UpdateLocation(st_pt, left_top, scroll_pos)
             End If
 
@@ -1133,7 +1133,7 @@ Public Class Main_Form
         ID_PICTURE_BOX(tab_index).DrawObjSelected(obj_selected, flag)
         If ID_MY_TEXTBOX(tab_index).Visible = True Then
             Dim obj_anno = object_list.ElementAt(tab_index).ElementAt(anno_num)
-            Dim st_pt As Point = New Point(obj_anno.draw_point.X * ID_PICTURE_BOX(tab_index).Width, obj_anno.draw_point.Y * ID_PICTURE_BOX(tab_index).Height)
+            Dim st_pt As Point = New Point(obj_anno.drawPoint.X * ID_PICTURE_BOX(tab_index).Width, obj_anno.drawPoint.Y * ID_PICTURE_BOX(tab_index).Height)
             ID_MY_TEXTBOX(tab_index).UpdateLocation(st_pt, left_top, scroll_pos)
         End If
     End Sub
@@ -1150,7 +1150,7 @@ Public Class Main_Form
     Private Sub EDGEDETECTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EDGEDETECTToolStripMenuItem.Click
         EdgeRegionDrawReady = True
         obj_selected.Refresh()
-        obj_selected.measure_type = MeasureType.objCurve
+        obj_selected.measuringType = MeasureType.objCurve
         ID_STATUS_LABEL.Text = "Detect edge."
     End Sub
 
@@ -1177,7 +1177,7 @@ Public Class Main_Form
                     Dim completed = ModifyObjSelected(obj_selected, cur_measure_type, m_pt, Enumerable.ElementAt(origin_image, tab_index).Width, Enumerable.ElementAt(origin_image, tab_index).Height, line_infor, font_infor, CF)
 
                     If completed Then
-                        obj_selected.obj_num = cur_obj_num(tab_index)
+                        obj_selected.objNum = cur_obj_num(tab_index)
                         object_list(tab_index).Add(obj_selected)
                         ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
                         ID_LISTVIEW.LoadObjectList(object_list.ElementAt(tab_index), CF, digit, scale_unit, name_list)
@@ -1210,15 +1210,15 @@ Public Class Main_Form
                     ElseIf cur_measure_type = MeasureType.objSel Then
                         If curve_sel_index >= 0 Then
                             Dim obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index)
-                            If obj.measure_type = MeasureType.objCuPoly Then
+                            If obj.measuringType = MeasureType.objCuPoly Then
                                 CuPolyRealSelectArrayIndx = curve_sel_index
-                            ElseIf obj.measure_type = MeasureType.objCurve Then
+                            ElseIf obj.measuringType = MeasureType.objCurve Then
                                 CRealSelectArrayIndx = curve_sel_index
-                            ElseIf obj.measure_type = MeasureType.objLine Then
+                            ElseIf obj.measuringType = MeasureType.objLine Then
                                 LRealSelectArrayIndx = curve_sel_index
-                            ElseIf obj.measure_type = MeasureType.objPoint Then
+                            ElseIf obj.measuringType = MeasureType.objPoint Then
                                 PRealSelectArrayIndx = curve_sel_index
-                            ElseIf obj.measure_type = MeasureType.objPoly Then
+                            ElseIf obj.measuringType = MeasureType.objPoly Then
                                 PolyRealSelectArrayIndx = curve_sel_index
                             End If
                             ID_PICTURE_BOX(tab_index).DrawObjList(object_list.ElementAt(tab_index), graphPen, graphPen_line, digit, CF, False)
@@ -1264,10 +1264,10 @@ Public Class Main_Form
 
             If move_line = True And curve_sel_index >= 0 Then
                 Dim obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index)
-                If obj.measure_type = MeasureType.objLine Then
+                If obj.measuringType = MeasureType.objLine Then
                     StartPtOfMove = m_pt
                     C_LineObj.Refresh()
-                    C_LineObj = CloneLineObj(obj.curve_object.LineItem(0))
+                    C_LineObj = CloneLineObj(obj.curveObject.LineItem(0))
                     obj_selected2.Refresh()
                     InitializeLineObj(obj_selected2, C_LineObj.LDrawPos, line_infor, font_infor)
                 End If
@@ -1277,8 +1277,8 @@ Public Class Main_Form
                 PolyPreviousPoint = Nothing
                 C_PolyObj.PolyDrawPos = PolyGetPos(C_PolyObj)
                 Dim tempObj = ClonePolyObj(C_PolyObj)
-                obj_selected.curve_object = New CurveObject()
-                obj_selected.curve_object.PolyItem.Add(tempObj)
+                obj_selected.curveObject = New CurveObject()
+                obj_selected.curveObject.PolyItem.Add(tempObj)
                 obj_selected.name = "PL" & cur_obj_num(tab_index)
                 AddCurveToList()
                 C_PolyObj.Refresh()
@@ -1287,8 +1287,8 @@ Public Class Main_Form
                 CuPolyPreviousPoint = Nothing
                 C_CuPolyObj.CuPolyDrawPos = CuPolyGetPos(C_CuPolyObj)
                 Dim tempObj = CloneCuPolyObj(C_CuPolyObj)
-                obj_selected.curve_object = New CurveObject()
-                obj_selected.curve_object.CuPolyItem.Add(tempObj)
+                obj_selected.curveObject = New CurveObject()
+                obj_selected.curveObject.CuPolyItem.Add(tempObj)
                 obj_selected.name = "CP" & cur_obj_num(tab_index)
                 AddCurveToList()
                 C_CuPolyObj.Refresh()
@@ -1305,8 +1305,8 @@ Public Class Main_Form
         If cur_measure_type = MeasureType.objPoint Then
             C_PointObj.PDrawPos = PGetPos(C_PointObj.PointPoint)
             Dim tempObj = ClonePointObj(C_PointObj)
-            obj_selected.curve_object = New CurveObject()
-            obj_selected.curve_object.PointItem.Add(tempObj)
+            obj_selected.curveObject = New CurveObject()
+            obj_selected.curveObject.PointItem.Add(tempObj)
             obj_selected.name = "P" & cur_obj_num(tab_index)
             AddCurveToList()
             C_PointObj.Refresh()
@@ -1315,8 +1315,8 @@ Public Class Main_Form
                 LinePreviousPoint = Nothing
                 C_LineObj.LDrawPos = LGetPos(C_LineObj)
                 Dim tempObj = CloneLineObj(C_LineObj)
-                obj_selected.curve_object = New CurveObject()
-                obj_selected.curve_object.LineItem.Add(tempObj)
+                obj_selected.curveObject = New CurveObject()
+                obj_selected.curveObject.LineItem.Add(tempObj)
                 obj_selected.name = "L" & cur_obj_num(tab_index)
                 AddCurveToList()
                 C_LineObj.Refresh()
@@ -1325,8 +1325,8 @@ Public Class Main_Form
             CurvePreviousPoint = Nothing
             C_CurveObj.CDrawPos = CGetPos(C_CurveObj)
             Dim tempObj = CloneCurveObj(C_CurveObj)
-            obj_selected.curve_object = New CurveObject()
-            obj_selected.curve_object.CurveItem.Add(tempObj)
+            obj_selected.curveObject = New CurveObject()
+            obj_selected.curveObject.CurveItem.Add(tempObj)
             obj_selected.name = "C" & cur_obj_num(tab_index)
             AddCurveToList()
             C_CurveObj.Refresh()
@@ -1336,7 +1336,7 @@ Public Class Main_Form
 
         If EdgeRegionDrawReady = True And SecondPtOfEdge.X <> 0 And SecondPtOfEdge.Y <> 0 Then
             'run code for detect edge
-            If obj_selected.measure_type = MeasureType.objCurve Then
+            If obj_selected.measuringType = MeasureType.objCurve Then
                 Dim input As Image = resized_image(tab_index).ToBitmap()
                 Dim Adjusted = AdjustBrightnessAndContrast(input, brightness(tab_index), contrast(tab_index), gamma(tab_index))
                 C_CurveObj = Canny(Adjusted, FirstPtOfEdge, SecondPtOfEdge)
@@ -1344,8 +1344,8 @@ Public Class Main_Form
                 CurvePreviousPoint = Nothing
                 C_CurveObj.CDrawPos = CGetPos(C_CurveObj)
                 Dim tempObj = CloneCurveObj(C_CurveObj)
-                obj_selected.curve_object = New CurveObject()
-                obj_selected.curve_object.CurveItem.Add(tempObj)
+                obj_selected.curveObject = New CurveObject()
+                obj_selected.curveObject.CurveItem.Add(tempObj)
                 obj_selected.name = "C" & cur_obj_num(tab_index)
                 AddCurveToList()
                 C_CurveObj.Refresh()
@@ -1364,7 +1364,7 @@ Public Class Main_Form
                     Undo()
                     undo_num += 1
                     EdgeRegionDrawReady = True
-                    obj_selected.measure_type = MeasureType.objCurve
+                    obj_selected.measuringType = MeasureType.objCurve
                 End If
             Else
                 EdgeRegionDrawed = True
@@ -1372,7 +1372,7 @@ Public Class Main_Form
         End If
 
         If move_line = True And EndPtOfMove.X <> 0 And EndPtOfMove.Y <> 0 Then
-            obj_selected2.obj_num = cur_obj_num(tab_index)
+            obj_selected2.objNum = cur_obj_num(tab_index)
             object_list(tab_index).Add(obj_selected2)
             obj_selected2.Refresh()
             cur_measure_type = -1
@@ -1381,8 +1381,8 @@ Public Class Main_Form
 
             C_LineObj.LDrawPos = LGetPos(C_LineObj)
             Dim tempObj = CloneLineObj(C_LineObj)
-            obj_selected.curve_object = New CurveObject()
-            obj_selected.curve_object.LineItem.Add(tempObj)
+            obj_selected.curveObject = New CurveObject()
+            obj_selected.curveObject.LineItem.Add(tempObj)
             obj_selected.name = "L" & cur_obj_num(tab_index)
             AddCurveToList()
             C_LineObj.Refresh()
@@ -1417,18 +1417,18 @@ Public Class Main_Form
                         ModifyObjSelected(object_list.ElementAt(tab_index), sel_index, Enumerable.ElementAt(origin_image, tab_index).Width, Enumerable.ElementAt(origin_image, tab_index).Height)
                         Dim obj = object_list.ElementAt(tab_index).ElementAt(sel_index)
                         Dim target_pt As Point = New Point()
-                        If obj.measure_type = MeasureType.angle Then
+                        If obj.measuringType = MeasureType.angle Then
 
                             Dim start_point As Point = New Point()
                             Dim end_point As Point = New Point()
                             Dim middle_point As Point = New Point()
 
-                            start_point.X = CInt(obj.start_point.X * ID_PICTURE_BOX(tab_index).Width)
-                            start_point.Y = CInt(obj.start_point.Y * ID_PICTURE_BOX(tab_index).Height)
-                            middle_point.X = CInt(obj.middle_point.X * ID_PICTURE_BOX(tab_index).Width)
-                            middle_point.Y = CInt(obj.middle_point.Y * ID_PICTURE_BOX(tab_index).Height)
-                            end_point.X = CInt(obj.end_point.X * ID_PICTURE_BOX(tab_index).Width)
-                            end_point.Y = CInt(obj.end_point.Y * ID_PICTURE_BOX(tab_index).Height)
+                            start_point.X = CInt(obj.startPoint.X * ID_PICTURE_BOX(tab_index).Width)
+                            start_point.Y = CInt(obj.startPoint.Y * ID_PICTURE_BOX(tab_index).Height)
+                            middle_point.X = CInt(obj.middlePoint.X * ID_PICTURE_BOX(tab_index).Width)
+                            middle_point.Y = CInt(obj.middlePoint.Y * ID_PICTURE_BOX(tab_index).Height)
+                            end_point.X = CInt(obj.endPoint.X * ID_PICTURE_BOX(tab_index).Width)
+                            end_point.Y = CInt(obj.endPoint.Y * ID_PICTURE_BOX(tab_index).Height)
 
                             target_pt.X = (start_point.X + end_point.X) / 2
                             target_pt.Y = (start_point.Y + end_point.Y) / 2
@@ -1437,10 +1437,10 @@ Public Class Main_Form
                             start_angle = angles(0)
                             sweep_angle = angles(1)
                             Dim angle As Integer = CInt(2 * start_angle + sweep_angle) / 2
-                            Dim radius = CInt(obj.angle_object.radius * ID_PICTURE_BOX(tab_index).Width) + 10
+                            Dim radius = CInt(obj.angleObject.radius * ID_PICTURE_BOX(tab_index).Width) + 10
                             target_pt = CalcPositionInCircle(middle_point, radius, angle)
                         Else
-                            target_pt = New Point(obj.draw_point.X * ID_PICTURE_BOX(tab_index).Width, obj.draw_point.Y * ID_PICTURE_BOX(tab_index).Height)
+                            target_pt = New Point(obj.drawPoint.X * ID_PICTURE_BOX(tab_index).Width, obj.drawPoint.Y * ID_PICTURE_BOX(tab_index).Height)
                         End If
                         ID_PICTURE_BOX(tab_index).DrawTempFinal(obj, target_pt, side_drag, digit, CF, False)
                         object_list(tab_index)(sel_index) = obj
@@ -1498,7 +1498,7 @@ Public Class Main_Form
 
             If move_line = True And curve_sel_index >= 0 And StartPtOfMove.X <> 0 And StartPtOfMove.Y <> 0 Then
                 EndPtOfMove = m_pt
-                Dim Obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index).curve_object.LineItem(0)
+                Dim Obj = object_list.ElementAt(tab_index).ElementAt(curve_sel_index).curveObject.LineItem(0)
                 C_LineObj.FirstPointOfLine.X = (EndPtOfMove.X - StartPtOfMove.X) + Obj.FirstPointOfLine.X
                 C_LineObj.FirstPointOfLine.Y = (EndPtOfMove.Y - StartPtOfMove.Y) + Obj.FirstPointOfLine.Y
                 C_LineObj.SecndPointOfLine.X = (EndPtOfMove.X - StartPtOfMove.X) + Obj.SecndPointOfLine.X
@@ -1581,7 +1581,7 @@ Public Class Main_Form
         m_pt.Y = Math.Min(Math.Max(m_pt.Y, 0), 1)
 
         Dim an_num = CheckAnnotation(m_pt, object_list.ElementAt(tab_index), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height)
-        If an_num >= 0 AndAlso Enumerable.ElementAt(Of MeasureObject)(Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, tab_index), an_num).measure_type = MeasureType.annotation Then
+        If an_num >= 0 AndAlso Enumerable.ElementAt(Of MeasureObject)(Enumerable.ElementAt(Of List(Of MeasureObject))(object_list, tab_index), an_num).measuringType = MeasureType.annotation Then
             ID_MY_TEXTBOX(tab_index).Font = font_infor.text_font
             ID_MY_TEXTBOX(tab_index).EnableTextBox(object_list.ElementAt(tab_index).ElementAt(an_num), ID_PICTURE_BOX(tab_index).Width, ID_PICTURE_BOX(tab_index).Height, left_top, scroll_pos)
             anno_num = an_num
@@ -2275,14 +2275,14 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.objLine
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
     End Sub
     Private Sub LINEToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles LINEToolStripMenuItem1.Click
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.objLine
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
     End Sub
 
@@ -2293,7 +2293,7 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.objPoly
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
     End Sub
 
@@ -2301,7 +2301,7 @@ Public Class Main_Form
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.objPoly
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
     End Sub
 
@@ -2312,7 +2312,7 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.objPoint
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
     End Sub
 
@@ -2320,7 +2320,7 @@ Public Class Main_Form
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.objPoint
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
     End Sub
 
@@ -2331,7 +2331,7 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.objCurve
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
     End Sub
 
@@ -2339,7 +2339,7 @@ Public Class Main_Form
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.objCurve
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
     End Sub
 
@@ -2350,7 +2350,7 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.objCuPoly
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
     End Sub
 
@@ -2358,7 +2358,7 @@ Public Class Main_Form
         menu_click = True
         obj_selected.Refresh()
         cur_measure_type = MeasureType.objCuPoly
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
     End Sub
 
@@ -2369,7 +2369,7 @@ Public Class Main_Form
         menu_click = False
         obj_selected.Refresh()
         cur_measure_type = MeasureType.objSel
-        obj_selected.measure_type = cur_measure_type
+        obj_selected.measuringType = cur_measure_type
 
     End Sub
 
@@ -2384,7 +2384,7 @@ Public Class Main_Form
     End Sub
 
     Private Sub AddMaxMinToList()
-        obj_selected.obj_num = cur_obj_num(tab_index)
+        obj_selected.objNum = cur_obj_num(tab_index)
         SetLineAndFont(obj_selected, line_infor, font_infor)
         object_list(tab_index).Add(obj_selected)
         obj_selected.Refresh()
@@ -2638,35 +2638,35 @@ Public Class Main_Form
 
     Private Sub INTERSECTIONToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles INTERSECTIONToolStripMenuItem.Click
         Obj_Seg.Refresh()
-        Obj_Seg.measureType = SegType.intersection
+        Obj_Seg.measureType = SegType.interSect
         Dim form = New Intersection()
         form.Show()
     End Sub
 
     Private Sub PHASESEGMENTATIONToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PHASESEGMENTATIONToolStripMenuItem.Click
         Obj_Seg.Refresh()
-        Obj_Seg.measureType = SegType.phaseSegmentation
+        Obj_Seg.measureType = SegType.phaseSegment
         Dim form = New Phase_Segmentation()
         form.Show()
     End Sub
 
     Private Sub COUNTCLASSIFICATIONToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles COUNTCLASSIFICATIONToolStripMenuItem.Click
         Obj_Seg.Refresh()
-        Obj_Seg.measureType = SegType.BlobSegment
+        Obj_Seg.measureType = SegType.blobSegment
         Dim form = New Count_Classification()
         form.Show()
     End Sub
 
     Private Sub PARTICIPLESIZEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PARTICIPLESIZEToolStripMenuItem.Click
         Obj_Seg.Refresh()
-        Obj_Seg.measureType = SegType.BlobSegment
+        Obj_Seg.measureType = SegType.blobSegment
         Dim form = New ParticipleSize()
         form.Show()
     End Sub
 
     Private Sub NODULARITYToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NODULARITYToolStripMenuItem.Click
         Obj_Seg.Refresh()
-        Obj_Seg.measureType = SegType.BlobSegment
+        Obj_Seg.measureType = SegType.blobSegment
         Dim form = New Nodularity()
         form.Show()
     End Sub

@@ -1011,7 +1011,7 @@ Partial Class Main_Form
         'ID_BTN_RADIUS
         '
         Me.ID_BTN_RADIUS.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.ID_BTN_RADIUS.Image = Global._2D_Drafting.My.Resources.Resources.radius
+        Me.ID_BTN_RADIUS.Image = Global._2D_Drafting.My.Resources.Resources.arc
         Me.ID_BTN_RADIUS.Location = New System.Drawing.Point(22, 74)
         Me.ID_BTN_RADIUS.Name = "ID_BTN_RADIUS"
         Me.ID_BTN_RADIUS.Size = New System.Drawing.Size(36, 36)

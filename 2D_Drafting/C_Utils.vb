@@ -12,7 +12,7 @@ Public Module C_Utils
     ''' get center point of medium edge of polygen.
     ''' </summary>
     ''' <paramname="PolyA">The index of polygen object.</param>
-    Function PolyGetPos(PolyA As C_PolyObject) As PointF
+    Function PolyGetPos(PolyA As PolyObj) As PointF
         Dim tempP As PointF
         Dim kk As Integer
         kk = PolyA.PolyPointIndx / 2
@@ -25,7 +25,7 @@ Public Module C_Utils
     ''' get center point of medium edge of Curve&Poly object.
     ''' </summary>
     ''' <paramname="CuPolyA">The index of Curve&Poly object.</param>
-    Function CuPolyGetPos(CuPolyA As C_CuPolyObject) As PointF
+    Function CuPolyGetPos(CuPolyA As CuPolyObj) As PointF
         Dim temp As Integer
         temp = Math.Round(CuPolyA.CuPolyPointIndx_j / 2)
         If temp = 0 Then temp = 1
@@ -40,7 +40,7 @@ Public Module C_Utils
     ''' get center point of line object.
     ''' </summary>
     ''' <paramname="LA">The index of Line object.</param>
-    Function LGetPos(LA As C_LineObject) As PointF
+    Function LGetPos(LA As LineObj) As PointF
         Dim tempP As PointF
         tempP.X = (LA.FirstPointOfLine.X + LA.SecndPointOfLine.X) / 2
         tempP.Y = (LA.FirstPointOfLine.Y + LA.SecndPointOfLine.Y) / 2
@@ -51,7 +51,7 @@ Public Module C_Utils
     ''' get center point of Curve object.
     ''' </summary>
     ''' <paramname="CA">The index of Curve object.</param>
-    Function CGetPos(CA As C_CurveObject) As PointF
+    Function CGetPos(CA As CurveObj) As PointF
 
         Return CA.CurvePoint((CA.CPointIndx / 2))
     End Function
@@ -80,7 +80,7 @@ Public Module C_Utils
     ''' clear C_Line Object.
     ''' </summary>
     ''' <paramname="C_line">The C_Line object.</param>
-    Function Clear(ByRef C_line As C_LineObject)
+    Function Clear(ByRef C_line As LineObj)
         Dim tempPt = New PointF(0, 0)
         C_line.FirstPointOfLine = tempPt
         C_line.SecndPointOfLine = tempPt
@@ -91,7 +91,7 @@ Public Module C_Utils
     ''' clear C_Point Object.
     ''' </summary>
     ''' <paramname="C_Point">The C_Point object.</param>
-    Function Clear(ByRef C_Point As C_PointObject)
+    Function Clear(ByRef C_Point As PointObj)
         Dim tempPt = New PointF(0, 0)
         C_Point.PointPoint = tempPt
         C_Point.PDrawPos = tempPt
@@ -101,7 +101,7 @@ Public Module C_Utils
     ''' clear C_Poly Object.
     ''' </summary>
     ''' <paramname="C_Poly">The C_Poly object.</param>
-    Function Clear(ByRef C_Poly As C_PolyObject)
+    Function Clear(ByRef C_Poly As PolyObj)
         Dim tempPt = New PointF(0, 0)
         C_Poly.PolyDrawPos = tempPt
         C_Poly.PolyPointIndx = 0
@@ -114,8 +114,8 @@ Public Module C_Utils
     ''' Clone C_Poly Object.
     ''' </summary>
     ''' <paramname="C_Poly">The C_Poly object.</param>
-    Function ClonePolyObj(ByVal C_Poly As C_PolyObject) As C_PolyObject
-        Dim Obj As C_PolyObject = New C_PolyObject()
+    Function ClonePolyObj(ByVal C_Poly As PolyObj) As PolyObj
+        Dim Obj As PolyObj = New PolyObj()
         Obj.PolyPointIndx = C_Poly.PolyPointIndx
         Obj.PolyDrawPos = C_Poly.PolyDrawPos
         For i = 0 To 50
@@ -128,8 +128,8 @@ Public Module C_Utils
     ''' Clone C_Line Object.
     ''' </summary>
     ''' <paramname="Line">The C_Poly object.</param>
-    Function CloneLineObj(ByVal Line As C_LineObject) As C_LineObject
-        Dim Obj As C_LineObject = New C_LineObject()
+    Function CloneLineObj(ByVal Line As LineObj) As LineObj
+        Dim Obj As LineObj = New LineObj()
         Obj.FirstPointOfLine = Line.FirstPointOfLine
         Obj.SecndPointOfLine = Line.SecndPointOfLine
         Obj.LDrawPos = Line.LDrawPos
@@ -141,8 +141,8 @@ Public Module C_Utils
     ''' Clone C_Curve Object.
     ''' </summary>
     ''' <paramname="Src">The source object.</param>
-    Function CloneCurveObj(ByVal Src As C_CurveObject) As C_CurveObject
-        Dim Obj As C_CurveObject = New C_CurveObject()
+    Function CloneCurveObj(ByVal Src As CurveObj) As CurveObj
+        Dim Obj As CurveObj = New CurveObj()
         Obj.CDrawPos = Src.CDrawPos
         Obj.CPointIndx = Src.CPointIndx
         For i = 0 To Src.CPointIndx
@@ -155,8 +155,8 @@ Public Module C_Utils
     ''' Clone C_Point Object.
     ''' </summary>
     ''' <paramname="Src">The source object.</param>
-    Function ClonePointObj(ByVal Src As C_PointObject) As C_PointObject
-        Dim Obj As C_PointObject = New C_PointObject()
+    Function ClonePointObj(ByVal Src As PointObj) As PointObj
+        Dim Obj As PointObj = New PointObj()
         Obj.PDrawPos = Src.PDrawPos
         Obj.PointPoint = Src.PointPoint
         Return Obj
@@ -166,8 +166,8 @@ Public Module C_Utils
     ''' Clone C_Cupoly Object.
     ''' </summary>
     ''' <paramname="Src">The source object.</param>
-    Function CloneCuPolyObj(ByVal Src As C_CuPolyObject) As C_CuPolyObject
-        Dim Obj As C_CuPolyObject = New C_CuPolyObject()
+    Function CloneCuPolyObj(ByVal Src As CuPolyObj) As CuPolyObj
+        Dim Obj As CuPolyObj = New CuPolyObj()
         Obj.CuPolyDrawPos = Src.CuPolyDrawPos
         Obj.CuPolyPointIndx_j = Src.CuPolyPointIndx_j
         For i = 0 To Obj.CuPolyPointIndx_j
@@ -183,7 +183,7 @@ Public Module C_Utils
     ''' clear C_Curve Object.
     ''' </summary>
     ''' <paramname="C_Curve">The C_Curve object.</param>
-    Function Clear(ByRef C_Curve As C_CurveObject)
+    Function Clear(ByRef C_Curve As CurveObj)
         Dim tempPt = New PointF(0, 0)
         C_Curve.CDrawPos = tempPt
         C_Curve.CPointIndx = 0
@@ -196,7 +196,7 @@ Public Module C_Utils
     ''' clear C_CuPoly Object.
     ''' </summary>
     ''' <paramname="C_CuPoly">The C_CuPoly object.</param>
-    Function Clear(ByRef C_CuPoly As C_CuPolyObject)
+    Function Clear(ByRef C_CuPoly As CuPolyObj)
         Dim tempPt = New PointF(0, 0)
         C_CuPoly.CuPolyDrawPos = tempPt
         C_CuPoly.CuPolyPointIndx_j = 0
@@ -221,11 +221,11 @@ Public Module C_Utils
     End Function
 
     Function SetLineAndFont(ByRef item As MeasureObject, ByVal line_infor As LineStyle, ByVal font_infor As FontInfor)
-        item.line_infor.line_style = line_infor.line_style
-        item.line_infor.line_width = line_infor.line_width
-        item.line_infor.line_color = line_infor.line_color
-        item.font_infor.font_color = font_infor.font_color
-        item.font_infor.text_font = font_infor.text_font
+        item.lineInfor.line_style = line_infor.line_style
+        item.lineInfor.line_width = line_infor.line_width
+        item.lineInfor.line_color = line_infor.line_color
+        item.fontInfor.font_color = font_infor.font_color
+        item.fontInfor.text_font = font_infor.text_font
     End Function
 
     ''' <summary>
@@ -365,7 +365,7 @@ Public Module C_Utils
     ''' <paramname="m_pt">coordinate of target point.</param>
     ''' <paramname="width">the width of picturebox.</param>
     ''' <paramname="width">the height of picturebox.</param>
-    Public Function Find_BPointPolyDistance(Polyi As C_PolyObject, mPt As Point, width As Integer, height As Integer) As Integer
+    Public Function Find_BPointPolyDistance(Polyi As PolyObj, mPt As Point, width As Integer, height As Integer) As Integer
         Dim tempDis, minTempDis As Integer
         Dim FirstPt = New Point(Polyi.PolyPoint(0).X * width, Polyi.PolyPoint(0).Y * height)
         minTempDis = CalcDistBetweenPoints(FirstPt, mPt)
@@ -404,7 +404,7 @@ Public Module C_Utils
     ''' <paramname="m_pt">coordinate of target point.</param>
     ''' <paramname="width">the width of picturebox.</param>
     ''' <paramname="width">the height of picturebox.</param>
-    Public Function pFind_BPointPolyDistance(Polyi As C_PolyObject, mPt As Point, width As Integer, height As Integer) As Integer
+    Public Function pFind_BPointPolyDistance(Polyi As PolyObj, mPt As Point, width As Integer, height As Integer) As Integer
         Dim tempDis, minTempDis As Integer
         Dim FirstPolyPoint = New Point(Polyi.PolyPoint(0).X * width, Polyi.PolyPoint(0).Y * height)
         Dim SecondPolyPoint = New Point(Polyi.PolyPoint(1).X * width, Polyi.PolyPoint(1).Y * height)
@@ -438,7 +438,7 @@ Public Module C_Utils
     ''' <paramname="m_pt">coordinate of target point.</param>
     ''' <paramname="width">the width of picturebox.</param>
     ''' <paramname="width">the height of picturebox.</param>
-    Public Function pFind_BPointPolyMaxDistance(Polyi As C_PolyObject, mPt As Point, width As Integer, height As Integer) As Integer
+    Public Function pFind_BPointPolyMaxDistance(Polyi As PolyObj, mPt As Point, width As Integer, height As Integer) As Integer
         Dim tempDis, maxTempDis As Integer
         Main_Form.POutFlag = False
         Dim FirstPolyPoint = New Point(Polyi.PolyPoint(0).X * width, Polyi.PolyPoint(0).Y * height)

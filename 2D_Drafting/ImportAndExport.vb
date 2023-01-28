@@ -454,10 +454,10 @@ Public Module ImportAndExport
                 Dim Width = pic.Width
                 Dim Height = pic.Height
                 graph.DrawImage(pic.Image, PointX, PointY, Width, Height)
-                If Obj.measureType = SegType.BlobSegment Then
+                If Obj.measureType = SegType.blobSegment Then
                     DrawLabelForCount(graph, pic, Obj.BlobSegObj.BlobList, font)
-                ElseIf Obj.measureType = SegType.intersection Then
-                    IdentifyInterSections(graph, Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image, Obj.sectObj.thr_seg, Obj)
+                ElseIf Obj.measureType = SegType.interSect Then
+                    IdentifyInterSections(graph, Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image, Obj.sectObj.threshold, Obj)
                 End If
 
                 graph.Flush()
@@ -499,7 +499,7 @@ Public Module ImportAndExport
             items = line.Split(",")
             obj.name = items(0)
             obj.length = CDbl(items(1))
-            obj.measure_type = MeasureType.toCurves
+            obj.measuringType = MeasureType.toCurves
             obj_list.Add(obj)
             cur_index = cur_index + 1
         Next line

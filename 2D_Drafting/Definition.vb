@@ -1,4 +1,5 @@
-﻿Public Enum MeasureType
+﻿'structure for indentifing measurement types
+Public Enum MeasureType
     initState = -1
     lineAlign = 0
     lineHorizontal = 1
@@ -46,7 +47,7 @@ Public Structure FontInfor
     End Sub
 End Structure
 
-'structure for line_align, line_horizon, line_vertical, line_para, draw_line, pt_line
+'structure for lineAlign, lineHorizontal, lineVertical, lineParallel, pencil, ptToLine
 Public Structure LineObject
     Public nor_pt1 As PointF        'connect with start point
     Public nor_pt2 As PointF        'connect with end point    
@@ -61,7 +62,7 @@ Public Structure LineObject
     Public side_drag As PointF      'flag for side drawing
 End Structure
 
-'structure for angle and angle_far
+'structure for angle and angle2Line
 Public Structure AngleObject
     Public start_angle As Double        'angle between first line of arc and X-axis
     Public sweep_angle As Double        'angle between first line and second line of arc
@@ -80,8 +81,8 @@ Public Structure AngleObject
     Public side_index As Integer        'index of nor_pt for side drawing
 End Structure
 
-'Structure for radius
-Public Structure RadiusObject
+'Structure for arc
+Public Structure ArcObject
     Public center_pt As PointF      'center point of arc
     Public circle_pt As PointF      'point in circle which is used for drawing radius
     Public draw_pt As PointF        'point for drawing text
@@ -115,109 +116,81 @@ Public Structure ScaleObject
 
 End Structure
 
-Public Structure C_LineObject
-    Public FirstPointOfLine As PointF
-    Public SecndPointOfLine As PointF
-    Public LDrawPos As PointF
 
-    Public Sub Refresh()
-        FirstPointOfLine.X = 0
-        FirstPointOfLine.Y = 0
-        SecndPointOfLine.X = 0
-        SecndPointOfLine.Y = 0
-        LDrawPos.X = 0
-        LDrawPos.Y = 0
-    End Sub
-End Structure
-
-Public Structure C_PointObject
-    Public PointPoint As PointF
-    Public PDrawPos As PointF
-
-    Public Sub Refresh()
-        PointPoint.X = 0
-        PointPoint.Y = 0
-        PDrawPos.X = 0
-        PDrawPos.Y = 0
-    End Sub
-End Structure
-
-'structure for drawing objects
+'structure for Object which involves all child objects 
 Public Structure MeasureObject
-    Public start_point As PointF        'start point of object
-    Public middle_point As PointF       'middle point of object
-    Public end_point As PointF          'end point of object
-    Public last_point As PointF         'optional, used for angle_far, the fourth point
-    Public common_point As PointF       'optional, used for angle_far, the common point of first line and second line of angle
-
-    Public draw_point As PointF         'point for drawing text
-    Public measure_type As Integer      'measuring type of current object
+    Public startPoint As PointF        'start point of object
+    Public middlePoint As PointF       'middle point of object
+    Public endPoint As PointF          'end point of object
+    Public lastPoint As PointF         'optional, used for angle2Line, the fourth point
+    Public commonPoint As PointF       'optional, used for angle2Line, the common point of first line and second line of angle
+    Public drawPoint As PointF         'point for drawing text
+    Public measuringType As Integer      'measuring type of current object
     Public intialized As Boolean        'flag for specifying that object is initialized or not
-    Public item_set As Integer          'the limit of points
+    Public itemSet As Integer          'the limit of points
     Public length As Double             'the length of object
-    Public angle As Double              'optional, used for angle, angle_far
-    Public radius As Double             'optional, used for radius
+    Public angle As Double              'optional, used for angle, angle2Line
+    Public arc As Double                'optional, used for arc
     Public annotation As String         'optional, used for annotation
-    Public line_object As LineObject
-    Public angle_object As AngleObject
-    Public radius_object As RadiusObject
-    Public anno_object As AnnoObject
-    Public obj_num As Integer           'the order of current object
-    Public line_infor As LineStyle      'information of drawing line
-    Public scale_object As ScaleObject
-    Public font_infor As FontInfor      'information of text font
-
-    Public left_top As PointF           'the left top cornor of object
-    Public right_bottom As PointF       'the right bottom cornor of object
-
+    Public lineObject As LineObject
+    Public angleObject As AngleObject
+    Public arcObject As ArcObject
+    Public annoObject As AnnoObject
+    Public objNum As Integer           'the order of current object
+    Public lineInfor As LineStyle      'information of drawing line
+    Public scaleObject As ScaleObject
+    Public fontInfor As FontInfor      'information of text font
+    Public leftTop As PointF           'the left top cornor of object
+    Public rightBottom As PointF       'the right bottom cornor of object
     Public name As String               'the name of object
     Public remarks As String            'remarks of object
 
-    Public curve_object As CurveObject
-    Public dot_flag As Boolean
+    Public curveObject As CurveObject
+    Public dotFlag As Boolean
     Public Sub Refresh()
-        start_point.X = 0
-        start_point.Y = 0
-        middle_point.X = 0
-        middle_point.Y = 0
-        end_point.X = 0
-        end_point.Y = 0
-        draw_point.X = 0
-        draw_point.Y = 0
-        last_point.X = 0
-        last_point.Y = 0
-        common_point.X = 0
-        common_point.Y = 0
+        startPoint.X = 0
+        startPoint.Y = 0
+        middlePoint.X = 0
+        middlePoint.Y = 0
+        endPoint.X = 0
+        endPoint.Y = 0
+        drawPoint.X = 0
+        drawPoint.Y = 0
+        lastPoint.X = 0
+        lastPoint.Y = 0
+        commonPoint.X = 0
+        commonPoint.Y = 0
 
         length = 0
         angle = 0
-        radius = 0
+        arc = 0
         annotation = ""
         intialized = False
-        item_set = 0
+        itemSet = 0
 
         name = ""
         remarks = ""
-        dot_flag = False
+        dotFlag = False
 
-        measure_type = MeasureType.initState
+        measuringType = MeasureType.initState
     End Sub
 End Structure
 
+'enum for indentifying the types of detection or segmentation
 Public Enum SegType
     circle = 0
-    intersection = 1
-    phaseSegmentation = 2
-    BlobSegment = 3
+    interSect = 1
+    phaseSegment = 2
+    blobSegment = 3
 End Enum
 
-
+'structure for object for detection or segmentation
 Public Structure SegObject
     Public measureType As Integer
     Public circleObj As CircleObj
     Public sectObj As InterSectionObj
-    Public phaseSegObj As PhaseSeg
-    Public BlobSegObj As BlobSeg
+    Public phaseSegObj As PhaseSegObj
+    Public BlobSegObj As BlobSegObj
 
     Public Sub Refresh()
         circleObj.Refresh()
@@ -227,6 +200,7 @@ Public Structure SegObject
     End Sub
 End Structure
 
+'Structure of Object which is used for intersection detection
 Public Class InterSectionObj
     Public horLine As Integer
     Public verLine As Integer
@@ -234,10 +208,10 @@ Public Class InterSectionObj
     Public verSectCnt(100) As Integer
     Public horSectPos(100, 1000) As PointF
     Public verSectPos(100, 1000) As PointF
-    Public thr_seg As Integer
+    Public threshold As Integer
 
     Public Sub Refresh()
-        thr_seg = 0
+        threshold = 0
         horLine = 0
         verLine = 0
         For i = 0 To 100
@@ -253,6 +227,7 @@ Public Class InterSectionObj
     End Sub
 End Class
 
+'structure for Object which is used for circle detection
 Public Class CircleObj
     Public pos(1000) As PointF
     Public size(1000) As Double
@@ -268,7 +243,8 @@ Public Class CircleObj
     End Sub
 End Class
 
-Public Class PhaseSeg
+'structure for phase segmentation
+Public Class PhaseSegObj
     Public PhaseVal As List(Of Integer) = New List(Of Integer)
     Public PhaseCol As List(Of String) = New List(Of String)
 
@@ -278,13 +254,16 @@ Public Class PhaseSeg
     End Sub
 End Class
 
-Public Class BlobSeg
+'structure for blob detection
+Public Class BlobSegObj
     Public BlobList As List(Of BlobObj) = New List(Of BlobObj)
 
     Public Sub Refresh()
         BlobList.Clear()
     End Sub
 End Class
+
+'structure for blob object
 Public Structure BlobObj
     Public pos As PointF
     Public height As Double
@@ -297,7 +276,46 @@ Public Structure BlobObj
     Public rightBottom As PointF
 End Structure
 
-Public Class C_CurveObject
+'the set of objects for measuring min, max, perpendicular min and perpendicular max distances 
+Public Class CurveObject
+    Public CuPolyItem As List(Of CuPolyObj) = New List(Of CuPolyObj)()
+    Public PolyItem As List(Of PolyObj) = New List(Of PolyObj)()
+    Public PointItem As List(Of PointObj) = New List(Of PointObj)()
+    Public LineItem As List(Of LineObj) = New List(Of LineObj)()
+    Public CurveItem As List(Of CurveObj) = New List(Of CurveObj)()
+End Class
+
+'object of line object for min, max, perpendicular min and perpendicular max distances 
+Public Structure LineObj
+    Public FirstPointOfLine As PointF
+    Public SecndPointOfLine As PointF
+    Public LDrawPos As PointF
+
+    Public Sub Refresh()
+        FirstPointOfLine.X = 0
+        FirstPointOfLine.Y = 0
+        SecndPointOfLine.X = 0
+        SecndPointOfLine.Y = 0
+        LDrawPos.X = 0
+        LDrawPos.Y = 0
+    End Sub
+End Structure
+
+'object of point object for min, max, perpendicular min and perpendicular max distances 
+Public Structure PointObj
+    Public PointPoint As PointF
+    Public PDrawPos As PointF
+
+    Public Sub Refresh()
+        PointPoint.X = 0
+        PointPoint.Y = 0
+        PDrawPos.X = 0
+        PDrawPos.Y = 0
+    End Sub
+End Structure
+
+'object of curve object for min, max, perpendicular min and perpendicular max distances 
+Public Class CurveObj
     Public CurvePoint(1000) As PointF
     Public CDrawPos As PointF
     Public CPointIndx As Integer
@@ -313,7 +331,8 @@ Public Class C_CurveObject
     End Sub
 End Class
 
-Public Class C_PolyObject
+'object of polyminal object for min, max, perpendicular min and perpendicular max distances 
+Public Class PolyObj
     Public PolyDrawPos As PointF
     Public PolyPointIndx As Integer
     Public PolyPoint(50) As PointF
@@ -329,7 +348,8 @@ Public Class C_PolyObject
     End Sub
 End Class
 
-Public Class C_CuPolyObject
+'object of curve&polyminal object for min, max, perpendicular min and perpendicular max distances 
+Public Class CuPolyObj
     Public CuPolyPoint(30, 1000) As PointF
     Public CuPolyDrawPos As PointF
     Public CuPolyPointIndx_j As Integer
@@ -349,11 +369,3 @@ Public Class C_CuPolyObject
     End Sub
 End Class
 
-Public Class CurveObject
-    Public CuPolyItem As List(Of C_CuPolyObject) = New List(Of C_CuPolyObject)()
-    Public PolyItem As List(Of C_PolyObject) = New List(Of C_PolyObject)()
-    Public PointItem As List(Of C_PointObject) = New List(Of C_PointObject)()
-    Public LineItem As List(Of C_LineObject) = New List(Of C_LineObject)()
-    Public CurveItem As List(Of C_CurveObject) = New List(Of C_CurveObject)()
-
-End Class

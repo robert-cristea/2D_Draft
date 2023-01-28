@@ -577,16 +577,16 @@ Public Module Utils
     ''' <paramname="obj">The object for considering.</param>
     Public Function swap_AC(ByVal obj As MeasureObject) As MeasureObject
         Dim swap = obj
-        Dim A = obj.start_point
-        Dim B = obj.middle_point
-        Dim C = obj.end_point
+        Dim A = obj.startPoint
+        Dim B = obj.middlePoint
+        Dim C = obj.endPoint
         Dim T = New PointF()
         T = A
         A = C
         C = T
-        swap.start_point = A
-        swap.middle_point = B
-        swap.end_point = C
+        swap.startPoint = A
+        swap.middlePoint = B
+        swap.endPoint = C
         Return swap
     End Function
 
@@ -597,9 +597,9 @@ Public Module Utils
     ''' <paramname="mid_pt">The point locates right of the center.</param>
     Public Function sorting_Points(ByVal obj As MeasureObject, ByVal mid_pt As PointF) As MeasureObject
         Dim sort = obj
-        Dim A = obj.start_point
-        Dim B = obj.middle_point
-        Dim C = obj.end_point
+        Dim A = obj.startPoint
+        Dim B = obj.middlePoint
+        Dim C = obj.endPoint
         Dim M = mid_pt
         If A.Y <= M.Y And C.Y <= M.Y And B.Y <= M.Y Then
             If B.X <= A.X And B.X <= C.X And C.X <= A.X Then

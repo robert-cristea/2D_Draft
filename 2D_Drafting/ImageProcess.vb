@@ -88,15 +88,15 @@ Public Module ImageProcess
     ''' <paramname="src">The source image.</param>
     ''' <paramname="FirstPtOfEdge">The left top cornor of selected region.</param>
     ''' <paramname="SecondPtOfEdge">The right bottom cornor of selected region.</param>
-    Public Function Canny(ByVal scr As Image, ByVal FirstPtOfEdge As Point, ByVal SecondPtOfEdge As Point) As C_CurveObject
+    Public Function Canny(ByVal scr As Image, ByVal FirstPtOfEdge As Point, ByVal SecondPtOfEdge As Point) As CurveObj
         Dim bmpImage As Bitmap = New Bitmap(scr)
         Dim grayImage As Emgu.CV.Image(Of Gray, Byte) = bmpImage.ToImage(Of Gray, Byte)()
         Dim colorImage As Emgu.CV.Image(Of Bgr, Byte) = bmpImage.ToImage(Of Bgr, Byte)()
         bmpImage.Dispose()
 
-        Dim C_Curve As C_CurveObject() = New C_CurveObject(1000) {}
+        Dim C_Curve As CurveObj() = New CurveObj(1000) {}
         For i = 0 To 1000
-            C_Curve(i) = New C_CurveObject()
+            C_Curve(i) = New CurveObj()
         Next
         Dim Width = scr.Width
         Dim Height = scr.Height

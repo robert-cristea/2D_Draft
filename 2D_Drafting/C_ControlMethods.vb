@@ -26,20 +26,20 @@ Public Module C_ControlMethods
     Public Sub DrawCurveObjItem(ByVal graph As Graphics, ByVal pictureBox As PictureBox, ByVal item As MeasureObject, digit As Integer, CF As Double, ByVal flag As Boolean)
         Dim graphPen As Pen
         If flag = True Then
-            graphPen = New Pen(Color.Red, item.line_infor.line_width)
+            graphPen = New Pen(Color.Red, item.lineInfor.line_width)
         Else
-            graphPen = New Pen(item.line_infor.line_color, item.line_infor.line_width)
+            graphPen = New Pen(item.lineInfor.line_color, item.lineInfor.line_width)
         End If
-        Dim PenRed = New Pen(Color.Red, item.line_infor.line_width)
+        Dim PenRed = New Pen(Color.Red, item.lineInfor.line_width)
 
-        Dim graphFont = item.font_infor.text_font
-        Dim graphBrush As SolidBrush = New SolidBrush(item.font_infor.font_color)
+        Dim graphFont = item.fontInfor.text_font
+        Dim graphBrush As SolidBrush = New SolidBrush(item.fontInfor.font_color)
 
-        If item.measure_type = MeasureType.objLine Then
-            Dim obj = item.curve_object.LineItem(0)
+        If item.measuringType = MeasureType.objLine Then
+            Dim obj = item.curveObject.LineItem(0)
             Dim FirstPt As Point = New Point(obj.FirstPointOfLine.X * pictureBox.Width, obj.FirstPointOfLine.Y * pictureBox.Height)
             Dim SecondPt As Point = New Point(obj.SecndPointOfLine.X * pictureBox.Width, obj.SecndPointOfLine.Y * pictureBox.Height)
-            If item.obj_num = Main_Form.LRealSelectArrayIndx Then
+            If item.objNum = Main_Form.LRealSelectArrayIndx Then
                 graph.DrawLine(PenRed, CInt(FirstPt.X), CInt(FirstPt.Y), CInt(SecondPt.X), CInt(SecondPt.Y))
             Else
                 graph.DrawLine(graphPen, CInt(FirstPt.X), CInt(FirstPt.Y), CInt(SecondPt.X), CInt(SecondPt.Y))
@@ -50,10 +50,10 @@ Public Module C_ControlMethods
             Dim textSize As SizeF = graph.MeasureString(item.name, graphFont)
             graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
-        ElseIf item.measure_type = MeasureType.objPoint Then
-            Dim obj = item.curve_object.PointItem(0)
+        ElseIf item.measuringType = MeasureType.objPoint Then
+            Dim obj = item.curveObject.PointItem(0)
             Dim PointPt = New Point(CInt(obj.PointPoint.X * pictureBox.Width), CInt(obj.PointPoint.Y * pictureBox.Height))
-            If item.obj_num = Main_Form.PRealSelectArrayIndx Then
+            If item.objNum = Main_Form.PRealSelectArrayIndx Then
                 graph.DrawEllipse(PenRed, New Rectangle(PointPt.X, PointPt.Y, 2, 2))
             Else
                 graph.DrawEllipse(graphPen, New Rectangle(PointPt.X, PointPt.Y, 2, 2))
@@ -62,12 +62,12 @@ Public Module C_ControlMethods
             Dim textSize As SizeF = graph.MeasureString(item.name, graphFont)
             graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
-        ElseIf item.measure_type = MeasureType.objPoly Then
-            Dim obj = item.curve_object.PolyItem(0)
+        ElseIf item.measuringType = MeasureType.objPoly Then
+            Dim obj = item.curveObject.PolyItem(0)
             For i = 0 To obj.PolyPointIndx - 1
                 Dim startPt = New Point(CInt(obj.PolyPoint(i).X * pictureBox.Width), CInt(obj.PolyPoint(i).Y * pictureBox.Height))
                 Dim EndPt = New Point(CInt(obj.PolyPoint(i + 1).X * pictureBox.Width), CInt(obj.PolyPoint(i + 1).Y * pictureBox.Height))
-                If item.obj_num = Main_Form.PolyRealSelectArrayIndx Then
+                If item.objNum = Main_Form.PolyRealSelectArrayIndx Then
                     graph.DrawLine(PenRed, CInt(startPt.X), CInt(startPt.Y), CInt(EndPt.X), CInt(EndPt.Y))
                 Else
                     graph.DrawLine(graphPen, CInt(startPt.X), CInt(startPt.Y), CInt(EndPt.X), CInt(EndPt.Y))
@@ -78,12 +78,12 @@ Public Module C_ControlMethods
             graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
 
-        ElseIf item.measure_type = MeasureType.objCurve Then
-            Dim obj = item.curve_object.CurveItem(0)
+        ElseIf item.measuringType = MeasureType.objCurve Then
+            Dim obj = item.curveObject.CurveItem(0)
             For i = 0 To obj.CPointIndx - 1
                 Dim startPt = New Point(CInt(obj.CurvePoint(i).X * pictureBox.Width), CInt(obj.CurvePoint(i).Y * pictureBox.Height))
                 Dim EndPt = New Point(CInt(obj.CurvePoint(i + 1).X * pictureBox.Width), CInt(obj.CurvePoint(i + 1).Y * pictureBox.Height))
-                If item.obj_num = Main_Form.CRealSelectArrayIndx Then
+                If item.objNum = Main_Form.CRealSelectArrayIndx Then
                     graph.DrawLine(PenRed, CInt(startPt.X), CInt(startPt.Y), CInt(EndPt.X), CInt(EndPt.Y))
                 Else
                     graph.DrawLine(graphPen, CInt(startPt.X), CInt(startPt.Y), CInt(EndPt.X), CInt(EndPt.Y))
@@ -93,13 +93,13 @@ Public Module C_ControlMethods
             Dim textSize As SizeF = graph.MeasureString(item.name, graphFont)
             graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
-        ElseIf item.measure_type = MeasureType.objCuPoly Then
-            Dim obj = item.curve_object.CuPolyItem(0)
+        ElseIf item.measuringType = MeasureType.objCuPoly Then
+            Dim obj = item.curveObject.CuPolyItem(0)
             For i = 1 To obj.CuPolyPointIndx_j
                 For j = 0 To obj.CuPolyPointIndx_k(i) - 2
                     Dim startPt = New Point(CInt(obj.CuPolyPoint(i, j).X * pictureBox.Width), CInt(obj.CuPolyPoint(i, j).Y * pictureBox.Height))
                     Dim EndPt = New Point(CInt(obj.CuPolyPoint(i, j + 1).X * pictureBox.Width), CInt(obj.CuPolyPoint(i, j + 1).Y * pictureBox.Height))
-                    If item.obj_num = Main_Form.CuPolyRealSelectArrayIndx Then
+                    If item.objNum = Main_Form.CuPolyRealSelectArrayIndx Then
                         graph.DrawLine(PenRed, CInt(startPt.X), CInt(startPt.Y), CInt(EndPt.X), CInt(EndPt.Y))
                     Else
                         graph.DrawLine(graphPen, CInt(startPt.X), CInt(startPt.Y), CInt(EndPt.X), CInt(EndPt.Y))
@@ -112,7 +112,7 @@ Public Module C_ControlMethods
                     End If
                     Dim startPt = New Point(CInt(obj.CuPolyPoint(i - 1, k_index).X * pictureBox.Width), CInt(obj.CuPolyPoint(i - 1, k_index).Y * pictureBox.Height))
                     Dim EndPt = New Point(CInt(obj.CuPolyPoint(i, 0).X * pictureBox.Width), CInt(obj.CuPolyPoint(i, 0).Y * pictureBox.Height))
-                    If item.obj_num = Main_Form.CuPolyRealSelectArrayIndx Then
+                    If item.objNum = Main_Form.CuPolyRealSelectArrayIndx Then
                         graph.DrawLine(PenRed, CInt(startPt.X), CInt(startPt.Y), CInt(EndPt.X), CInt(EndPt.Y))
                     Else
                         graph.DrawLine(graphPen, CInt(startPt.X), CInt(startPt.Y), CInt(EndPt.X), CInt(EndPt.Y))
@@ -123,12 +123,12 @@ Public Module C_ControlMethods
             Dim textSize As SizeF = graph.MeasureString(item.name, graphFont)
             graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
-        ElseIf item.measure_type = MeasureType.objMinMax Then
-            Dim startPt = New Point(item.start_point.X * pictureBox.Width, item.start_point.Y * pictureBox.Height)
-            Dim EndPt = New Point(item.end_point.X * pictureBox.Width, item.end_point.Y * pictureBox.Height)
+        ElseIf item.measuringType = MeasureType.objMinMax Then
+            Dim startPt = New Point(item.startPoint.X * pictureBox.Width, item.startPoint.Y * pictureBox.Height)
+            Dim EndPt = New Point(item.endPoint.X * pictureBox.Width, item.endPoint.Y * pictureBox.Height)
             graph.DrawLine(graphPen, CInt(startPt.X), CInt(startPt.Y), CInt(EndPt.X), CInt(EndPt.Y))
-            If item.dot_flag Then
-                Dim MidPt = New Point(item.middle_point.X * pictureBox.Width, item.middle_point.Y * pictureBox.Height)
+            If item.dotFlag Then
+                Dim MidPt = New Point(item.middlePoint.X * pictureBox.Width, item.middlePoint.Y * pictureBox.Height)
                 graphPen.DashStyle = Drawing2D.DashStyle.Dot
                 graph.DrawLine(graphPen, CInt(startPt.X), CInt(startPt.Y), CInt(MidPt.X), CInt(MidPt.Y))
             End If
@@ -153,8 +153,8 @@ Public Module C_ControlMethods
     ''' draw C_Line Object.
     ''' </summary>
     ''' <paramname="pictureBox">The pictureBox control in which you want to draw object list.</param>
-    ''' <paramname="LineObj">The C_LineObject you are going to draw.</param>
-    Public Sub DrawLineObject(ByVal pictureBox As PictureBox, ByVal LineObj As C_LineObject)
+    ''' <paramname="LineObj">The LineObj you are going to draw.</param>
+    Public Sub DrawLineObject(ByVal pictureBox As PictureBox, ByVal LineObj As LineObj)
         Dim graph As Graphics = pictureBox.CreateGraphics()
         Dim graphPen = New Pen(Color.Red, 2)
         Dim startPt = New Point(LineObj.FirstPointOfLine.X * pictureBox.Width, LineObj.FirstPointOfLine.Y * pictureBox.Height)
@@ -184,7 +184,7 @@ Public Module C_ControlMethods
     ''' <paramname="pictureBox">The pictureBox control in which you want to draw object list.</param>
     ''' <paramname="line_infor">The information about drawing line.</param>
     ''' <paramname="Obj">The poly object.</param>
-    Public Sub DrawPolyObj(ByVal pictureBox As PictureBox, ByVal line_infor As LineStyle, ByVal Obj As C_PolyObject)
+    Public Sub DrawPolyObj(ByVal pictureBox As PictureBox, ByVal line_infor As LineStyle, ByVal Obj As PolyObj)
         Dim graphPen As Pen = New Pen(line_infor.line_color, line_infor.line_width)
         Dim graph As Graphics = pictureBox.CreateGraphics()
         For i = 0 To Obj.PolyPointIndx - 1
@@ -201,7 +201,7 @@ Public Module C_ControlMethods
     ''' <paramname="pictureBox">The pictureBox control in which you want to draw object list.</param>
     ''' <paramname="line_infor">The information about drawing line.</param>
     ''' <paramname="obj">The curve object.</param>
-    Public Sub DrawCurveObj(ByVal pictureBox As PictureBox, ByVal line_infor As LineStyle, ByVal Obj As C_CurveObject)
+    Public Sub DrawCurveObj(ByVal pictureBox As PictureBox, ByVal line_infor As LineStyle, ByVal Obj As CurveObj)
         Dim graphPen As Pen = New Pen(line_infor.line_color, line_infor.line_width)
         Dim graph As Graphics = pictureBox.CreateGraphics()
         For i = 0 To Obj.CPointIndx - 1
@@ -218,7 +218,7 @@ Public Module C_ControlMethods
     ''' <paramname="pictureBox">The pictureBox control in which you want to draw object list.</param>
     ''' <paramname="line_infor">The information about drawing line.</param>
     ''' <paramname="obj">The cupoly object.</param>
-    Public Sub DrawCuPolyObj(ByVal pictureBox As PictureBox, ByVal line_infor As LineStyle, ByVal Obj As C_CuPolyObject)
+    Public Sub DrawCuPolyObj(ByVal pictureBox As PictureBox, ByVal line_infor As LineStyle, ByVal Obj As CuPolyObj)
         Dim graphPen As Pen = New Pen(line_infor.line_color, line_infor.line_width)
         Dim graph As Graphics = pictureBox.CreateGraphics()
 
@@ -251,15 +251,15 @@ Public Module C_ControlMethods
         Dim index = -1
         Dim mPt = New Point(m_pt.X * pictureBox.Width, m_pt.Y * pictureBox.Height)
         For Each item In obj_list
-            If item.measure_type < MeasureType.objLine Then
+            If item.measuringType < MeasureType.objLine Then
                 Continue For
             End If
-            If item.measure_type = MeasureType.objCuPoly Then
-                Dim obj = item.curve_object.CuPolyItem(0)
+            If item.measuringType = MeasureType.objCuPoly Then
+                Dim obj = item.curveObject.CuPolyItem(0)
                 For i = 0 To obj.CuPolyPointIndx_j
                     For j = 0 To obj.CuPolyPointIndx_k(i) - 1
                         If m_pt.X > obj.CuPolyPoint(i, j).X - 0.01 And m_pt.X < obj.CuPolyPoint(i, j).X + 0.01 And m_pt.Y > obj.CuPolyPoint(i, j).Y - 0.01 And m_pt.Y < obj.CuPolyPoint(i, j).Y + 0.01 Then
-                            index = item.obj_num
+                            index = item.objNum
                             Exit For
                         End If
                     Next
@@ -270,37 +270,37 @@ Public Module C_ControlMethods
                         Dim dist = Find_BPointLineDistance(startPt.X, startPt.Y, EndPt.X, EndPt.Y, mPt.X, mPt.Y)
 
                         If dist < 5 And Main_Form.OutPointFlag = False Then
-                            index = item.obj_num
+                            index = item.objNum
                         End If
                     End If
                 Next
-            ElseIf item.measure_type = MeasureType.objCurve Then
-                Dim obj = item.curve_object.CurveItem(0)
+            ElseIf item.measuringType = MeasureType.objCurve Then
+                Dim obj = item.curveObject.CurveItem(0)
                 For i = 0 To obj.CPointIndx - 1
                     If m_pt.X > obj.CurvePoint(i).X - 0.01 And m_pt.X < obj.CurvePoint(i).X + 0.01 And m_pt.Y > obj.CurvePoint(i).Y - 0.01 And m_pt.Y < obj.CurvePoint(i).Y + 0.01 Then
-                        index = item.obj_num
+                        index = item.objNum
                         Exit For
                     End If
                 Next
-            ElseIf item.measure_type = MeasureType.objLine Then
-                Dim obj = item.curve_object.LineItem(0)
+            ElseIf item.measuringType = MeasureType.objLine Then
+                Dim obj = item.curveObject.LineItem(0)
                 Dim startPt = New Point(obj.FirstPointOfLine.X * pictureBox.Width, obj.FirstPointOfLine.Y * pictureBox.Height)
                 Dim EndPt = New Point(obj.SecndPointOfLine.X * pictureBox.Width, obj.SecndPointOfLine.Y * pictureBox.Height)
                 Dim dist = Find_BPointLineDistance(startPt.X, startPt.Y, EndPt.X, EndPt.Y, mPt.X, mPt.Y)
                 If dist < 5 And Main_Form.OutPointFlag = False Then
-                    index = item.obj_num
+                    index = item.objNum
                 End If
-            ElseIf item.measure_type = MeasureType.objPoint Then
-                Dim obj = item.curve_object.PointItem(0)
+            ElseIf item.measuringType = MeasureType.objPoint Then
+                Dim obj = item.curveObject.PointItem(0)
                 If m_pt.X < obj.PointPoint.X + 0.01 And m_pt.X > obj.PointPoint.X - 0.01 And m_pt.Y < obj.PointPoint.Y + 0.01 And m_pt.Y > obj.PointPoint.Y - 0.01 Then
-                    index = item.obj_num
+                    index = item.objNum
                 End If
-            ElseIf item.measure_type = MeasureType.objPoly Then
-                Dim obj = item.curve_object.PolyItem(0)
+            ElseIf item.measuringType = MeasureType.objPoly Then
+                Dim obj = item.curveObject.PolyItem(0)
                 If obj.PolyPointIndx > 0 Then
                     Dim dist = Find_BPointPolyDistance(obj, mPt, pictureBox.Width, pictureBox.Height)
                     If dist < 5 Then
-                        index = item.obj_num
+                        index = item.objNum
                     End If
                 End If
             End If
@@ -377,8 +377,8 @@ Public Module C_ControlMethods
         Dim dMinLineCurve, dLineCurve, minIndex_j, minIndex_k, MSx, MSy As Integer
         Dim LineMidExistFlag, CuPolyLOutflag As Boolean
         LineMidExistFlag = False : CuPolyLOutflag = False
-        Dim CuPolyItem = Obj1.curve_object.CuPolyItem(0)
-        Dim LineItem = Obj2.curve_object.LineItem(0)
+        Dim CuPolyItem = Obj1.curveObject.CuPolyItem(0)
+        Dim LineItem = Obj2.curveObject.LineItem(0)
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
         Dim FirstEdgeOfCuPoly = New Point(CuPolyItem.CuPolyPoint(1, 0).X * width, CuPolyItem.CuPolyPoint(1, 0).Y * height)
@@ -490,9 +490,9 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Min"
         result.length = dLineCurve
-        result.measure_type = MeasureType.objMinMax
-        result.start_point = New PointF(MSx / CSng(width), MSy / CSng(height))
-        result.end_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.startPoint = New PointF(MSx / CSng(width), MSy / CSng(height))
+        result.endPoint = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         Return result
     End Function
 
@@ -506,8 +506,8 @@ Public Module C_ControlMethods
     Public Function CalcMinBetweenCuPolyAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
         Dim dMinPointCuPoly, dPointCuPoly, minIndexPCuPoly_j, minIndexPCuPoly_k, minExistFlag, Cx, Cy As Integer
-        Dim CuPolyItem = Obj1.curve_object.CuPolyItem(0)
-        Dim PointItem = Obj2.curve_object.PointItem(0)
+        Dim CuPolyItem = Obj1.curveObject.CuPolyItem(0)
+        Dim PointItem = Obj2.curveObject.PointItem(0)
 
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
         Dim FirstEdgeOfCuPoly = New Point(CuPolyItem.CuPolyPoint(1, 0).X * width, CuPolyItem.CuPolyPoint(1, 0).Y * height)
@@ -531,13 +531,13 @@ Public Module C_ControlMethods
         Next
 
         If minExistFlag Then
-            result.end_point = New PointF(Cx / CSng(width), Cy / CSng(height))
+            result.endPoint = New PointF(Cx / CSng(width), Cy / CSng(height))
         Else
-            result.end_point = CuPolyItem.CuPolyPoint(minIndexPCuPoly_j, minIndexPCuPoly_k)
+            result.endPoint = CuPolyItem.CuPolyPoint(minIndexPCuPoly_j, minIndexPCuPoly_k)
         End If
         result.name = Obj1.name & "To" & Obj2.name & "Min"
-        result.start_point = PointItem.PointPoint
-        result.measure_type = MeasureType.objMinMax
+        result.startPoint = PointItem.PointPoint
+        result.measuringType = MeasureType.objMinMax
         result.length = dMinPointCuPoly
         Return result
     End Function
@@ -551,8 +551,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMinBetweenCurveAndLine(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result = New MeasureObject()
-        Dim CurveItem = Obj1.curve_object.CurveItem(0)
-        Dim LineItem = Obj2.curve_object.LineItem(0)
+        Dim CurveItem = Obj1.curveObject.CurveItem(0)
+        Dim LineItem = Obj2.curveObject.LineItem(0)
         Dim dMinLineCurve, dLineCurve, minIndex As Integer
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
@@ -570,14 +570,14 @@ Public Module C_ControlMethods
         dLineCurve = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, MinCurvePoint.X, MinCurvePoint.Y)
 
         If Main_Form.COutPointFlag = True Then
-            result.middle_point = New PointF(Main_Form.CDotX / CSng(width), Main_Form.CDotY / CSng(height))
-            result.dot_flag = True
+            result.middlePoint = New PointF(Main_Form.CDotX / CSng(width), Main_Form.CDotY / CSng(height))
+            result.dotFlag = True
         End If
-        result.start_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
-        result.end_point = CurveItem.CurvePoint(minIndex)
+        result.startPoint = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
+        result.endPoint = CurveItem.CurvePoint(minIndex)
         result.name = Obj1.name & "To" & Obj2.name & "Min"
         result.length = dLineCurve
-        result.measure_type = MeasureType.objMinMax
+        result.measuringType = MeasureType.objMinMax
         Return result
     End Function
 
@@ -590,8 +590,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMinBetweenCurveAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim CurveItem = Obj1.curve_object.CurveItem(0)
-        Dim PointItem = Obj2.curve_object.PointItem(0)
+        Dim CurveItem = Obj1.curveObject.CurveItem(0)
+        Dim PointItem = Obj2.curveObject.PointItem(0)
 
         Dim dMinPointCurve, dPointCurve, minIndexP As Integer
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
@@ -604,11 +604,11 @@ Public Module C_ControlMethods
 
             If dMinPointCurve > dPointCurve Then dMinPointCurve = dPointCurve : minIndexP = i
         Next
-        result.start_point = PointItem.PointPoint
-        result.end_point = CurveItem.CurvePoint(minIndexP)
+        result.startPoint = PointItem.PointPoint
+        result.endPoint = CurveItem.CurvePoint(minIndexP)
         result.length = dMinPointCurve
         result.name = Obj1.name & "To" & Obj2.name & "Min"
-        result.measure_type = MeasureType.objMinMax
+        result.measuringType = MeasureType.objMinMax
         Return result
     End Function
 
@@ -621,8 +621,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMinBetweenPointAndLine(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim PointItem = Obj1.curve_object.PointItem(0)
-        Dim LineItem = Obj2.curve_object.LineItem(0)
+        Dim PointItem = Obj1.curveObject.PointItem(0)
+        Dim LineItem = Obj2.curveObject.LineItem(0)
 
         Dim dLinePoint As Integer
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
@@ -630,11 +630,11 @@ Public Module C_ControlMethods
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
         dLinePoint = Find_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, PointPoint.X, PointPoint.Y)
 
-        result.start_point = PointItem.PointPoint
-        result.end_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
+        result.startPoint = PointItem.PointPoint
+        result.endPoint = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         result.length = dLinePoint
         result.name = Obj1.name & "To" & Obj2.name & "Min"
-        result.measure_type = MeasureType.objMinMax
+        result.measuringType = MeasureType.objMinMax
         Return result
     End Function
 
@@ -647,18 +647,18 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMinBetweenPointAndPoly(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim PointItem = Obj1.curve_object.PointItem(0)
-        Dim PolyItem = Obj2.curve_object.PolyItem(0)
+        Dim PointItem = Obj1.curveObject.PointItem(0)
+        Dim PolyItem = Obj2.curveObject.PolyItem(0)
 
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
         Dim dPolyPoint As Integer
         dPolyPoint = Find_BPointPolyDistance(PolyItem, PointPoint, width, height)
 
-        result.start_point = PointItem.PointPoint
-        result.end_point = New PointF(Main_Form.PXs / CSng(width), Main_Form.PYs / CSng(height))
+        result.startPoint = PointItem.PointPoint
+        result.endPoint = New PointF(Main_Form.PXs / CSng(width), Main_Form.PYs / CSng(height))
         result.length = dPolyPoint
         result.name = Obj1.name & "To" & Obj2.name & "Min"
-        result.measure_type = MeasureType.objMinMax
+        result.measuringType = MeasureType.objMinMax
         Return result
     End Function
 
@@ -671,8 +671,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMinBetweenLineAndPoly(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim LineItem = Obj1.curve_object.LineItem(0)
-        Dim PolyItem = Obj2.curve_object.PolyItem(0)
+        Dim LineItem = Obj1.curveObject.LineItem(0)
+        Dim PolyItem = Obj2.curveObject.PolyItem(0)
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
 
@@ -693,11 +693,11 @@ Public Module C_ControlMethods
             End If
         Next
 
-        result.start_point = New PointF(LPx / CSng(width), LPy / CSng(height))
-        result.end_point = New PointF(LPx1 / CSng(width), LPy1 / CSng(height))
+        result.startPoint = New PointF(LPx / CSng(width), LPy / CSng(height))
+        result.endPoint = New PointF(LPx1 / CSng(width), LPy1 / CSng(height))
         result.length = minLinePoly
         result.name = Obj1.name & "To" & Obj2.name & "Min"
-        result.measure_type = MeasureType.objMinMax
+        result.measuringType = MeasureType.objMinMax
         Return result
     End Function
 
@@ -710,8 +710,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMinBetweenCurveAndPoly(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim CurveItem = Obj1.curve_object.CurveItem(0)
-        Dim PolyItem = Obj2.curve_object.PolyItem(0)
+        Dim CurveItem = Obj1.curveObject.CurveItem(0)
+        Dim PolyItem = Obj2.curveObject.PolyItem(0)
         Dim FirstCurvePoint = New Point(CurveItem.CurvePoint(0).X * width, CurveItem.CurvePoint(0).Y * height)
 
         Dim dPolyCurve, mindPolyCurve, minIdx, PPx, PPy As Integer
@@ -723,11 +723,11 @@ Public Module C_ControlMethods
             If mindPolyCurve > dPolyCurve Then mindPolyCurve = dPolyCurve : minIdx = j : PPx = Main_Form.PXs : PPy = Main_Form.PYs
         Next
 
-        result.start_point = CurveItem.CurvePoint(minIdx)
-        result.end_point = New PointF(PPx / CSng(width), PPy / CSng(height))
+        result.startPoint = CurveItem.CurvePoint(minIdx)
+        result.endPoint = New PointF(PPx / CSng(width), PPy / CSng(height))
         result.length = mindPolyCurve
         result.name = Obj1.name & "To" & Obj2.name & "Min"
-        result.measure_type = MeasureType.objMinMax
+        result.measuringType = MeasureType.objMinMax
         Return result
     End Function
 #End Region
@@ -742,8 +742,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMaxBetweenCuPolyAndLine(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result = New MeasureObject()
-        Dim CuPolyItem = Obj1.curve_object.CuPolyItem(0)
-        Dim LineItem = Obj2.curve_object.LineItem(0)
+        Dim CuPolyItem = Obj1.curveObject.CuPolyItem(0)
+        Dim LineItem = Obj2.curveObject.LineItem(0)
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
         Dim FirstEdgeOfCuPoly = New Point(CuPolyItem.CuPolyPoint(1, 0).X * width, CuPolyItem.CuPolyPoint(1, 0).Y * height)
@@ -783,9 +783,9 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.objMinMax
-        result.start_point = CuPolyItem.CuPolyPoint(maxIdx_j, maxIdx_k)
-        result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.startPoint = CuPolyItem.CuPolyPoint(maxIdx_j, maxIdx_k)
+        result.endPoint = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
     End Function
 
@@ -798,8 +798,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMaxBetweenCuPolyAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result = New MeasureObject()
-        Dim CuPolyItem = Obj1.curve_object.CuPolyItem(0)
-        Dim PointItem = Obj2.curve_object.PointItem(0)
+        Dim CuPolyItem = Obj1.curveObject.CuPolyItem(0)
+        Dim PointItem = Obj2.curveObject.PointItem(0)
 
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
         Dim FirstEdgeOfCuPoly = New Point(CuPolyItem.CuPolyPoint(1, 0).X * width, CuPolyItem.CuPolyPoint(1, 0).Y * height)
@@ -817,9 +817,9 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = dMaxPointCuPoly
-        result.measure_type = MeasureType.objMinMax
-        result.start_point = CuPolyItem.CuPolyPoint(maxIndexPCuPoly_j, maxIndexPCuPoly_k)
-        result.end_point = PointItem.PointPoint
+        result.measuringType = MeasureType.objMinMax
+        result.startPoint = CuPolyItem.CuPolyPoint(maxIndexPCuPoly_j, maxIndexPCuPoly_k)
+        result.endPoint = PointItem.PointPoint
         Return result
     End Function
 
@@ -832,8 +832,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMaxBetweenCurveAndLine(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result = New MeasureObject()
-        Dim CurveItem = Obj1.curve_object.CurveItem(0)
-        Dim LineItem = Obj2.curve_object.LineItem(0)
+        Dim CurveItem = Obj1.curveObject.CurveItem(0)
+        Dim LineItem = Obj2.curveObject.LineItem(0)
 
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
@@ -868,9 +868,9 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.objMinMax
-        result.start_point = CurveItem.CurvePoint(maxIdx)
-        result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.startPoint = CurveItem.CurvePoint(maxIdx)
+        result.endPoint = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
 
     End Function
@@ -884,8 +884,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMaxBetweenCurveAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim CurveItem = Obj1.curve_object.CurveItem(0)
-        Dim PointItem = Obj2.curve_object.PointItem(0)
+        Dim CurveItem = Obj1.curveObject.CurveItem(0)
+        Dim PointItem = Obj2.curveObject.PointItem(0)
 
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
         Dim FirstCurvePoint = New Point(CurveItem.CurvePoint(0).X * width, CurveItem.CurvePoint(0).Y * height)
@@ -909,9 +909,9 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.objMinMax
-        result.start_point = CurveItem.CurvePoint(maxIdx)
-        result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.startPoint = CurveItem.CurvePoint(maxIdx)
+        result.endPoint = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
     End Function
 
@@ -924,8 +924,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMaxBetweenCurveAndPoly(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim CurveItem = Obj1.curve_object.CurveItem(0)
-        Dim PolyItem = Obj2.curve_object.PolyItem(0)
+        Dim CurveItem = Obj1.curveObject.CurveItem(0)
+        Dim PolyItem = Obj2.curveObject.PolyItem(0)
         Dim FirstCurvePoint = New Point(CurveItem.CurvePoint(0).X * width, CurveItem.CurvePoint(0).Y * height)
         Dim FirstPolyPoint = New Point(PolyItem.PolyPoint(0).X * width, PolyItem.PolyPoint(0).Y * height)
 
@@ -952,9 +952,9 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.objMinMax
-        result.start_point = CurveItem.CurvePoint(maxIdx)
-        result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.startPoint = CurveItem.CurvePoint(maxIdx)
+        result.endPoint = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
 
     End Function
@@ -968,8 +968,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMaxBetweenLineAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim PointItem = Obj2.curve_object.PointItem(0)
-        Dim LineItem = Obj1.curve_object.LineItem(0)
+        Dim PointItem = Obj2.curveObject.PointItem(0)
+        Dim LineItem = Obj1.curveObject.LineItem(0)
 
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
@@ -989,9 +989,9 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.objMinMax
-        result.start_point = PointItem.PointPoint
-        result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.startPoint = PointItem.PointPoint
+        result.endPoint = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
     End Function
 
@@ -1004,8 +1004,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMaxBetweenLineAndPoly(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim LineItem = Obj1.curve_object.LineItem(0)
-        Dim PolyItem = Obj2.curve_object.PolyItem(0)
+        Dim LineItem = Obj1.curveObject.LineItem(0)
+        Dim PolyItem = Obj2.curveObject.PolyItem(0)
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
 
@@ -1039,9 +1039,9 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.objMinMax
-        result.start_point = PolyItem.PolyPoint(maxIdx)
-        result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.startPoint = PolyItem.PolyPoint(maxIdx)
+        result.endPoint = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
 
     End Function
@@ -1055,8 +1055,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcMaxBetweenPolyAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim PointItem = Obj2.curve_object.PointItem(0)
-        Dim PolyItem = Obj1.curve_object.PolyItem(0)
+        Dim PointItem = Obj2.curveObject.PointItem(0)
+        Dim PolyItem = Obj1.curveObject.PolyItem(0)
 
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
         Dim maxCL_Dis, CL_Dis, maxIdx As Integer
@@ -1079,9 +1079,9 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.objMinMax
-        result.start_point = PolyItem.PolyPoint(maxIdx)
-        result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.startPoint = PolyItem.PolyPoint(maxIdx)
+        result.endPoint = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
     End Function
 
@@ -1101,8 +1101,8 @@ Public Module C_ControlMethods
         Dim dMinLineCurve, dLineCurve, minIndex_j, minIndex_k, MSx, MSy As Integer
         Dim LineMidExistFlag, CuPolyLOutflag As Boolean
         LineMidExistFlag = False : CuPolyLOutflag = False
-        Dim CuPolyItem = Obj1.curve_object.CuPolyItem(0)
-        Dim LineItem = Obj2.curve_object.LineItem(0)
+        Dim CuPolyItem = Obj1.curveObject.CuPolyItem(0)
+        Dim LineItem = Obj2.curveObject.LineItem(0)
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
         Dim FirstEdgeOfCuPoly = New Point(CuPolyItem.CuPolyPoint(1, 0).X * width, CuPolyItem.CuPolyPoint(1, 0).Y * height)
@@ -1214,9 +1214,9 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
         result.length = dLineCurve
-        result.measure_type = MeasureType.objMinMax
-        result.start_point = New PointF(MSx / CSng(width), MSy / CSng(height))
-        result.end_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.startPoint = New PointF(MSx / CSng(width), MSy / CSng(height))
+        result.endPoint = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         Return result
     End Function
 
@@ -1230,8 +1230,8 @@ Public Module C_ControlMethods
     Public Function CalcPMinBetweenCuPolyAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
         Dim dMinPointCuPoly, dPointCuPoly, minIndexPCuPoly_j, minIndexPCuPoly_k, minExistFlag, Cx, Cy As Integer
-        Dim CuPolyItem = Obj1.curve_object.CuPolyItem(0)
-        Dim PointItem = Obj2.curve_object.PointItem(0)
+        Dim CuPolyItem = Obj1.curveObject.CuPolyItem(0)
+        Dim PointItem = Obj2.curveObject.PointItem(0)
 
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
         Dim FirstEdgeOfCuPoly = New Point(CuPolyItem.CuPolyPoint(1, 0).X * width, CuPolyItem.CuPolyPoint(1, 0).Y * height)
@@ -1255,13 +1255,13 @@ Public Module C_ControlMethods
         Next
 
         If minExistFlag Then
-            result.end_point = New PointF(Cx / CSng(width), Cy / CSng(height))
+            result.endPoint = New PointF(Cx / CSng(width), Cy / CSng(height))
         Else
-            result.end_point = CuPolyItem.CuPolyPoint(minIndexPCuPoly_j, minIndexPCuPoly_k)
+            result.endPoint = CuPolyItem.CuPolyPoint(minIndexPCuPoly_j, minIndexPCuPoly_k)
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
-        result.start_point = PointItem.PointPoint
-        result.measure_type = MeasureType.objMinMax
+        result.startPoint = PointItem.PointPoint
+        result.measuringType = MeasureType.objMinMax
         result.length = dMinPointCuPoly
         Return result
     End Function
@@ -1275,8 +1275,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMinBetweenCurveAndLine(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result = New MeasureObject()
-        Dim CurveItem = Obj1.curve_object.CurveItem(0)
-        Dim LineItem = Obj2.curve_object.LineItem(0)
+        Dim CurveItem = Obj1.curveObject.CurveItem(0)
+        Dim LineItem = Obj2.curveObject.LineItem(0)
         Dim dMinLineCurve, dLineCurve, minIndex As Integer
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
@@ -1295,14 +1295,14 @@ Public Module C_ControlMethods
         If Main_Form.OutPointFlag = True Then Main_Form.COutPointFlag = True : Main_Form.CDotX = Main_Form.DotX : Main_Form.CDotY = Main_Form.DotY
 
         If Main_Form.COutPointFlag = True Then
-            result.middle_point = New PointF(Main_Form.CDotX / CSng(width), Main_Form.CDotY / CSng(height))
-            result.dot_flag = True
+            result.middlePoint = New PointF(Main_Form.CDotX / CSng(width), Main_Form.CDotY / CSng(height))
+            result.dotFlag = True
         End If
-        result.start_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
-        result.end_point = CurveItem.CurvePoint(minIndex)
+        result.startPoint = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
+        result.endPoint = CurveItem.CurvePoint(minIndex)
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
         result.length = dLineCurve
-        result.measure_type = MeasureType.objMinMax
+        result.measuringType = MeasureType.objMinMax
         Return result
     End Function
 
@@ -1315,8 +1315,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMinBetweenCurveAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim CurveItem = Obj1.curve_object.CurveItem(0)
-        Dim PointItem = Obj2.curve_object.PointItem(0)
+        Dim CurveItem = Obj1.curveObject.CurveItem(0)
+        Dim PointItem = Obj2.curveObject.PointItem(0)
 
         Dim dMinPointCurve, dPointCurve, minIndexP As Integer
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
@@ -1329,11 +1329,11 @@ Public Module C_ControlMethods
 
             If dMinPointCurve > dPointCurve Then dMinPointCurve = dPointCurve : minIndexP = i
         Next
-        result.start_point = PointItem.PointPoint
-        result.end_point = CurveItem.CurvePoint(minIndexP)
+        result.startPoint = PointItem.PointPoint
+        result.endPoint = CurveItem.CurvePoint(minIndexP)
         result.length = dMinPointCurve
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
-        result.measure_type = MeasureType.objMinMax
+        result.measuringType = MeasureType.objMinMax
         Return result
     End Function
 
@@ -1346,8 +1346,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMinBetweenPointAndLine(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim PointItem = Obj1.curve_object.PointItem(0)
-        Dim LineItem = Obj2.curve_object.LineItem(0)
+        Dim PointItem = Obj1.curveObject.PointItem(0)
+        Dim LineItem = Obj2.curveObject.LineItem(0)
 
         Dim dLinePoint As Integer
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
@@ -1355,15 +1355,15 @@ Public Module C_ControlMethods
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
         dLinePoint = pFind_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, PointPoint.X, PointPoint.Y)
 
-        result.end_point = PointItem.PointPoint
+        result.endPoint = PointItem.PointPoint
         If Main_Form.OutPointFlag = True Then
-            result.middle_point = New PointF(Main_Form.DotX / CSng(width), Main_Form.DotY / CSng(height))
-            result.dot_flag = True
+            result.middlePoint = New PointF(Main_Form.DotX / CSng(width), Main_Form.DotY / CSng(height))
+            result.dotFlag = True
         End If
-        result.start_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
+        result.startPoint = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         result.length = dLinePoint
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
-        result.measure_type = MeasureType.objMinMax
+        result.measuringType = MeasureType.objMinMax
         Return result
     End Function
 
@@ -1376,22 +1376,22 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMinBetweenPointAndPoly(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim PointItem = Obj1.curve_object.PointItem(0)
-        Dim PolyItem = Obj2.curve_object.PolyItem(0)
+        Dim PointItem = Obj1.curveObject.PointItem(0)
+        Dim PolyItem = Obj2.curveObject.PolyItem(0)
 
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
         Dim dPolyPoint As Integer
         dPolyPoint = pFind_BPointPolyDistance(PolyItem, PointPoint, width, height)
 
         If Main_Form.POutFlag = True Then
-            result.middle_point = New PointF(Main_Form.PDotX / CSng(width), Main_Form.PDotY / CSng(height))
-            result.dot_flag = True
+            result.middlePoint = New PointF(Main_Form.PDotX / CSng(width), Main_Form.PDotY / CSng(height))
+            result.dotFlag = True
         End If
-        result.end_point = PointItem.PointPoint
-        result.start_point = New PointF(Main_Form.PXs / CSng(width), Main_Form.PYs / CSng(height))
+        result.endPoint = PointItem.PointPoint
+        result.startPoint = New PointF(Main_Form.PXs / CSng(width), Main_Form.PYs / CSng(height))
         result.length = dPolyPoint
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
-        result.measure_type = MeasureType.objMinMax
+        result.measuringType = MeasureType.objMinMax
         Return result
     End Function
 
@@ -1404,8 +1404,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMinBetweenLineAndPoly(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim LineItem = Obj1.curve_object.LineItem(0)
-        Dim PolyItem = Obj2.curve_object.PolyItem(0)
+        Dim LineItem = Obj1.curveObject.LineItem(0)
+        Dim PolyItem = Obj2.curveObject.PolyItem(0)
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
 
@@ -1432,14 +1432,14 @@ Public Module C_ControlMethods
         Next
 
         If PLOutFlag = True Then
-            result.middle_point = New PointF(LPDotx / CSng(width), LPDoty / CSng(height))
-            result.dot_flag = True
+            result.middlePoint = New PointF(LPDotx / CSng(width), LPDoty / CSng(height))
+            result.dotFlag = True
         End If
-        result.start_point = New PointF(LPx / CSng(width), LPy / CSng(height))
-        result.end_point = New PointF(LPx1 / CSng(width), LPy1 / CSng(height))
+        result.startPoint = New PointF(LPx / CSng(width), LPy / CSng(height))
+        result.endPoint = New PointF(LPx1 / CSng(width), LPy1 / CSng(height))
         result.length = minLinePoly
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
-        result.measure_type = MeasureType.objMinMax
+        result.measuringType = MeasureType.objMinMax
         Return result
     End Function
 
@@ -1452,8 +1452,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMinBetweenCurveAndPoly(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim CurveItem = Obj1.curve_object.CurveItem(0)
-        Dim PolyItem = Obj2.curve_object.PolyItem(0)
+        Dim CurveItem = Obj1.curveObject.CurveItem(0)
+        Dim PolyItem = Obj2.curveObject.PolyItem(0)
         Dim FirstCurvePoint = New Point(CurveItem.CurvePoint(0).X * width, CurveItem.CurvePoint(0).Y * height)
 
         Dim dPolyCurve, mindPolyCurve, minIdx, PPx, PPy, PPDotx, PPDoty As Integer
@@ -1473,14 +1473,14 @@ Public Module C_ControlMethods
         Next
 
         If PPOutFlag = True Then
-            result.middle_point = New PointF(PPDotx / CSng(width), PPDoty / CSng(height))
-            result.dot_flag = True
+            result.middlePoint = New PointF(PPDotx / CSng(width), PPDoty / CSng(height))
+            result.dotFlag = True
         End If
-        result.end_point = CurveItem.CurvePoint(minIdx)
-        result.start_point = New PointF(PPx / CSng(width), PPy / CSng(height))
+        result.endPoint = CurveItem.CurvePoint(minIdx)
+        result.startPoint = New PointF(PPx / CSng(width), PPy / CSng(height))
         result.length = mindPolyCurve
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
-        result.measure_type = MeasureType.objMinMax
+        result.measuringType = MeasureType.objMinMax
         Return result
     End Function
 
@@ -1497,8 +1497,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMaxBetweenCuPolyAndLine(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result = New MeasureObject()
-        Dim CuPolyItem = Obj1.curve_object.CuPolyItem(0)
-        Dim LineItem = Obj2.curve_object.LineItem(0)
+        Dim CuPolyItem = Obj1.curveObject.CuPolyItem(0)
+        Dim LineItem = Obj2.curveObject.LineItem(0)
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
         Dim FirstEdgeOfCuPoly = New Point(CuPolyItem.CuPolyPoint(1, 0).X * width, CuPolyItem.CuPolyPoint(1, 0).Y * height)
@@ -1522,14 +1522,14 @@ Public Module C_ControlMethods
         If Main_Form.OutPointFlag = True Then Main_Form.COutPointFlag = True : Main_Form.CDotX = Main_Form.DotX : Main_Form.CDotY = Main_Form.DotY
 
         If Main_Form.COutPointFlag = True Then
-            result.middle_point = New PointF(Main_Form.CDotX / CSng(width), Main_Form.CDotY / CSng(height))
-            result.dot_flag = True
+            result.middlePoint = New PointF(Main_Form.CDotX / CSng(width), Main_Form.CDotY / CSng(height))
+            result.dotFlag = True
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = dMaxLineCurve
-        result.measure_type = MeasureType.objMinMax
-        result.end_point = CuPolyItem.CuPolyPoint(maxIndex_j, maxIndex_k)
-        result.start_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.endPoint = CuPolyItem.CuPolyPoint(maxIndex_j, maxIndex_k)
+        result.startPoint = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         Return result
     End Function
 
@@ -1542,8 +1542,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMaxBetweenCuPolyAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result = New MeasureObject()
-        Dim CuPolyItem = Obj1.curve_object.CuPolyItem(0)
-        Dim PointItem = Obj2.curve_object.PointItem(0)
+        Dim CuPolyItem = Obj1.curveObject.CuPolyItem(0)
+        Dim PointItem = Obj2.curveObject.PointItem(0)
 
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
         Dim FirstEdgeOfCuPoly = New Point(CuPolyItem.CuPolyPoint(1, 0).X * width, CuPolyItem.CuPolyPoint(1, 0).Y * height)
@@ -1561,9 +1561,9 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = dMaxPointCuPoly
-        result.measure_type = MeasureType.objMinMax
-        result.start_point = CuPolyItem.CuPolyPoint(maxIndexPCuPoly_j, maxIndexPCuPoly_k)
-        result.end_point = PointItem.PointPoint
+        result.measuringType = MeasureType.objMinMax
+        result.startPoint = CuPolyItem.CuPolyPoint(maxIndexPCuPoly_j, maxIndexPCuPoly_k)
+        result.endPoint = PointItem.PointPoint
         Return result
     End Function
 
@@ -1576,8 +1576,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMaxBetweenCurveAndLine(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result = New MeasureObject()
-        Dim CurveItem = Obj1.curve_object.CurveItem(0)
-        Dim LineItem = Obj2.curve_object.LineItem(0)
+        Dim CurveItem = Obj1.curveObject.CurveItem(0)
+        Dim LineItem = Obj2.curveObject.LineItem(0)
 
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
@@ -1598,14 +1598,14 @@ Public Module C_ControlMethods
         If Main_Form.OutPointFlag = True Then Main_Form.COutPointFlag = True : Main_Form.CDotX = Main_Form.DotX : Main_Form.CDotY = Main_Form.DotY
 
         If Main_Form.COutPointFlag = True Then
-            result.middle_point = New PointF(Main_Form.CDotX / CSng(width), Main_Form.CDotY / CSng(height))
-            result.dot_flag = True
+            result.middlePoint = New PointF(Main_Form.CDotX / CSng(width), Main_Form.CDotY / CSng(height))
+            result.dotFlag = True
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = dMaxLineCurve
-        result.measure_type = MeasureType.objMinMax
-        result.end_point = CurveItem.CurvePoint(maxIndex)
-        result.start_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.endPoint = CurveItem.CurvePoint(maxIndex)
+        result.startPoint = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         Return result
 
     End Function
@@ -1619,8 +1619,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMaxBetweenCurveAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim CurveItem = Obj1.curve_object.CurveItem(0)
-        Dim PointItem = Obj2.curve_object.PointItem(0)
+        Dim CurveItem = Obj1.curveObject.CurveItem(0)
+        Dim PointItem = Obj2.curveObject.PointItem(0)
 
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
         Dim FirstCurvePoint = New Point(CurveItem.CurvePoint(0).X * width, CurveItem.CurvePoint(0).Y * height)
@@ -1644,9 +1644,9 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.objMinMax
-        result.start_point = CurveItem.CurvePoint(maxIdx)
-        result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.startPoint = CurveItem.CurvePoint(maxIdx)
+        result.endPoint = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
     End Function
 
@@ -1659,8 +1659,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMaxBetweenCurveAndPoly(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim CurveItem = Obj1.curve_object.CurveItem(0)
-        Dim PolyItem = Obj2.curve_object.PolyItem(0)
+        Dim CurveItem = Obj1.curveObject.CurveItem(0)
+        Dim PolyItem = Obj2.curveObject.PolyItem(0)
         Dim FirstCurvePoint = New Point(CurveItem.CurvePoint(0).X * width, CurveItem.CurvePoint(0).Y * height)
         Dim FirstPolyPoint = New Point(PolyItem.PolyPoint(0).X * width, PolyItem.PolyPoint(0).Y * height)
 
@@ -1682,14 +1682,14 @@ Public Module C_ControlMethods
         Next
 
         If PPOutFlag = True Then
-            result.middle_point = New PointF(PPDotx / CSng(width), PPDoty / CSng(height))
-            result.dot_flag = True
+            result.middlePoint = New PointF(PPDotx / CSng(width), PPDoty / CSng(height))
+            result.dotFlag = True
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = maxdPolyCurve
-        result.measure_type = MeasureType.objMinMax
-        result.end_point = CurveItem.CurvePoint(maxIdx)
-        result.start_point = New PointF(PPx / CSng(width), PPy / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.endPoint = CurveItem.CurvePoint(maxIdx)
+        result.startPoint = New PointF(PPx / CSng(width), PPy / CSng(height))
         Return result
 
     End Function
@@ -1703,8 +1703,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMaxBetweenLineAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim PointItem = Obj2.curve_object.PointItem(0)
-        Dim LineItem = Obj1.curve_object.LineItem(0)
+        Dim PointItem = Obj2.curveObject.PointItem(0)
+        Dim LineItem = Obj1.curveObject.LineItem(0)
 
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
@@ -1714,14 +1714,14 @@ Public Module C_ControlMethods
         dLinePoint = pFind_BPointLineDistance(FirstPointofLine.X, FirstPointofLine.Y, SecndPointOfLine.X, SecndPointOfLine.Y, PointPoint.X, PointPoint.Y)
 
         If Main_Form.OutPointFlag = True Then
-            result.middle_point = New PointF(Main_Form.DotX / CSng(width), Main_Form.DotY / CSng(height))
-            result.dot_flag = True
+            result.middlePoint = New PointF(Main_Form.DotX / CSng(width), Main_Form.DotY / CSng(height))
+            result.dotFlag = True
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = dLinePoint
-        result.measure_type = MeasureType.objMinMax
-        result.end_point = PointItem.PointPoint
-        result.start_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.endPoint = PointItem.PointPoint
+        result.startPoint = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         Return result
     End Function
 
@@ -1734,8 +1734,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMaxBetweenLineAndPoly(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim LineItem = Obj1.curve_object.LineItem(0)
-        Dim PolyItem = Obj2.curve_object.PolyItem(0)
+        Dim LineItem = Obj1.curveObject.LineItem(0)
+        Dim PolyItem = Obj2.curveObject.PolyItem(0)
         Dim FirstPointofLine = New Point(LineItem.FirstPointOfLine.X * width, LineItem.FirstPointOfLine.Y * height)
         Dim SecndPointOfLine = New Point(LineItem.SecndPointOfLine.X * width, LineItem.SecndPointOfLine.Y * height)
 
@@ -1762,14 +1762,14 @@ Public Module C_ControlMethods
         Next
 
         If PLOutFlag = True Then
-            result.middle_point = New PointF(LPDotx / CSng(width), LPDoty / CSng(height))
-            result.dot_flag = True
+            result.middlePoint = New PointF(LPDotx / CSng(width), LPDoty / CSng(height))
+            result.dotFlag = True
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = maxLinePoly
-        result.measure_type = MeasureType.objMinMax
-        result.start_point = New PointF(LPx / CSng(width), LPy / CSng(height))
-        result.end_point = New PointF(LPx1 / CSng(width), LPy1 / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.startPoint = New PointF(LPx / CSng(width), LPy / CSng(height))
+        result.endPoint = New PointF(LPx1 / CSng(width), LPy1 / CSng(height))
         Return result
 
     End Function
@@ -1783,8 +1783,8 @@ Public Module C_ControlMethods
     ''' <paramname="height">The height of picturebox.</param>
     Public Function CalcPMaxBetweenPolyAndPoint(ByVal Obj1 As MeasureObject, ByVal Obj2 As MeasureObject, ByVal width As Integer, ByVal height As Integer) As MeasureObject
         Dim result As MeasureObject = New MeasureObject()
-        Dim PointItem = Obj2.curve_object.PointItem(0)
-        Dim PolyItem = Obj1.curve_object.PolyItem(0)
+        Dim PointItem = Obj2.curveObject.PointItem(0)
+        Dim PolyItem = Obj1.curveObject.PolyItem(0)
 
         Dim PointPoint = New Point(PointItem.PointPoint.X * width, PointItem.PointPoint.Y * height)
         Dim dPolyPoint As Integer
@@ -1793,14 +1793,14 @@ Public Module C_ControlMethods
         dPolyPoint = pFind_BPointPolyMaxDistance(PolyItem, PointPoint, width, height)
 
         If Main_Form.POutFlag = True Then
-            result.middle_point = New PointF(Main_Form.PDotX / CSng(width), Main_Form.PDotY / CSng(height))
-            result.dot_flag = True
+            result.middlePoint = New PointF(Main_Form.PDotX / CSng(width), Main_Form.PDotY / CSng(height))
+            result.dotFlag = True
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = dPolyPoint
-        result.measure_type = MeasureType.objMinMax
-        result.end_point = PointItem.PointPoint
-        result.start_point = New PointF(Main_Form.PXs / CSng(width), Main_Form.PYs / CSng(height))
+        result.measuringType = MeasureType.objMinMax
+        result.endPoint = PointItem.PointPoint
+        result.startPoint = New PointF(Main_Form.PXs / CSng(width), Main_Form.PYs / CSng(height))
         Return result
     End Function
 

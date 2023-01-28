@@ -39,7 +39,7 @@ Public Class Intersection
         Try
             thr_seg = ID_SCROLL_THR_SEG.Value
             ID_LABEL_THR_SEG.Text = thr_seg.ToString()
-            Main_Form.Obj_Seg.sectObj.thr_seg = thr_seg
+            Main_Form.Obj_Seg.sectObj.threshold = thr_seg
 
             Dim percent_black = 0
             Dim percent_white = 0
