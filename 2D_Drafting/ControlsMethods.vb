@@ -13,7 +13,12 @@ Imports Size = System.Drawing.Size
 ''' </summary>
 Public Module ControlsMethods
 #Region "PictureBox Methods"
-
+    ''' <summary>
+    ''' Update element of list
+    ''' </summary>
+    ''' <paramname="Src">The list for update.</param>
+    ''' <paramname="NewMat">The element Mat which will be used for update.</param>
+    ''' <paramname="index">The index of list to update.</param>
     Public Sub DisposeElemOfList(ByRef Src As List(Of Mat), NewMat As Mat, index As Integer)
         Dim oldMat = Src(index)
         Src.RemoveAt(index)
@@ -24,11 +29,16 @@ Public Module ControlsMethods
         Src.Insert(index, NewMat)
     End Sub
 
-    Public Function CalcIntialRatio(picBox As Panel, Ori As Mat) As Single
+    ''' <summary>
+    ''' calculate ratio of panel size by image size
+    ''' </summary>
+    ''' <paramname="panel">The panel which involves picturebox.</param>
+    ''' <paramname="Ori">The image in picturebox.</param>
+    Public Function CalcIntialRatio(panel As Panel, Ori As Mat) As Single
         Dim image_w = Ori.Cols
         Dim image_h = Ori.Rows
-        Dim picturebox_w = picBox.Width
-        Dim picturebox_h = picBox.Height
+        Dim picturebox_w = panel.Width
+        Dim picturebox_h = panel.Height
         Dim ratio As Single
 
         If image_w / image_h < picturebox_w / picturebox_h Then
@@ -54,6 +64,12 @@ Public Module ControlsMethods
         Return dst_img
     End Function
 
+    ''' <summary>
+    ''' Zoom image into Dst_w * Dst_h.
+    ''' </summary>
+    ''' <paramname="Src">The source image.</param>
+    ''' <paramname="Dst_w">The width of zoomed image.</param>
+    ''' <paramname="Dst_h">The height of zoomed image.</param>
     Public Function ZoomImage2(Src As Mat, Dst_w As Integer, Dst_h As Integer) As Mat
         Dim Dst As Mat = New Mat()
         Dim s As Size = New Size(Dst_w, Dst_h)
@@ -988,8 +1004,6 @@ Public Module ControlsMethods
             Dim nor_pt1, nor_pt2, nor_pt3, nor_pt4, nor_pt5, nor_pt6, nor_pt7, nor_pt8, side_pt, draw_pt As Point
             If item.measuringType = MeasureType.lineFixed Then
                 Dim length = Math.Sqrt(Math.Pow(end_point.X - start_point.X, 2) + Math.Pow(end_point.Y - start_point.Y, 2)) * CF
-                'end_point.X = start_point.X + (end_point.X - start_point.X) / length * item.length * pictureBox.Width
-                'end_point.Y = start_point.Y + (end_point.Y - start_point.Y) / length * item.length * pictureBox.Width
 
                 nor_pt1 = New Point(item.lineObject.nor_pt1.X * pictureBox.Width, item.lineObject.nor_pt1.Y * pictureBox.Height)
                 nor_pt3 = New Point(item.lineObject.nor_pt3.X * pictureBox.Width, item.lineObject.nor_pt3.Y * pictureBox.Height)
@@ -1017,7 +1031,6 @@ Public Module ControlsMethods
                 side_pt = New Point(item.lineObject.side_drag.X * pictureBox.Width, item.lineObject.side_drag.Y * pictureBox.Height)
                 draw_pt = New Point(item.lineObject.draw_pt.X * pictureBox.Width, item.lineObject.draw_pt.Y * pictureBox.Height)
             End If
-
 
             graph.DrawLine(graphPen2, start_point, nor_pt1)
             graph.DrawLine(graphPen2, end_point, nor_pt2)
@@ -1681,13 +1694,6 @@ Public Module ControlsMethods
                 nor_point2 = end_point
             End If
 
-
-            'graph.DrawLine(graphPen, start_point, nor_point1);
-            'if (obj_selected.measuringType == (int)MeasureType.lineParallel)
-            '    graph.DrawLine(graphPen, last_point, nor_point2);
-            'else
-            '    graph.DrawLine(graphPen, end_point, nor_point2);
-
             Dim nor_point3 As Point = New Point()
             Dim nor_point4 As Point = New Point()
             If obj_selected.measuringType = MeasureType.lineAlign OrElse obj_selected.measuringType = MeasureType.lineFixed Then
@@ -1740,22 +1746,18 @@ Public Module ControlsMethods
 
                 If obj_selected.measuringType = MeasureType.ptToLine Then
                     Side_pt.X = CInt((nor_point4.X - nor_point3.X) / sum * dist1 + nor_point4.X)
-                    'graph.DrawLine(graphPen, nor_point4, Side_pt);
                     Side_pt.Y = CInt((nor_point4.Y - nor_point3.Y) / sum * dist1 + nor_point4.Y)
                 Else
                     If dist1 > dist2 Then
                         Side_pt.X = CInt((nor_point4.X - nor_point3.X) / sum * dist2 + nor_point4.X)
-                        'graph.DrawLine(graphPen, nor_point4, Side_pt);
                         Side_pt.Y = CInt((nor_point4.Y - nor_point3.Y) / sum * dist2 + nor_point4.Y)
                     Else
                         Side_pt.X = CInt((nor_point3.X - nor_point4.X) / sum * dist1 + nor_point3.X)
                         Side_pt.Y = CInt((nor_point3.Y - nor_point4.Y) / sum * dist1 + nor_point3.Y)
-                        'graph.DrawLine(graphPen, nor_point3, Side_pt);
                     End If
                 End If
             End If
 
-            'graph.DrawLine(graphPen, nor_point3, nor_point4);
             Dim n_dist As Integer = CalcDistBetweenPoints(nor_point3, nor_point4)
             n_dist /= 10
             n_dist = Math.Max(n_dist, 5)
@@ -1769,10 +1771,6 @@ Public Module ControlsMethods
                 arr_points = GetArrowPoints(start_point, end_point, nor_point1, nor_point3, n_dist)
                 arr_points2 = GetArrowPoints(end_point, start_point, nor_point2, nor_point4, n_dist)
             End If
-            'graph.DrawLine(graphPen, nor_point3, arr_points[0]);
-            'graph.DrawLine(graphPen, nor_point3, arr_points[1]);
-            'graph.DrawLine(graphPen, nor_point4, arr_points2[0]);
-            'graph.DrawLine(graphPen, nor_point4, arr_points2[1]);
 
             'draw text
             Dim ang_tran As Integer = obj_selected.angle
@@ -1781,9 +1779,6 @@ Public Module ControlsMethods
                 ang_tran = 180 - ang_tran
                 attri = 1
             End If
-
-            'Point mid_pt = new Point((int)((start_point.X + end_point.X) / 2), (int)((start_point.Y + end_point.Y) / 2));
-            'Point draw_pt = new Point(mid_pt.X - offset.Width, mid_pt.Y - offset.Height);
 
             'set limit to target point
             Dim draw_pt = target_point
@@ -2043,8 +2038,6 @@ Public Module ControlsMethods
             obj_selected.angleObject.side_drag = New PointF(CSng(Side_pt.X) / pictureBox.Width, CSng(Side_pt.Y) / pictureBox.Height)
             obj_selected.angleObject.side_index = side_index
 
-            'float[] x_set = { obj_selected.middlePoint.X, obj_selected.angleObject.start_pt.X, obj_selected.angleObject.end_pt.X };
-            'float[] y_set = { obj_selected.middlePoint.Y, obj_selected.angleObject.start_pt.Y, obj_selected.angleObject.end_pt.Y };
             Dim x_set = {obj_selected.middlePoint.X, obj_selected.startPoint.X, obj_selected.endPoint.X}
             Dim y_set = {obj_selected.middlePoint.Y, obj_selected.startPoint.Y, obj_selected.endPoint.Y}
             obj_selected.leftTop.X = GetMinimumInSet(x_set)
@@ -2122,11 +2115,7 @@ Public Module ControlsMethods
                 Dim dist As Integer = radius / 5
                 dist = Math.Min(Math.Max(dist, 5), 20)
                 Dim arr_points = GetArrowPoints3(centerpt, pt_circle, dist)
-                'graph.DrawLine(graphPen, centerpt, arr_points[0]);
-                'graph.DrawLine(graphPen, centerpt, arr_points[1]);
                 Dim arr_points2 = GetArrowPoints3(pt_circle, centerpt, dist)
-                'graph.DrawLine(graphPen, pt_circle, arr_points2[0]);
-                'graph.DrawLine(graphPen, pt_circle, arr_points2[1]);
 
                 'draw string
                 Dim attri = -1
@@ -2293,13 +2282,9 @@ Public Module ControlsMethods
             Dim radius2 = If(radius - 10 > 1, radius - 10, 1)
             Dim centerpt = middle_point
 
-            'graph.DrawArc(graphPen, new Rectangle(centerpt.X - radius2, centerpt.Y - radius2, radius2 * 2, radius2 * 2),
-            '                            (float)start_angle, (float)sweep_angle);
             'draw arrows
             Dim first_point = CalcPositionInCircle(centerpt, radius, start_angle)
             Dim second_point = CalcPositionInCircle(centerpt, radius, start_angle + sweep_angle)
-            'graph.DrawLine(graphPen, centerpt, first_point);
-            'graph.DrawLine(graphPen, centerpt, second_point);
 
             Dim nor_point1 = CalcPositionInCircle(centerpt, radius2, start_angle)
             Dim nor_point4 = CalcPositionInCircle(centerpt, radius2, start_angle + sweep_angle)

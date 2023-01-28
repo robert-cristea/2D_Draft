@@ -1,12 +1,10 @@
-﻿Imports System.Data.Common
+﻿
 Imports System.IO
 Imports System.Reflection
 Imports System.Runtime.InteropServices
-Imports System.Windows.Interop
 Imports AForge.Video
 Imports AForge.Video.DirectShow
 Imports Emgu.CV
-Imports Emgu.CV.Ocl
 Imports Color = System.Drawing.Color
 Imports ComboBox = System.Windows.Forms.ComboBox
 Imports Font = System.Drawing.Font
@@ -161,17 +159,6 @@ Public Class Main_Form
     Private Shared Function SendMessage(ByVal hwnd As Integer, ByVal wMsg As Integer, ByVal wParam As Integer, ByVal lParam As Integer) As Integer
     End Function
 
-    <DllImport("user32.dll")>
-    Private Shared Function SetCapture(ByVal hWnd As Integer) As IntPtr
-    End Function
-
-    <DllImport("user32.dll")>
-    Private Shared Function ReleaseCapture() As Long
-    End Function
-
-    <DllImport("user32.dll")>
-    Private Shared Function GetCapture() As IntPtr
-    End Function
 
 #Region "Main Form Methods"
 
@@ -381,21 +368,7 @@ Public Class Main_Form
             GetLegendInfo()
             initVar()
         Catch ex As Exception
-
-            'ID_GROUP_BOX_CONTROL.Enabled = False
             MessageBox.Show(ex.Message.ToString())
-
-        End Try
-
-        Try
-            OpenCamera()
-            SelectResolution(videoDevice, CameraResolutionsCB)
-            If Not My.Settings.camresindex.Equals("") Then
-                CameraResolutionsCB.SelectedIndex = My.Settings.camresindex + 1
-            End If
-
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
         End Try
 
         If My.Settings.imagefilepath.Equals("") Then
@@ -421,6 +394,7 @@ Public Class Main_Form
                 colorList.Add(Col_Array)
             End If
         Next
+
         DeleteImages(imagePath)
         Createdirectory(imagePath)
     End Sub
@@ -794,7 +768,6 @@ Public Class Main_Form
             DrawAndCenteringImage()
 
             zoomed.Dispose()
-            'Image.Dispose()
         Catch ex As Exception
             MessageBox.Show(ex.Message.ToString())
         End Try
@@ -846,6 +819,7 @@ Public Class Main_Form
         ID_STATUS_LABEL.Text = "Zoom Fit"
     End Sub
 
+    'resize image into Dst_w * Dst_h
     Private Sub CustomeResize(Dst_w As Single, Dst_h As Single, Optional State As Boolean = False)
         Try
             If State = False Then
@@ -883,6 +857,7 @@ Public Class Main_Form
         End Try
     End Sub
 
+    'resize image
     Private Sub RESIZEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RESIZEToolStripMenuItem.Click
         Try
             Dim form As New Resize
@@ -898,6 +873,7 @@ Public Class Main_Form
         End Try
 
     End Sub
+
     'undo last object and last row of listview
     Private Sub Undo()
         If undoNum > 0 Then
@@ -914,13 +890,15 @@ Public Class Main_Form
             End If
         End If
     End Sub
+
+    'undo last object
     Private Sub ID_BTN_UNDO_Click(sender As Object, e As EventArgs) Handles ID_BTN_UNDO.Click
         menuClick = False
         Undo()
         ID_STATUS_LABEL.Text = "Undo"
     End Sub
 
-
+    'undo last object
     Private Sub UNDOToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UNDOToolStripMenuItem.Click
         menuClick = True
         Undo()
@@ -1046,7 +1024,7 @@ Public Class Main_Form
             Return
         End If
         If e.Button = MouseButtons.Left Then
-            SetCapture(CInt(PictureBox.Handle))
+            MouseDownFlag = True
             Dim m_pt As PointF = New PointF()
             m_pt.X = CSng(e.X) / PictureBox.Width
             m_pt.Y = CSng(e.Y) / PictureBox.Height
@@ -1144,7 +1122,6 @@ Public Class Main_Form
                 FirstPtOfEdge = m_pt2
                 EdgeRegionDrawed = False
             End If
-            MouseDownFlag = True
 
             If moveLine = True And curveObjSelIndex >= 0 Then
                 Dim obj = objectList.ElementAt(curveObjSelIndex)
@@ -1193,7 +1170,7 @@ Public Class Main_Form
 
         Dim m_pt2 = New Point(e.X, e.Y)
 
-        If GetCapture() = PictureBox.Handle Then
+        If MouseDownFlag Then
             If curMeasureType < 0 Then
                 If selIndex >= 0 Then
                     mCurDragPt = m_pt
@@ -1309,7 +1286,6 @@ Public Class Main_Form
                     PictureBox.DrawObjSelected(objSelected, False)
                     PictureBox.DrawTempFinal(objSelected, temp, sideDrag, digit, CF, True)
                 ElseIf curMeasureType = MeasureType.objPoly Then
-                    'If PolyDrawEndFlag = False Then
                     If PolyPreviousPoint Is Nothing Then
                         PolyPreviousPoint = e.Location
                         Dim ptF = New PointF(e.X / CSng(PictureBox.Width), e.Y / CSng(PictureBox.Height))
@@ -1321,7 +1297,6 @@ Public Class Main_Form
                             DrawLineBetweenTwoPoints(PictureBox, lineInfor, PolyPreviousPoint.Value, e.Location)
                         End If
                     End If
-                    'End If
                 ElseIf curMeasureType = MeasureType.objCuPoly Then
                     If CuPolyDrawEndFlag = False Then
                         Dim temp As Point
@@ -1360,7 +1335,7 @@ Public Class Main_Form
 
     'release capture
     Private Sub PictureBox_MouseUp(sender As Object, e As MouseEventArgs) Handles PictureBox.MouseUp
-        Call ReleaseCapture()
+        MouseDownFlag = False
 
         If curMeasureType = MeasureType.objPoint Then
             C_PointObj.PDrawPos = PGetPos(C_PointObj.PointPoint)
@@ -1489,7 +1464,7 @@ Public Class Main_Form
         Dim ratio = zoomFactor
         Dim zoomed = ZoomImage(ratio, currentImage)
         Dim Image = zoomed.ToBitmap()
-        Dim form As ID_FORM_BRIGHTNESS = New ID_FORM_BRIGHTNESS(PictureBox, Image, brightness, contrast, gamma)
+        Dim form As Brightness = New Brightness(PictureBox, Image, brightness, contrast, gamma)
 
         Dim InitialImage = AdjustBrightnessAndContrast(Image, brightness, contrast, gamma)
         If form.ShowDialog() = DialogResult.OK Then
@@ -1676,6 +1651,8 @@ Public Class Main_Form
         End If
         PictureBox.DrawObjList(objectList, digit, CF, False)
     End Sub
+
+    'open calibration ini file
     Private Sub CALIBRATIONINFOToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CALIBRATIONINFOToolStripMenuItem.Click
         Try
             Dim alive As System.Diagnostics.Process
@@ -1702,6 +1679,7 @@ Public Class Main_Form
         End Try
     End Sub
 
+    'open config ini file
     Private Sub CONFIGINFOToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CONFIGINFOToolStripMenuItem.Click
         Try
             Dim alive As System.Diagnostics.Process
@@ -1722,6 +1700,7 @@ Public Class Main_Form
         End Try
     End Sub
 
+    'open legend ini file
     Private Sub LEGENDINFOToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LEGENDINFOToolStripMenuItem.Click
         Try
             Dim alive As System.Diagnostics.Process
@@ -1973,19 +1952,7 @@ Public Class Main_Form
 #End Region
 
 #Region "Keygen Methods"
-    'check for license
 
-
-    'show activate dialog
-    Private Sub ID_MENU_ACTIVATE_Click(sender As Object, e As EventArgs) Handles ID_MENU_ACTIVATE.Click
-
-    End Sub
-
-    'show license info dialog
-    Private Sub ID_MENU_LICENSE_INFO_Click(sender As Object, e As EventArgs) Handles ID_MENU_LICENSE_INFO.Click
-
-
-    End Sub
 #End Region
 
 #Region "Curves Methods"
@@ -2351,6 +2318,10 @@ Public Class Main_Form
 #End Region
 
 #Region "Segmentation Tool"
+
+    ''' <summary>
+    ''' open Circle dialog and detect circles
+    ''' </summary>
     Private Sub CIRCLEDETECTIONToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CIRCLEDETECTIONToolStripMenuItem.Click
         objSeg.Refresh()
         objSeg.measureType = SegType.circle
@@ -2358,6 +2329,9 @@ Public Class Main_Form
         form.Show()
     End Sub
 
+    ''' <summary>
+    ''' Open intersect dialog and detect intersections
+    ''' </summary>
     Private Sub INTERSECTIONToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles INTERSECTIONToolStripMenuItem.Click
         objSeg.Refresh()
         objSeg.measureType = SegType.interSect
@@ -2365,6 +2339,9 @@ Public Class Main_Form
         form.Show()
     End Sub
 
+    ''' <summary>
+    ''' open phase segmentation dialog 
+    ''' </summary>
     Private Sub PHASESEGMENTATIONToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PHASESEGMENTATIONToolStripMenuItem.Click
         objSeg.Refresh()
         objSeg.measureType = SegType.phaseSegment
@@ -2372,13 +2349,19 @@ Public Class Main_Form
         form.Show()
     End Sub
 
+    ''' <summary>
+    ''' open countAndClassification dialog
+    ''' </summary>
     Private Sub COUNTCLASSIFICATIONToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles COUNTCLASSIFICATIONToolStripMenuItem.Click
         objSeg.Refresh()
         objSeg.measureType = SegType.blobSegment
-        Dim form = New Count_Classification()
+        Dim form = New CountAndClassification()
         form.Show()
     End Sub
 
+    ''' <summary>
+    ''' open Participle Size dialog
+    ''' </summary>
     Private Sub PARTICIPLESIZEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PARTICIPLESIZEToolStripMenuItem.Click
         objSeg.Refresh()
         objSeg.measureType = SegType.blobSegment
@@ -2386,6 +2369,9 @@ Public Class Main_Form
         form.Show()
     End Sub
 
+    ''' <summary>
+    ''' open countAndClassification dialog
+    ''' </summary>
     Private Sub NODULARITYToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NODULARITYToolStripMenuItem.Click
         objSeg.Refresh()
         objSeg.measureType = SegType.blobSegment

@@ -31,6 +31,7 @@ Public Module ImageProcess
         Dim y = Math.Pow(0.04, x)
         Return y
     End Function
+
     ''' <summary>
     ''' Adjust the brightness and contrast of image
     ''' </summary>
@@ -71,7 +72,6 @@ Public Module ImageProcess
 
             Next
         Next
-
 
         Dim array As Byte() = colorImage.ToJpegData()
 
@@ -1098,6 +1098,10 @@ Public Module ImageProcess
         Return img
     End Function
 
+    ''' <summary>
+    ''' get system.image from emgu.cv.image.
+    ''' </summary>
+    ''' <paramname="ori">The original image.</param>
     Public Function GetImageFromEmgu(ori As Emgu.CV.Image(Of Bgr, Byte)) As Image
         Dim array As Byte() = ori.ToJpegData()
         ori.Dispose()
@@ -1107,6 +1111,10 @@ Public Module ImageProcess
         Return img
     End Function
 
+    ''' <summary>
+    ''' get system.image from emgu.cv.image.
+    ''' </summary>
+    ''' <paramname="ori">The original image.</param>
     Public Function GetImageFromEmgu(ori As Emgu.CV.Image(Of Gray, Byte)) As Image
         Dim array As Byte() = ori.ToJpegData()
         ori.Dispose()
@@ -1116,6 +1124,12 @@ Public Module ImageProcess
         Return img
     End Function
 
+    ''' <summary>
+    ''' get binary image with two threshold.
+    ''' </summary>
+    ''' <paramname="ori">The original image.</param>
+    ''' <paramname="min">The lower threshold.</param>
+    ''' <paramname="max">The upper threshold.</param>
     Public Function GetBinaryWith2Thr(ori As Emgu.CV.Image(Of Gray, Byte), min As Integer, max As Integer) As Emgu.CV.Image(Of Gray, Byte)
         Dim ResImg = ori.CopyBlank()
         Dim ScrData = ori.Data
@@ -1149,7 +1163,10 @@ Public Module ImageProcess
         Return 0
     End Function
 
-
+    ''' <summary>
+    ''' Get gaussian blured image.
+    ''' </summary>
+    ''' <paramname="buf">The original image.</param>
     Public Function blur(ByVal buf As Emgu.CV.Image(Of Emgu.CV.Structure.Gray, Byte)) As Emgu.CV.Image(Of Emgu.CV.Structure.Gray, Byte)
         Dim tempimg As Emgu.CV.Image(Of Emgu.CV.Structure.Gray, Byte) = buf
         Emgu.CV.CvInvoke.GaussianBlur(buf, tempimg, New Size(5, 5), 0)
@@ -1225,6 +1242,12 @@ Public Module ImageProcess
         Return ResultImg
     End Function
 
+    ''' <summary>
+    ''' draw strings to picturebox.
+    ''' </summary>
+    ''' <paramname="g">The graphics.</param>
+    ''' <paramname="pic">The picturebox.</param>
+    ''' <paramname="ObjList">The object to contain information for blobs.</param>
     Public Sub DrawLabelForCount(g As Graphics, pic As PictureBox, ObjList As List(Of BlobObj), font As Font)
         Dim graphBrush As SolidBrush = New SolidBrush(Color.Black)
         Dim width = pic.Width
@@ -1236,6 +1259,12 @@ Public Module ImageProcess
         Next
         graphBrush.Dispose()
     End Sub
+
+    ''' <summary>
+    ''' draw strings to picturebox.
+    ''' </summary>
+    ''' <paramname="pic">The picturebox.</param>
+    ''' <paramname="ObjList">The object to contain information for blobs.</param>
     Public Sub DrawLabelForCount(pic As PictureBox, ObjList As List(Of BlobObj), font As Font)
         pic.Refresh()
         Dim g = pic.CreateGraphics()
@@ -1243,6 +1272,10 @@ Public Module ImageProcess
         g.Dispose()
     End Sub
 
+    ''' <summary>
+    ''' get inverse image.
+    ''' </summary>
+    ''' <paramname="BinaryImg">The source binary image.</param>
     Public Function InvertBinary(BinaryImg As Emgu.CV.Image(Of Gray, Byte)) As Emgu.CV.Image(Of Gray, Byte)
         Dim Scrdata = BinaryImg.Data
 

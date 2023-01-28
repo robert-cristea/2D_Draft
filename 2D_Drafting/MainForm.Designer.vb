@@ -399,35 +399,35 @@ Partial Class Main_Form
         '
         Me.LINEToolStripMenuItem1.Image = Global._2D_Drafting.My.Resources.Resources.menu_c_line
         Me.LINEToolStripMenuItem1.Name = "LINEToolStripMenuItem1"
-        Me.LINEToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
+        Me.LINEToolStripMenuItem1.Size = New System.Drawing.Size(161, 22)
         Me.LINEToolStripMenuItem1.Text = "LINE"
         '
         'POLYGENToolStripMenuItem
         '
         Me.POLYGENToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_poly
         Me.POLYGENToolStripMenuItem.Name = "POLYGENToolStripMenuItem"
-        Me.POLYGENToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.POLYGENToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.POLYGENToolStripMenuItem.Text = "POLYGEN"
         '
         'POINTToolStripMenuItem
         '
         Me.POINTToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_point
         Me.POINTToolStripMenuItem.Name = "POINTToolStripMenuItem"
-        Me.POINTToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.POINTToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.POINTToolStripMenuItem.Text = "POINT"
         '
         'CURVEToolStripMenuItem
         '
         Me.CURVEToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_curve
         Me.CURVEToolStripMenuItem.Name = "CURVEToolStripMenuItem"
-        Me.CURVEToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CURVEToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.CURVEToolStripMenuItem.Text = "CURVE"
         '
         'CURVEPOLYGENToolStripMenuItem
         '
         Me.CURVEPOLYGENToolStripMenuItem.Image = Global._2D_Drafting.My.Resources.Resources.menu_CuPoly
         Me.CURVEPOLYGENToolStripMenuItem.Name = "CURVEPOLYGENToolStripMenuItem"
-        Me.CURVEPOLYGENToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CURVEPOLYGENToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.CURVEPOLYGENToolStripMenuItem.Text = "CURVE&POLYGEN"
         '
         'SELECTOBJECTSToolStripMenuItem
@@ -1025,7 +1025,7 @@ Partial Class Main_Form
         '
         'Panel3
         '
-        Me.Panel3.Anchor = System.Windows.Forms.AnchorStyles.Right
+        Me.Panel3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel3.Controls.Add(Me.ID_COMBOBOX_CF)
         Me.Panel3.Controls.Add(Me.ID_BTN_TEXT_FONT)
         Me.Panel3.Controls.Add(Me.ID_BTN_TEXT_COL_PICKER)

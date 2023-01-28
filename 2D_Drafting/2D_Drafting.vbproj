@@ -184,14 +184,13 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ControlsMethods.vb" />
-    <Compile Include="Count_Classification.Designer.vb">
-      <DependentUpon>Count_Classification.vb</DependentUpon>
+    <Compile Include="CountAndClassification.Designer.vb">
+      <DependentUpon>CountAndClassification.vb</DependentUpon>
     </Compile>
-    <Compile Include="Count_Classification.vb">
+    <Compile Include="CountAndClassification.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CurveClass.vb" />
-    <Compile Include="C_ControlMethods.vb" />
+    <Compile Include="CurveMethod.vb" />
     <Compile Include="C_Utils.vb" />
     <Compile Include="MainForm.Designer.vb">
       <DependentUpon>MainForm.vb</DependentUpon>
@@ -235,10 +234,10 @@
     <Compile Include="Graph.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ID_FORM_BRIGHTNESS.Designer.vb">
-      <DependentUpon>ID_FORM_BRIGHTNESS.vb</DependentUpon>
+    <Compile Include="Brightness.Designer.vb">
+      <DependentUpon>Brightness.vb</DependentUpon>
     </Compile>
-    <Compile Include="ID_FORM_BRIGHTNESS.vb">
+    <Compile Include="Brightness.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ImageProcess.vb" />
@@ -313,8 +312,8 @@
     <EmbeddedResource Include="Circle.resx">
       <DependentUpon>Circle.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Count_Classification.resx">
-      <DependentUpon>Count_Classification.vb</DependentUpon>
+    <EmbeddedResource Include="CountAndClassification.resx">
+      <DependentUpon>CountAndClassification.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.vb</DependentUpon>
@@ -337,8 +336,8 @@
     <EmbeddedResource Include="Graph.resx">
       <DependentUpon>Graph.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ID_FORM_BRIGHTNESS.resx">
-      <DependentUpon>ID_FORM_BRIGHTNESS.vb</DependentUpon>
+    <EmbeddedResource Include="Brightness.resx">
+      <DependentUpon>Brightness.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Intensity.resx">
       <DependentUpon>Intensity.vb</DependentUpon>
