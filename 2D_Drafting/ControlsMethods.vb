@@ -97,13 +97,13 @@ Public Module ControlsMethods
             Dim y_low = item.left_top.Y
             Dim y_high = item.right_bottom.Y
 
-            If item.measure_type = MeasureType.line_horizontal Then
+            If item.measure_type = MeasureType.lineHorizontal Then
                 y_low -= 0.01F
                 y_high += 0.01F
-            ElseIf item.measure_type = MeasureType.line_vertical Then
+            ElseIf item.measure_type = MeasureType.lineVertical Then
                 x_low -= 0.01F
                 x_high += 0.01F
-            ElseIf item.measure_type = MeasureType.measure_scale Then
+            ElseIf item.measure_type = MeasureType.measureScale Then
                 x_low = item.start_point.X
                 y_low = item.start_point.Y
 
@@ -116,7 +116,7 @@ Public Module ControlsMethods
                     x_high = x_low + 0.01F
                     x_low -= 0.01F
                 End If
-            ElseIf item.measure_type = MeasureType.circle_fixed Then
+            ElseIf item.measure_type = MeasureType.arcFixed Then
                 x_low = item.start_point.X - item.scale_object.length / (CF * width)
                 x_high = item.start_point.X + item.scale_object.length / (CF * width)
                 y_low = item.start_point.Y - item.scale_object.length / (CF * width)
@@ -189,13 +189,13 @@ Public Module ControlsMethods
         Dim y_low = item.left_top.Y
         Dim y_high = item.right_bottom.Y
 
-        If item.measure_type = MeasureType.line_horizontal Then
+        If item.measure_type = MeasureType.lineHorizontal Then
             y_low -= 0.02F
             y_high += 0.02F
-        ElseIf item.measure_type = MeasureType.line_vertical Then
+        ElseIf item.measure_type = MeasureType.lineVertical Then
             x_low -= 0.02F
             x_high += 0.02F
-        ElseIf item.measure_type = MeasureType.measure_scale Then
+        ElseIf item.measure_type = MeasureType.measureScale Then
             x_low = item.start_point.X
             y_low = item.start_point.Y
 
@@ -206,7 +206,7 @@ Public Module ControlsMethods
                 x_high = x_low + 0.02F
                 x_low -= 0.02F
             End If
-        ElseIf item.measure_type = MeasureType.circle_fixed Then
+        ElseIf item.measure_type = MeasureType.arcFixed Then
             x_low = item.start_point.X - item.scale_object.length / (CF * width)
             x_high = item.start_point.X + item.scale_object.length / (CF * width)
             y_low = item.start_point.Y - item.scale_object.length / (CF * width)
@@ -310,7 +310,7 @@ Public Module ControlsMethods
         obj_selected.right_bottom.X += dx
         obj_selected.right_bottom.Y += dy
 
-        If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_horizontal OrElse obj_selected.measure_type = MeasureType.line_vertical OrElse obj_selected.measure_type = MeasureType.line_para OrElse obj_selected.measure_type = MeasureType.pt_line Then
+        If obj_selected.measure_type = MeasureType.lineAlign OrElse obj_selected.measure_type = MeasureType.lineHorizontal OrElse obj_selected.measure_type = MeasureType.lineVertical OrElse obj_selected.measure_type = MeasureType.lineParallel OrElse obj_selected.measure_type = MeasureType.ptToLine Then
             obj_selected.line_object.draw_pt.X += dx
             obj_selected.line_object.draw_pt.Y += dy
             obj_selected.line_object.side_drag.X += dx
@@ -331,7 +331,7 @@ Public Module ControlsMethods
             obj_selected.line_object.nor_pt7.Y += dy
             obj_selected.line_object.nor_pt8.X += dx
             obj_selected.line_object.nor_pt8.Y += dy
-        ElseIf obj_selected.measure_type = MeasureType.line_fixed Then
+        ElseIf obj_selected.measure_type = MeasureType.lineFixed Then
             obj_selected.line_object.nor_pt1.X += dx
             obj_selected.line_object.nor_pt1.Y += dy
             obj_selected.line_object.nor_pt3.X += dx
@@ -340,7 +340,7 @@ Public Module ControlsMethods
             obj_selected.line_object.nor_pt5.Y += dy
             obj_selected.line_object.nor_pt6.X += dx
             obj_selected.line_object.nor_pt6.Y += dy
-        ElseIf obj_selected.measure_type = MeasureType.angle OrElse obj_selected.measure_type = MeasureType.angle_far OrElse obj_selected.measure_type = MeasureType.angle_fixed Then
+        ElseIf obj_selected.measure_type = MeasureType.angle OrElse obj_selected.measure_type = MeasureType.angle2Line OrElse obj_selected.measure_type = MeasureType.angleFixed Then
             obj_selected.angle_object.draw_pt.X += dx
             obj_selected.angle_object.draw_pt.Y += dy
             obj_selected.angle_object.side_drag.X += dx
@@ -361,7 +361,7 @@ Public Module ControlsMethods
             obj_selected.angle_object.nor_pt5.Y += dy
             obj_selected.angle_object.nor_pt6.X += dx
             obj_selected.angle_object.nor_pt6.Y += dy
-        ElseIf obj_selected.measure_type = MeasureType.radius Then
+        ElseIf obj_selected.measure_type = MeasureType.arc Then
             obj_selected.radius_object.draw_pt.X += dx
             obj_selected.radius_object.draw_pt.Y += dy
             obj_selected.radius_object.side_drag.X += dx
@@ -378,7 +378,7 @@ Public Module ControlsMethods
             obj_selected.radius_object.circle_pt.Y += dy
             obj_selected.radius_object.center_pt.X += dx
             obj_selected.radius_object.center_pt.Y += dy
-        ElseIf obj_selected.measure_type = MeasureType.circle_fixed Then
+        ElseIf obj_selected.measure_type = MeasureType.arcFixed Then
             obj_selected.radius_object.center_pt.X += dx
             obj_selected.radius_object.center_pt.Y += dy
         ElseIf obj_selected.measure_type = MeasureType.annotation Then
@@ -414,7 +414,7 @@ Public Module ControlsMethods
     Public Sub MovePoint(ByVal obj_list As List(Of MeasureObject), ByVal item_index As Integer, ByVal pt_index As Integer, ByVal dx As Single, ByVal dy As Single)
         Dim obj_selected = obj_list.ElementAt(item_index)
 
-        If obj_selected.measure_type = MeasureType.measure_scale Then CorrectDeltaForScale(dx, dy, obj_selected.scale_object.style)
+        If obj_selected.measure_type = MeasureType.measureScale Then CorrectDeltaForScale(dx, dy, obj_selected.scale_object.style)
 
         Select Case pt_index
             Case 1
@@ -450,20 +450,20 @@ Public Module ControlsMethods
         obj_selected.intialized = True
 
         Dim item_set_limit = 0
-        If cur_measure_type = MeasureType.line_align OrElse cur_measure_type = MeasureType.line_horizontal OrElse cur_measure_type = MeasureType.line_vertical OrElse cur_measure_type = MeasureType.line_fixed OrElse cur_measure_type = MeasureType.angle_fixed Then
+        If cur_measure_type = MeasureType.lineAlign OrElse cur_measure_type = MeasureType.lineHorizontal OrElse cur_measure_type = MeasureType.lineVertical OrElse cur_measure_type = MeasureType.lineFixed OrElse cur_measure_type = MeasureType.angleFixed Then
             item_set_limit = 3
-        ElseIf cur_measure_type = MeasureType.angle OrElse cur_measure_type = MeasureType.radius OrElse cur_measure_type = MeasureType.line_para OrElse cur_measure_type = MeasureType.pt_line Then
+        ElseIf cur_measure_type = MeasureType.angle OrElse cur_measure_type = MeasureType.arc OrElse cur_measure_type = MeasureType.lineParallel OrElse cur_measure_type = MeasureType.ptToLine Then
             item_set_limit = 4
-        ElseIf cur_measure_type = MeasureType.annotation OrElse cur_measure_type = MeasureType.draw_line OrElse cur_measure_type = MeasureType.circle_fixed Then
+        ElseIf cur_measure_type = MeasureType.annotation OrElse cur_measure_type = MeasureType.pencil OrElse cur_measure_type = MeasureType.arcFixed Then
             item_set_limit = 2
-        ElseIf cur_measure_type = MeasureType.angle_far Then
+        ElseIf cur_measure_type = MeasureType.angle2Line Then
             item_set_limit = 5
-        ElseIf cur_measure_type = MeasureType.measure_scale Then
+        ElseIf cur_measure_type = MeasureType.measureScale Then
             item_set_limit = 1
         End If
 
         If obj_selected.item_set < item_set_limit Then
-            If cur_measure_type = MeasureType.line_align OrElse cur_measure_type = MeasureType.line_horizontal OrElse cur_measure_type = MeasureType.line_vertical OrElse cur_measure_type = MeasureType.measure_scale OrElse cur_measure_type = MeasureType.draw_line OrElse cur_measure_type = MeasureType.line_fixed Then
+            If cur_measure_type = MeasureType.lineAlign OrElse cur_measure_type = MeasureType.lineHorizontal OrElse cur_measure_type = MeasureType.lineVertical OrElse cur_measure_type = MeasureType.measureScale OrElse cur_measure_type = MeasureType.pencil OrElse cur_measure_type = MeasureType.lineFixed Then
                 If obj_selected.item_set = 0 Then
                     obj_selected.start_point = m_pt
                     obj_selected.item_set += 1
@@ -479,7 +479,7 @@ Public Module ControlsMethods
                     obj_selected.draw_point = m_pt
                     obj_selected.item_set += 1
                 End If
-            ElseIf cur_measure_type = MeasureType.angle OrElse cur_measure_type = MeasureType.radius OrElse cur_measure_type = MeasureType.line_para OrElse cur_measure_type = MeasureType.pt_line OrElse cur_measure_type = MeasureType.angle_fixed Then
+            ElseIf cur_measure_type = MeasureType.angle OrElse cur_measure_type = MeasureType.arc OrElse cur_measure_type = MeasureType.lineParallel OrElse cur_measure_type = MeasureType.ptToLine OrElse cur_measure_type = MeasureType.angleFixed Then
                 If obj_selected.item_set = 0 Then
                     obj_selected.start_point = m_pt
                     obj_selected.item_set += 1
@@ -487,7 +487,7 @@ Public Module ControlsMethods
                     obj_selected.middle_point = m_pt
                     obj_selected.item_set += 1
                 ElseIf obj_selected.item_set = 2 Then
-                    If cur_measure_type = MeasureType.angle_fixed Then
+                    If cur_measure_type = MeasureType.angleFixed Then
                         obj_selected.draw_point = m_pt
                         obj_selected.item_set += 1
                     Else
@@ -495,7 +495,7 @@ Public Module ControlsMethods
                         obj_selected.item_set += 1
                     End If
 
-                    If cur_measure_type = MeasureType.radius OrElse cur_measure_type = MeasureType.pt_line OrElse cur_measure_type = MeasureType.line_para Then
+                    If cur_measure_type = MeasureType.arc OrElse cur_measure_type = MeasureType.ptToLine OrElse cur_measure_type = MeasureType.lineParallel Then
                         Dim x_set = {obj_selected.start_point.X, obj_selected.middle_point.X, obj_selected.end_point.X}
                         obj_selected.left_top.X = GetMinimumInSet(x_set)
                         obj_selected.right_bottom.X = GetMaximumInSet(x_set)
@@ -507,7 +507,7 @@ Public Module ControlsMethods
                     obj_selected.draw_point = m_pt
                     obj_selected.item_set += 1
                 End If
-            ElseIf cur_measure_type = MeasureType.circle_fixed Then
+            ElseIf cur_measure_type = MeasureType.arcFixed Then
                 If obj_selected.item_set = 0 Then
                     obj_selected.start_point = m_pt
                     obj_selected.item_set += 1
@@ -525,7 +525,7 @@ Public Module ControlsMethods
                     obj_selected.item_set += 1
                 End If
 
-            ElseIf cur_measure_type = MeasureType.angle_far Then
+            ElseIf cur_measure_type = MeasureType.angle2Line Then
                 If obj_selected.item_set = 0 Then
                     obj_selected.start_point = m_pt
                     obj_selected.item_set += 1
@@ -569,8 +569,8 @@ Public Module ControlsMethods
             last_point.Y = CInt(obj_selected.last_point.Y * height)
 
             If obj_selected.item_set = item_set_limit - 1 Then
-                If cur_measure_type = MeasureType.line_align OrElse cur_measure_type = MeasureType.line_fixed Then
-                    If cur_measure_type = MeasureType.line_align Then
+                If cur_measure_type = MeasureType.lineAlign OrElse cur_measure_type = MeasureType.lineFixed Then
+                    If cur_measure_type = MeasureType.lineAlign Then
                         obj_selected.length = Math.Sqrt(Math.Pow(end_point.X - start_point.X, 2) + Math.Pow(end_point.Y - start_point.Y, 2))
                     Else
                         Dim length = Math.Sqrt(Math.Pow(end_point.X - start_point.X, 2) + Math.Pow(end_point.Y - start_point.Y, 2)) * CF
@@ -593,17 +593,17 @@ Public Module ControlsMethods
 
                     obj_selected.angle = angle * 360 / Math.PI / 2
                     obj_selected.name = "line aline"
-                ElseIf cur_measure_type = MeasureType.line_horizontal Then
+                ElseIf cur_measure_type = MeasureType.lineHorizontal Then
                     obj_selected.length = Math.Abs(CDbl(end_point.X - start_point.X))
 
                     obj_selected.angle = 0
                     obj_selected.name = "line horizonal"
-                ElseIf cur_measure_type = MeasureType.line_vertical Then
+                ElseIf cur_measure_type = MeasureType.lineVertical Then
                     obj_selected.length = Math.Abs(CDbl(end_point.Y - start_point.Y))
 
                     obj_selected.angle = 90
                     obj_selected.name = "line vertical"
-                ElseIf cur_measure_type = MeasureType.line_para OrElse cur_measure_type = MeasureType.pt_line Then
+                ElseIf cur_measure_type = MeasureType.lineParallel OrElse cur_measure_type = MeasureType.ptToLine Then
                     obj_selected.length = CalcDistFromPointToLine(start_point, middle_point, end_point)
 
                     Dim angle As Double = 0
@@ -616,7 +616,7 @@ Public Module ControlsMethods
 
                     obj_selected.angle = angle * 360 / Math.PI / 2 + 90
 
-                    If cur_measure_type = MeasureType.line_para Then
+                    If cur_measure_type = MeasureType.lineParallel Then
                         obj_selected.name = "line para"
                     Else
                         obj_selected.name = "pt to line"
@@ -626,7 +626,7 @@ Public Module ControlsMethods
                     Dim angle = CalcAngleBetweenTwoLines(start_point, middle_point, end_point)
                     obj_selected.angle = angle * 360 / Math.PI / 2
                     obj_selected.name = "angle"
-                ElseIf cur_measure_type = MeasureType.radius Then
+                ElseIf cur_measure_type = MeasureType.arc Then
                     Dim A = start_point
                     Dim B = middle_point
                     Dim C = end_point
@@ -651,7 +651,7 @@ Public Module ControlsMethods
                 ElseIf cur_measure_type = MeasureType.annotation Then
                     obj_selected.annotation = "annotation"
                     obj_selected.name = "anno"
-                ElseIf cur_measure_type = MeasureType.angle_far Then
+                ElseIf cur_measure_type = MeasureType.angle2Line Then
                     Dim inter_pt = CalcInterSection(start_point, middle_point, end_point, last_point)
                     If inter_pt.X = 10000 AndAlso inter_pt.Y = 10000 Then
                         obj_selected.angle = 0
@@ -661,9 +661,9 @@ Public Module ControlsMethods
                         obj_selected.common_point = New PointF(CSng(inter_pt.X) / width, CSng(inter_pt.Y) / height)
                     End If
                     obj_selected.name = "angle"
-                ElseIf cur_measure_type = MeasureType.angle_fixed Then
+                ElseIf cur_measure_type = MeasureType.angleFixed Then
                     obj_selected.name = "angle"
-                ElseIf cur_measure_type = MeasureType.circle_fixed Then
+                ElseIf cur_measure_type = MeasureType.arcFixed Then
                     obj_selected.name = "circle"
                 End If
             End If
@@ -674,7 +674,7 @@ Public Module ControlsMethods
             obj_selected.font_infor.font_color = font_infor.font_color
             obj_selected.font_infor.text_font = font_infor.text_font
 
-            If cur_measure_type = MeasureType.measure_scale Then
+            If cur_measure_type = MeasureType.measureScale Then
                 end_point = start_point
 
                 Dim length_px As Integer
@@ -726,19 +726,19 @@ Public Module ControlsMethods
 
         Dim cur_measure_type = obj_selected.measure_type
 
-        If cur_measure_type = MeasureType.line_align OrElse cur_measure_type = MeasureType.line_horizontal OrElse cur_measure_type = MeasureType.line_vertical OrElse cur_measure_type = MeasureType.measure_scale OrElse cur_measure_type = MeasureType.draw_line Then
+        If cur_measure_type = MeasureType.lineAlign OrElse cur_measure_type = MeasureType.lineHorizontal OrElse cur_measure_type = MeasureType.lineVertical OrElse cur_measure_type = MeasureType.measureScale OrElse cur_measure_type = MeasureType.pencil Then
             obj_selected.left_top.X = Math.Min(obj_selected.start_point.X, obj_selected.end_point.X)
             obj_selected.left_top.Y = Math.Min(obj_selected.start_point.Y, obj_selected.end_point.Y)
             obj_selected.right_bottom.X = Math.Max(obj_selected.start_point.X, obj_selected.end_point.X)
             obj_selected.right_bottom.Y = Math.Max(obj_selected.start_point.Y, obj_selected.end_point.Y)
-        ElseIf cur_measure_type = MeasureType.radius OrElse cur_measure_type = MeasureType.pt_line OrElse cur_measure_type = MeasureType.line_para Then
+        ElseIf cur_measure_type = MeasureType.arc OrElse cur_measure_type = MeasureType.ptToLine OrElse cur_measure_type = MeasureType.lineParallel Then
             Dim x_set = {obj_selected.start_point.X, obj_selected.middle_point.X, obj_selected.end_point.X}
             obj_selected.left_top.X = GetMinimumInSet(x_set)
             obj_selected.right_bottom.X = GetMaximumInSet(x_set)
             Dim y_set = {obj_selected.start_point.Y, obj_selected.middle_point.Y, obj_selected.end_point.Y}
             obj_selected.left_top.Y = GetMinimumInSet(y_set)
             obj_selected.right_bottom.Y = GetMaximumInSet(y_set)
-        ElseIf cur_measure_type = MeasureType.angle_far Then
+        ElseIf cur_measure_type = MeasureType.angle2Line Then
             Dim x_set = {obj_selected.start_point.X, obj_selected.middle_point.X, obj_selected.end_point.X, obj_selected.last_point.X}
             obj_selected.left_top.X = GetMinimumInSet(x_set)
             obj_selected.right_bottom.X = GetMaximumInSet(x_set)
@@ -771,7 +771,7 @@ Public Module ControlsMethods
         Dim last_point As Point = New Point()
         last_point.X = CInt(obj_selected.last_point.X * width)
         last_point.Y = CInt(obj_selected.last_point.Y * height)
-        If cur_measure_type = MeasureType.line_align Then
+        If cur_measure_type = MeasureType.lineAlign Then
             obj_selected.length = Math.Sqrt(Math.Pow(end_point.X - start_point.X, 2) + Math.Pow(end_point.Y - start_point.Y, 2))
 
             Dim angle As Double = 0
@@ -783,17 +783,17 @@ Public Module ControlsMethods
             End If
 
             obj_selected.angle = angle * 360 / Math.PI / 2
-        ElseIf cur_measure_type = MeasureType.line_horizontal Then
+        ElseIf cur_measure_type = MeasureType.lineHorizontal Then
             obj_selected.length = Math.Abs(CDbl(end_point.X - start_point.X))
 
             obj_selected.angle = 0
-        ElseIf cur_measure_type = MeasureType.line_vertical Then
+        ElseIf cur_measure_type = MeasureType.lineVertical Then
             obj_selected.length = Math.Abs(CDbl(end_point.Y - start_point.Y))
 
             obj_selected.angle = 90
-        ElseIf cur_measure_type = MeasureType.measure_scale Then
+        ElseIf cur_measure_type = MeasureType.measureScale Then
             obj_selected.length = Math.Sqrt(Math.Pow(end_point.X - start_point.X, 2) + Math.Pow(end_point.Y - start_point.Y, 2))
-        ElseIf cur_measure_type = MeasureType.line_para OrElse cur_measure_type = MeasureType.pt_line Then
+        ElseIf cur_measure_type = MeasureType.lineParallel OrElse cur_measure_type = MeasureType.ptToLine Then
             obj_selected.length = CalcDistFromPointToLine(start_point, middle_point, end_point)
 
             Dim angle As Double = 0
@@ -808,7 +808,7 @@ Public Module ControlsMethods
             'correct code
             Dim angle = CalcAngleBetweenTwoLines(start_point, middle_point, end_point)
             obj_selected.angle = angle * 360 / Math.PI / 2
-        ElseIf cur_measure_type = MeasureType.radius Then
+        ElseIf cur_measure_type = MeasureType.arc Then
 
             Dim A = start_point
             Dim B = middle_point
@@ -830,7 +830,7 @@ Public Module ControlsMethods
 
             obj_selected.radius_object.radius = obj_selected.radius / width
             obj_selected.radius_object.center_pt = New PointF(centerpt.X / CSng(width), centerpt.Y / CSng(height))
-        ElseIf cur_measure_type = MeasureType.angle_far Then
+        ElseIf cur_measure_type = MeasureType.angle2Line Then
             Dim inter_pt = CalcInterSection(start_point, middle_point, end_point, last_point)
             If inter_pt.X = 10000 AndAlso inter_pt.Y = 10000 Then
                 obj_selected.angle = 0
@@ -860,7 +860,7 @@ Public Module ControlsMethods
         Obj.line_object.nor_pt6 = m_pt
         Obj.line_object.nor_pt7 = m_pt
         Obj.line_object.nor_pt8 = m_pt
-        Obj.measure_type = MeasureType.line_align
+        Obj.measure_type = MeasureType.lineAlign
         Obj.line_infor.line_style = line_infor.line_style
         Obj.line_infor.line_width = line_infor.line_width
         Obj.line_infor.line_color = line_infor.line_color
@@ -985,11 +985,11 @@ Public Module ControlsMethods
         last_point.X = CInt(item.last_point.X * pictureBox.Width)
         last_point.Y = CInt(item.last_point.Y * pictureBox.Height)
 
-        If item.measure_type = MeasureType.line_align OrElse item.measure_type = MeasureType.line_horizontal OrElse item.measure_type = MeasureType.line_vertical OrElse item.measure_type = MeasureType.line_para OrElse item.measure_type = MeasureType.pt_line OrElse item.measure_type = MeasureType.line_fixed Then
+        If item.measure_type = MeasureType.lineAlign OrElse item.measure_type = MeasureType.lineHorizontal OrElse item.measure_type = MeasureType.lineVertical OrElse item.measure_type = MeasureType.lineParallel OrElse item.measure_type = MeasureType.ptToLine OrElse item.measure_type = MeasureType.lineFixed Then
             'graph.DrawLine(graphPen, start_point, end_point);
-            If item.measure_type = MeasureType.line_para Then end_point = last_point
+            If item.measure_type = MeasureType.lineParallel Then end_point = last_point
             Dim nor_pt1, nor_pt2, nor_pt3, nor_pt4, nor_pt5, nor_pt6, nor_pt7, nor_pt8, side_pt, draw_pt As Point
-            If item.measure_type = MeasureType.line_fixed Then
+            If item.measure_type = MeasureType.lineFixed Then
                 Dim length = Math.Sqrt(Math.Pow(end_point.X - start_point.X, 2) + Math.Pow(end_point.Y - start_point.Y, 2)) * CF
                 'end_point.X = start_point.X + (end_point.X - start_point.X) / length * item.length * pictureBox.Width
                 'end_point.Y = start_point.Y + (end_point.Y - start_point.Y) / length * item.length * pictureBox.Width
@@ -1035,7 +1035,7 @@ Public Module ControlsMethods
             Dim trans_pt = GetRotationTransform(draw_pt, item.line_object.trans_angle)
 
             Dim length_decimal = GetDecimalNumber(item.length, digit, CF)
-            If item.measure_type = MeasureType.line_fixed Then
+            If item.measure_type = MeasureType.lineFixed Then
                 length_decimal = item.scale_object.length
             End If
 
@@ -1050,7 +1050,7 @@ Public Module ControlsMethods
             End If
 
             graph.RotateTransform(-1 * item.line_object.trans_angle)
-        ElseIf item.measure_type = MeasureType.angle OrElse item.measure_type = MeasureType.angle_far OrElse item.measure_type = MeasureType.angle_fixed Then
+        ElseIf item.measure_type = MeasureType.angle OrElse item.measure_type = MeasureType.angle2Line OrElse item.measure_type = MeasureType.angleFixed Then
 
             Dim st_pt As Point = New Point(item.angle_object.start_pt.X * pictureBox.Width, item.angle_object.start_pt.Y * pictureBox.Height)
             Dim end_pt As Point = New Point(item.angle_object.end_pt.X * pictureBox.Width, item.angle_object.end_pt.Y * pictureBox.Height)
@@ -1063,11 +1063,11 @@ Public Module ControlsMethods
             Dim side_pt As Point = New Point(item.angle_object.side_drag.X * pictureBox.Width, item.angle_object.side_drag.Y * pictureBox.Height)
             Dim start_angle = item.angle_object.start_angle
             Dim sweep_angle = item.angle_object.sweep_angle
-            If item.measure_type = MeasureType.angle_far Then middle_point = inter_pt
+            If item.measure_type = MeasureType.angle2Line Then middle_point = inter_pt
             Dim radius = Convert.ToInt32(item.angle_object.radius * pictureBox.Width)
             graph.DrawArc(graphPen2, New Rectangle(middle_point.X - radius, middle_point.Y - radius, radius * 2, radius * 2), CSng(start_angle), CSng(sweep_angle))
 
-            If item.measure_type = MeasureType.angle OrElse item.measure_type = MeasureType.angle_fixed Then
+            If item.measure_type = MeasureType.angle OrElse item.measure_type = MeasureType.angleFixed Then
                 graph.DrawLine(graphPen2, middle_point, st_pt)
                 graph.DrawLine(graphPen2, middle_point, end_pt)
             End If
@@ -1096,7 +1096,7 @@ Public Module ControlsMethods
                 graph.DrawString(output, graphFont, graphBrush, New RectangleF(trans_pt.X - textSize.Width / 2, trans_pt.Y - textSize.Height / 2, textSize.Width, textSize.Height))
             End If
             graph.RotateTransform(-1 * item.angle_object.trans_angle)
-        ElseIf item.measure_type = MeasureType.radius Then
+        ElseIf item.measure_type = MeasureType.arc Then
             Dim center_pt As Point = New Point(item.radius_object.center_pt.X * pictureBox.Width, item.radius_object.center_pt.Y * pictureBox.Height)
             Dim circle_pt As Point = New Point(item.radius_object.circle_pt.X * pictureBox.Width, item.radius_object.circle_pt.Y * pictureBox.Height)
             'int radius = Convert.ToInt32(Utils.CalcDistBetweenPoints(center_pt, circle_pt));
@@ -1192,7 +1192,7 @@ Public Module ControlsMethods
             Dim left_top As Point = New Point(item.left_top.X * pictureBox.Width, item.left_top.Y * pictureBox.Height)
             Dim line_pt As Point = New Point(item.anno_object.line_pt.X * pictureBox.Width, item.anno_object.line_pt.Y * pictureBox.Height)
             graph.DrawLine(graphPen2, start_point, line_pt)
-        ElseIf item.measure_type = MeasureType.draw_line Then
+        ElseIf item.measure_type = MeasureType.pencil Then
             If Equals(item.line_infor.line_style, "dotted") Then
                 graphPen2.DashStyle = Drawing2D.DashStyle.Dot
             ElseIf Equals(item.line_infor.line_style, "dashed") Then
@@ -1201,7 +1201,7 @@ Public Module ControlsMethods
                 graphPen2.DashPattern = dashValues
             End If
             graph.DrawLine(graphPen2, start_point, end_point)
-        ElseIf item.measure_type = MeasureType.measure_scale Then
+        ElseIf item.measure_type = MeasureType.measureScale Then
             Dim nor_pt1 As Point = New Point()
             Dim nor_pt2 As Point = New Point()
             Dim nor_pt3 As Point = New Point()
@@ -1255,7 +1255,7 @@ Public Module ControlsMethods
             End If
 
             graph.RotateTransform(-1 * trans_angle)
-        ElseIf item.measure_type = MeasureType.circle_fixed Then
+        ElseIf item.measure_type = MeasureType.arcFixed Then
             Dim center_pt As Point = New Point(item.radius_object.center_pt.X * pictureBox.Width, item.radius_object.center_pt.Y * pictureBox.Height)
             Dim deltaX = item.radius_object.center_pt.X
             Dim deltaY = item.radius_object.center_pt.Y
@@ -1350,16 +1350,16 @@ Public Module ControlsMethods
         Dim radius = 2
 
         For i = 0 To obj_selected.item_set - 1
-            If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_horizontal OrElse obj_selected.measure_type = MeasureType.line_vertical OrElse obj_selected.measure_type = MeasureType.draw_line OrElse obj_selected.measure_type = MeasureType.measure_scale OrElse obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.circle_fixed OrElse obj_selected.measure_type = MeasureType.line_fixed Then
+            If obj_selected.measure_type = MeasureType.lineAlign OrElse obj_selected.measure_type = MeasureType.lineHorizontal OrElse obj_selected.measure_type = MeasureType.lineVertical OrElse obj_selected.measure_type = MeasureType.pencil OrElse obj_selected.measure_type = MeasureType.measureScale OrElse obj_selected.measure_type = MeasureType.lineAlign OrElse obj_selected.measure_type = MeasureType.arcFixed OrElse obj_selected.measure_type = MeasureType.lineFixed Then
                 If i = 0 Then
                     graph.DrawArc(graphPen, New Rectangle(start_point.X - radius, start_point.Y - radius, radius * 2, radius * 2), 0, 360)
-                    If obj_selected.measure_type = MeasureType.measure_scale Then
+                    If obj_selected.measure_type = MeasureType.measureScale Then
                         graph.DrawArc(graphPen, New Rectangle(end_point.X - radius, end_point.Y - radius, radius * 2, radius * 2), 0, 360)
                     End If
-                ElseIf i = 1 And obj_selected.measure_type <> MeasureType.circle_fixed Then
+                ElseIf i = 1 And obj_selected.measure_type <> MeasureType.arcFixed Then
                     graph.DrawArc(graphPen, New Rectangle(end_point.X - radius, end_point.Y - radius, radius * 2, radius * 2), 0, 360)
                 End If
-            ElseIf obj_selected.measure_type = MeasureType.angle OrElse obj_selected.measure_type = MeasureType.radius OrElse obj_selected.measure_type = MeasureType.angle_far OrElse obj_selected.measure_type = MeasureType.line_para OrElse obj_selected.measure_type = MeasureType.pt_line OrElse obj_selected.measure_type = MeasureType.angle_fixed Then
+            ElseIf obj_selected.measure_type = MeasureType.angle OrElse obj_selected.measure_type = MeasureType.arc OrElse obj_selected.measure_type = MeasureType.angle2Line OrElse obj_selected.measure_type = MeasureType.lineParallel OrElse obj_selected.measure_type = MeasureType.ptToLine OrElse obj_selected.measure_type = MeasureType.angleFixed Then
                 If i = 0 Then
                     graph.DrawArc(graphPen, New Rectangle(start_point.X - radius, start_point.Y - radius, radius * 2, radius * 2), 0, 360)
                 ElseIf i = 1 Then
@@ -1449,13 +1449,13 @@ Public Module ControlsMethods
         Dim radius = 5
 
         For i = 0 To obj_selected.item_set - 1
-            If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_horizontal OrElse obj_selected.measure_type = MeasureType.line_vertical OrElse obj_selected.measure_type = MeasureType.draw_line OrElse obj_selected.measure_type = MeasureType.measure_scale Then
+            If obj_selected.measure_type = MeasureType.lineAlign OrElse obj_selected.measure_type = MeasureType.lineHorizontal OrElse obj_selected.measure_type = MeasureType.lineVertical OrElse obj_selected.measure_type = MeasureType.pencil OrElse obj_selected.measure_type = MeasureType.measureScale Then
                 If i = 0 Then
                     flag = PointInRect(m_pt, New Rectangle(start_point.X - radius, start_point.Y - radius, radius * 2, radius * 2))
                     If flag Then
                         Return 1
                     Else
-                        If obj_selected.measure_type = MeasureType.measure_scale Then
+                        If obj_selected.measure_type = MeasureType.measureScale Then
                             flag = PointInRect(m_pt, New Rectangle(end_point.X - radius, end_point.Y - radius, radius * 2, radius * 2))
                             If flag Then Return 3
                         End If
@@ -1464,7 +1464,7 @@ Public Module ControlsMethods
                     flag = PointInRect(m_pt, New Rectangle(end_point.X - radius, end_point.Y - radius, radius * 2, radius * 2))
                     If flag Then Return 3
                 End If
-            ElseIf obj_selected.measure_type = MeasureType.angle OrElse obj_selected.measure_type = MeasureType.radius OrElse obj_selected.measure_type = MeasureType.angle_far OrElse obj_selected.measure_type = MeasureType.line_para OrElse obj_selected.measure_type = MeasureType.pt_line Then
+            ElseIf obj_selected.measure_type = MeasureType.angle OrElse obj_selected.measure_type = MeasureType.arc OrElse obj_selected.measure_type = MeasureType.angle2Line OrElse obj_selected.measure_type = MeasureType.lineParallel OrElse obj_selected.measure_type = MeasureType.ptToLine Then
                 If i = 0 Then
                     flag = PointInRect(m_pt, New Rectangle(start_point.X - radius, start_point.Y - radius, radius * 2, radius * 2))
                     If flag Then Return 1
@@ -1651,61 +1651,61 @@ Public Module ControlsMethods
         inter_pt.X = CInt(obj_selected.common_point.X * pictureBox.Width)
         inter_pt.Y = CInt(obj_selected.common_point.Y * pictureBox.Height)
 
-        If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_horizontal OrElse obj_selected.measure_type = MeasureType.line_vertical OrElse obj_selected.measure_type = MeasureType.line_para OrElse obj_selected.measure_type = MeasureType.pt_line OrElse obj_selected.measure_type = MeasureType.line_fixed Then
-            If (obj_selected.measure_type = MeasureType.line_para OrElse obj_selected.measure_type = MeasureType.pt_line) AndAlso obj_selected.item_set < 3 Then Return
+        If obj_selected.measure_type = MeasureType.lineAlign OrElse obj_selected.measure_type = MeasureType.lineHorizontal OrElse obj_selected.measure_type = MeasureType.lineVertical OrElse obj_selected.measure_type = MeasureType.lineParallel OrElse obj_selected.measure_type = MeasureType.ptToLine OrElse obj_selected.measure_type = MeasureType.lineFixed Then
+            If (obj_selected.measure_type = MeasureType.lineParallel OrElse obj_selected.measure_type = MeasureType.ptToLine) AndAlso obj_selected.item_set < 3 Then Return
             If obj_selected.item_set < 2 Then Return
             'pictureBox.Refresh();
 
             Dim nor_point1 As Point = New Point()
             Dim nor_point2 As Point = New Point()
-            If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_fixed Then
+            If obj_selected.measure_type = MeasureType.lineAlign OrElse obj_selected.measure_type = MeasureType.lineFixed Then
                 offset = GetNormalFromPointToLine(start_point, end_point, target_point)
                 nor_point1.X = start_point.X - offset.Width
                 nor_point1.Y = start_point.Y - offset.Height
                 nor_point2.X = end_point.X - offset.Width
                 nor_point2.Y = end_point.Y - offset.Height
-            ElseIf obj_selected.measure_type = MeasureType.line_horizontal Then
+            ElseIf obj_selected.measure_type = MeasureType.lineHorizontal Then
                 nor_point1.X = start_point.X
                 nor_point1.Y = If(target_point.Y + 10 < pictureBox.Height, target_point.Y + 10, target_point.Y)
                 nor_point2.X = end_point.X
                 nor_point2.Y = If(target_point.Y + 10 < pictureBox.Height, target_point.Y + 10, target_point.Y)
-            ElseIf obj_selected.measure_type = MeasureType.line_vertical Then
+            ElseIf obj_selected.measure_type = MeasureType.lineVertical Then
                 nor_point1.X = If(target_point.X + 10 < pictureBox.Width, target_point.X + 10, target_point.X)
                 nor_point1.Y = start_point.Y
                 nor_point2.X = If(target_point.X + 10 < pictureBox.Width, target_point.X + 10, target_point.X)
                 nor_point2.Y = end_point.Y
-            ElseIf obj_selected.measure_type = MeasureType.line_para Then
+            ElseIf obj_selected.measure_type = MeasureType.lineParallel Then
                 nor_point1 = middle_point
                 offset = GetNormalFromPointToLine(start_point, middle_point, end_point)
                 last_point.X = start_point.X - offset.Width
                 last_point.Y = start_point.Y - offset.Height
                 obj_selected.last_point = New PointF(CSng(start_point.X - offset.Width) / pictureBox.Width, CSng(start_point.Y - offset.Height) / pictureBox.Height)
                 nor_point2 = New Point(middle_point.X - offset.Width, middle_point.Y - offset.Height)
-            ElseIf obj_selected.measure_type = MeasureType.pt_line Then
+            ElseIf obj_selected.measure_type = MeasureType.ptToLine Then
                 nor_point1 = middle_point
                 nor_point2 = end_point
             End If
 
 
             'graph.DrawLine(graphPen, start_point, nor_point1);
-            'if (obj_selected.measure_type == (int)MeasureType.line_para)
+            'if (obj_selected.measure_type == (int)MeasureType.lineParallel)
             '    graph.DrawLine(graphPen, last_point, nor_point2);
             'else
             '    graph.DrawLine(graphPen, end_point, nor_point2);
 
             Dim nor_point3 As Point = New Point()
             Dim nor_point4 As Point = New Point()
-            If obj_selected.measure_type = MeasureType.line_align OrElse obj_selected.measure_type = MeasureType.line_fixed Then
+            If obj_selected.measure_type = MeasureType.lineAlign OrElse obj_selected.measure_type = MeasureType.lineFixed Then
                 offset2 = GetNormalToLineFixedLen(start_point, end_point, target_point, 10, True)
 
                 nor_point3.X = nor_point1.X + offset2.Width
                 nor_point3.Y = nor_point1.Y + offset2.Height
                 nor_point4.X = nor_point2.X + offset2.Width
                 nor_point4.Y = nor_point2.Y + offset2.Height
-            ElseIf obj_selected.measure_type = MeasureType.line_horizontal OrElse obj_selected.measure_type = MeasureType.line_vertical Then
+            ElseIf obj_selected.measure_type = MeasureType.lineHorizontal OrElse obj_selected.measure_type = MeasureType.lineVertical Then
                 nor_point3 = nor_point1
                 nor_point4 = nor_point2
-            ElseIf obj_selected.measure_type = MeasureType.line_para Then
+            ElseIf obj_selected.measure_type = MeasureType.lineParallel Then
                 Dim offset3 = GetNormalFromPointToLine(start_point, nor_point1, target_point)
                 nor_point3.X = target_point.X + offset3.Width
                 nor_point3.Y = target_point.Y + offset3.Height
@@ -1724,7 +1724,7 @@ Public Module ControlsMethods
                 Y_max = Math.Max(last_point.Y, nor_point2.Y)
                 Y_min = Math.Min(last_point.Y, nor_point2.Y)
                 nor_point4.Y = Math.Min(Math.Max(nor_point4.Y, Y_min), Y_max)
-            ElseIf obj_selected.measure_type = MeasureType.pt_line Then
+            ElseIf obj_selected.measure_type = MeasureType.ptToLine Then
                 nor_point3 = end_point
                 offset = GetNormalFromPointToLine(start_point, middle_point, end_point)
                 nor_point4.X = nor_point3.X + offset.Width
@@ -1735,7 +1735,7 @@ Public Module ControlsMethods
             If side_drag Then
                 Dim dist1 = CalcDistFromPointToLine(start_point, nor_point1, target_point)
                 Dim dist2 As Double
-                If obj_selected.measure_type = MeasureType.line_para Then
+                If obj_selected.measure_type = MeasureType.lineParallel Then
                     dist2 = CalcDistFromPointToLine(last_point, nor_point2, target_point)
                 Else
                     dist2 = CalcDistFromPointToLine(end_point, nor_point2, target_point)
@@ -1743,7 +1743,7 @@ Public Module ControlsMethods
 
                 Dim sum = CalcDistBetweenPoints(nor_point3, nor_point4)
 
-                If obj_selected.measure_type = MeasureType.pt_line Then
+                If obj_selected.measure_type = MeasureType.ptToLine Then
                     Side_pt.X = CInt((nor_point4.X - nor_point3.X) / sum * dist1 + nor_point4.X)
                     'graph.DrawLine(graphPen, nor_point4, Side_pt);
                     Side_pt.Y = CInt((nor_point4.Y - nor_point3.Y) / sum * dist1 + nor_point4.Y)
@@ -1767,7 +1767,7 @@ Public Module ControlsMethods
 
             Dim arr_points = New Point(1) {}
             Dim arr_points2 = New Point(1) {}
-            If obj_selected.measure_type = MeasureType.line_para OrElse obj_selected.measure_type = MeasureType.pt_line Then
+            If obj_selected.measure_type = MeasureType.lineParallel OrElse obj_selected.measure_type = MeasureType.ptToLine Then
                 arr_points = GetArrowPoints3(nor_point3, nor_point4, n_dist)
                 arr_points2 = GetArrowPoints3(nor_point4, nor_point3, n_dist)
             Else
@@ -1792,7 +1792,7 @@ Public Module ControlsMethods
 
             'set limit to target point
             Dim draw_pt = target_point
-            If obj_selected.measure_type = MeasureType.line_para Then
+            If obj_selected.measure_type = MeasureType.lineParallel Then
                 Dim dist = CalcDistBetweenPoints(start_point, nor_point1)
                 draw_pt.X += CInt((nor_point1.X - start_point.X) / dist * 20)
                 draw_pt.Y += CInt((nor_point1.Y - start_point.Y) / dist * 20)
@@ -1802,7 +1802,7 @@ Public Module ControlsMethods
                 Dim Y_max = Math.Max(Math.Max(Math.Max(start_point.Y, last_point.Y), nor_point1.Y), nor_point2.Y)
                 draw_pt.X = Math.Min(Math.Max(draw_pt.X, X_min), X_max)
                 draw_pt.Y = Math.Min(Math.Max(draw_pt.Y, Y_min), Y_max)
-            ElseIf obj_selected.measure_type = MeasureType.pt_line Then
+            ElseIf obj_selected.measure_type = MeasureType.ptToLine Then
                 Dim offset3 = GetNormalFromPointToLine(nor_point3, nor_point4, target_point, 10)
                 If nor_point3.X = nor_point4.X Then
                     If nor_point3.Y > nor_point4.Y Then
@@ -1824,14 +1824,14 @@ Public Module ControlsMethods
                     draw_pt.Y -= CInt(offset3.Height)
                 End If
             Else
-                If obj_selected.measure_type <> MeasureType.line_horizontal Then
+                If obj_selected.measure_type <> MeasureType.lineHorizontal Then
                     If nor_point1.Y > nor_point2.Y Then
                         draw_pt.Y = Math.Min(Math.Max(target_point.Y, nor_point2.Y), nor_point1.Y)
                     Else
                         draw_pt.Y = Math.Min(Math.Max(target_point.Y, nor_point1.Y), nor_point2.Y)
                     End If
                 End If
-                If obj_selected.measure_type <> MeasureType.line_vertical Then
+                If obj_selected.measure_type <> MeasureType.lineVertical Then
                     If nor_point1.X > nor_point2.X Then
                         draw_pt.X = Math.Min(Math.Max(target_point.X, nor_point2.X), nor_point1.X)
                     Else
@@ -1848,7 +1848,7 @@ Public Module ControlsMethods
             End If
 
             If draw_flag Then
-                If obj_selected.measure_type = MeasureType.line_para Then end_point = last_point
+                If obj_selected.measure_type = MeasureType.lineParallel Then end_point = last_point
                 graph.DrawLine(graphPen, start_point, nor_point1)
                 graph.DrawLine(graphPen, end_point, nor_point2)
                 graph.DrawLine(graphPen, nor_point3, nor_point4)
@@ -1861,7 +1861,7 @@ Public Module ControlsMethods
                 graph.RotateTransform(attri * ang_tran)
                 Dim trans_pt = GetRotationTransform(draw_pt, attri * ang_tran)
                 Dim length_decimal = GetDecimalNumber(obj_selected.length, digit, CF)
-                If obj_selected.measure_type = MeasureType.line_fixed Then
+                If obj_selected.measure_type = MeasureType.lineFixed Then
                     length_decimal = obj_selected.scale_object.length
                 End If
                 Dim textSize As SizeF = graph.MeasureString(length_decimal.ToString(), graphFont)
@@ -1870,7 +1870,7 @@ Public Module ControlsMethods
 
             'Initialize line objects
 
-            If obj_selected.measure_type = MeasureType.line_fixed Then
+            If obj_selected.measure_type = MeasureType.lineFixed Then
                 obj_selected.line_object.nor_pt1 = New PointF(CSng(nor_point1.X) / pictureBox.Width, CSng(nor_point1.Y) / pictureBox.Height)
                 obj_selected.line_object.nor_pt3 = New PointF(CSng(nor_point3.X) / pictureBox.Width, CSng(nor_point3.Y) / pictureBox.Height)
                 obj_selected.line_object.nor_pt5 = New PointF(CSng(arr_points(0).X) / pictureBox.Width, CSng(arr_points(0).Y) / pictureBox.Height)
@@ -1900,9 +1900,9 @@ Public Module ControlsMethods
                 obj_selected.line_object.side_drag = New PointF(CSng(Side_pt.X) / pictureBox.Width, CSng(Side_pt.Y) / pictureBox.Height)
             End If
 
-        ElseIf obj_selected.measure_type = MeasureType.angle OrElse obj_selected.measure_type = MeasureType.angle_fixed Then
+        ElseIf obj_selected.measure_type = MeasureType.angle OrElse obj_selected.measure_type = MeasureType.angleFixed Then
             If obj_selected.measure_type = MeasureType.angle And obj_selected.item_set < 3 Then Return
-            If obj_selected.measure_type = MeasureType.angle_fixed And obj_selected.item_set < 2 Then Return
+            If obj_selected.measure_type = MeasureType.angleFixed And obj_selected.item_set < 2 Then Return
 
             Dim angles As Double()
             If obj_selected.measure_type = MeasureType.angle Then
@@ -2032,7 +2032,7 @@ Public Module ControlsMethods
             'obj_selected.angle = sweep_angle;
             obj_selected.angle_object.start_pt = New PointF(CSng(first_point.X) / pictureBox.Width, CSng(first_point.Y) / pictureBox.Height)
             obj_selected.angle_object.end_pt = New PointF(CSng(second_point.X) / pictureBox.Width, CSng(second_point.Y) / pictureBox.Height)
-            If obj_selected.measure_type = MeasureType.angle_fixed Then
+            If obj_selected.measure_type = MeasureType.angleFixed Then
                 obj_selected.end_point = obj_selected.angle_object.end_pt
             End If
             obj_selected.angle_object.nor_pt1 = New PointF(CSng(nor_point1.X) / pictureBox.Width, CSng(nor_point1.Y) / pictureBox.Height)
@@ -2056,7 +2056,7 @@ Public Module ControlsMethods
             obj_selected.left_top.Y = GetMinimumInSet(y_set)
             obj_selected.right_bottom.X = GetMaximumInSet(x_set)
             obj_selected.right_bottom.Y = GetMaximumInSet(y_set)
-        ElseIf obj_selected.measure_type = MeasureType.radius Then
+        ElseIf obj_selected.measure_type = MeasureType.arc Then
             If obj_selected.item_set < 3 Then Return
 
             Dim A = start_point
@@ -2183,7 +2183,7 @@ Public Module ControlsMethods
                 obj_selected.radius_object.draw_pt = New PointF(CSng(draw_pt.X) / pictureBox.Width, CSng(draw_pt.Y) / pictureBox.Height)
                 obj_selected.radius_object.trans_angle = attri * angle_mpt_deg
             End If
-        ElseIf obj_selected.measure_type = MeasureType.circle_fixed Then
+        ElseIf obj_selected.measure_type = MeasureType.arcFixed Then
             If obj_selected.item_set < 1 Then Return
 
             Dim centerpt = start_point
@@ -2277,7 +2277,7 @@ Public Module ControlsMethods
             obj_selected.right_bottom = New PointF(CSng(right_bottom.X) / pictureBox.Width, CSng(right_bottom.Y) / pictureBox.Height)
 
             obj_selected.anno_object.line_pt = New PointF(CSng(near_pt.X) / pictureBox.Width, CSng(near_pt.Y) / pictureBox.Height)
-        ElseIf obj_selected.measure_type = MeasureType.angle_far Then
+        ElseIf obj_selected.measure_type = MeasureType.angle2Line Then
             If obj_selected.item_set < 4 Then Return
 
             middle_point = inter_pt
@@ -2501,23 +2501,23 @@ Public Module ControlsMethods
                 str_item(5) = item.remarks
 
                 Select Case item.measure_type
-                    Case MeasureType.line_align
+                    Case MeasureType.lineAlign
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.line_horizontal
+                    Case MeasureType.lineHorizontal
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.line_vertical
+                    Case MeasureType.lineVertical
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.line_para
+                    Case MeasureType.lineParallel
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.pt_line
+                    Case MeasureType.ptToLine
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
@@ -2525,34 +2525,34 @@ Public Module ControlsMethods
                         length = GetDecimalNumber(item.angle_object.sweep_angle, digit, 1)
                         str_item(2) = length.ToString()
                         str_item(4) = "degree"
-                    Case MeasureType.angle_far
+                    Case MeasureType.angle2Line
                         length = GetDecimalNumber(item.angle_object.sweep_angle, digit, 1)
                         str_item(2) = length.ToString()
                         str_item(4) = "degree"
-                    Case MeasureType.radius
+                    Case MeasureType.arc
                         length = GetDecimalNumber(item.radius, digit, CF)
                         str_item(3) = length.ToString()
                         str_item(4) = unit
                     Case MeasureType.annotation
-                    Case MeasureType.draw_line
+                    Case MeasureType.pencil
                         str_item(0) = "line"
-                    Case MeasureType.measure_scale
+                    Case MeasureType.measureScale
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.C_MinMax
+                    Case MeasureType.objMinMax
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.line_fixed
+                    Case MeasureType.lineFixed
                         length = item.scale_object.length
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.circle_fixed
+                    Case MeasureType.arcFixed
                         length = GetDecimalNumber(item.scale_object.length, digit, 1)
                         str_item(3) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.angle_fixed
+                    Case MeasureType.angleFixed
                         length = item.scale_object.length
                         str_item(2) = length.ToString()
                         str_item(4) = "degree"
@@ -2593,23 +2593,23 @@ Public Module ControlsMethods
                 str_item(5) = item.remarks
 
                 Select Case item.measure_type
-                    Case MeasureType.line_align
+                    Case MeasureType.lineAlign
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.line_horizontal
+                    Case MeasureType.lineHorizontal
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.line_vertical
+                    Case MeasureType.lineVertical
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.line_para
+                    Case MeasureType.lineParallel
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.pt_line
+                    Case MeasureType.ptToLine
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
@@ -2617,34 +2617,34 @@ Public Module ControlsMethods
                         length = GetDecimalNumber(item.angle_object.sweep_angle, digit, 1)
                         str_item(2) = length.ToString()
                         str_item(4) = "degree"
-                    Case MeasureType.angle_far
+                    Case MeasureType.angle2Line
                         length = GetDecimalNumber(item.angle_object.sweep_angle, digit, 1)
                         str_item(2) = length.ToString()
                         str_item(4) = "degree"
-                    Case MeasureType.radius
+                    Case MeasureType.arc
                         length = GetDecimalNumber(item.radius, digit, CF)
                         str_item(3) = length.ToString()
                         str_item(4) = unit
                     Case MeasureType.annotation
-                    Case MeasureType.draw_line
+                    Case MeasureType.pencil
                         str_item(0) = "line"
-                    Case MeasureType.measure_scale
+                    Case MeasureType.measureScale
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.C_MinMax
+                    Case MeasureType.objMinMax
                         length = GetDecimalNumber(item.length, digit, CF)
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.line_fixed
+                    Case MeasureType.lineFixed
                         length = item.scale_object.length
                         str_item(1) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.circle_fixed
+                    Case MeasureType.arcFixed
                         length = GetDecimalNumber(item.scale_object.length, digit, 1)
                         str_item(3) = length.ToString()
                         str_item(4) = unit
-                    Case MeasureType.angle_fixed
+                    Case MeasureType.angleFixed
                         length = item.scale_object.length
                         str_item(2) = length.ToString()
                         str_item(4) = "degree"

@@ -499,7 +499,7 @@ Public Module ImportAndExport
             items = line.Split(",")
             obj.name = items(0)
             obj.length = CDbl(items(1))
-            obj.measure_type = MeasureType.Curves
+            obj.measure_type = MeasureType.toCurves
             obj_list.Add(obj)
             cur_index = cur_index + 1
         Next line

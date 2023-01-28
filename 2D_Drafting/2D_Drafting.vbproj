@@ -282,7 +282,7 @@
     <Compile Include="Nodularity.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Object.vb" />
+    <Compile Include="Definition.vb" />
     <Compile Include="ParticipleSize.Designer.vb">
       <DependentUpon>ParticipleSize.vb</DependentUpon>
     </Compile>

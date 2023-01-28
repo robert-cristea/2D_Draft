@@ -35,7 +35,7 @@ Public Module C_ControlMethods
         Dim graphFont = item.font_infor.text_font
         Dim graphBrush As SolidBrush = New SolidBrush(item.font_infor.font_color)
 
-        If item.measure_type = MeasureType.C_Line Then
+        If item.measure_type = MeasureType.objLine Then
             Dim obj = item.curve_object.LineItem(0)
             Dim FirstPt As Point = New Point(obj.FirstPointOfLine.X * pictureBox.Width, obj.FirstPointOfLine.Y * pictureBox.Height)
             Dim SecondPt As Point = New Point(obj.SecndPointOfLine.X * pictureBox.Width, obj.SecndPointOfLine.Y * pictureBox.Height)
@@ -50,7 +50,7 @@ Public Module C_ControlMethods
             Dim textSize As SizeF = graph.MeasureString(item.name, graphFont)
             graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
-        ElseIf item.measure_type = MeasureType.C_Point Then
+        ElseIf item.measure_type = MeasureType.objPoint Then
             Dim obj = item.curve_object.PointItem(0)
             Dim PointPt = New Point(CInt(obj.PointPoint.X * pictureBox.Width), CInt(obj.PointPoint.Y * pictureBox.Height))
             If item.obj_num = Main_Form.PRealSelectArrayIndx Then
@@ -62,7 +62,7 @@ Public Module C_ControlMethods
             Dim textSize As SizeF = graph.MeasureString(item.name, graphFont)
             graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
-        ElseIf item.measure_type = MeasureType.C_Poly Then
+        ElseIf item.measure_type = MeasureType.objPoly Then
             Dim obj = item.curve_object.PolyItem(0)
             For i = 0 To obj.PolyPointIndx - 1
                 Dim startPt = New Point(CInt(obj.PolyPoint(i).X * pictureBox.Width), CInt(obj.PolyPoint(i).Y * pictureBox.Height))
@@ -78,7 +78,7 @@ Public Module C_ControlMethods
             graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
 
-        ElseIf item.measure_type = MeasureType.C_Curve Then
+        ElseIf item.measure_type = MeasureType.objCurve Then
             Dim obj = item.curve_object.CurveItem(0)
             For i = 0 To obj.CPointIndx - 1
                 Dim startPt = New Point(CInt(obj.CurvePoint(i).X * pictureBox.Width), CInt(obj.CurvePoint(i).Y * pictureBox.Height))
@@ -93,7 +93,7 @@ Public Module C_ControlMethods
             Dim textSize As SizeF = graph.MeasureString(item.name, graphFont)
             graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
-        ElseIf item.measure_type = MeasureType.C_CuPoly Then
+        ElseIf item.measure_type = MeasureType.objCuPoly Then
             Dim obj = item.curve_object.CuPolyItem(0)
             For i = 1 To obj.CuPolyPointIndx_j
                 For j = 0 To obj.CuPolyPointIndx_k(i) - 2
@@ -123,7 +123,7 @@ Public Module C_ControlMethods
             Dim textSize As SizeF = graph.MeasureString(item.name, graphFont)
             graph.DrawString(item.name, graphFont, graphBrush, New RectangleF(DrawPt.X, DrawPt.Y, textSize.Width, textSize.Height))
 
-        ElseIf item.measure_type = MeasureType.C_MinMax Then
+        ElseIf item.measure_type = MeasureType.objMinMax Then
             Dim startPt = New Point(item.start_point.X * pictureBox.Width, item.start_point.Y * pictureBox.Height)
             Dim EndPt = New Point(item.end_point.X * pictureBox.Width, item.end_point.Y * pictureBox.Height)
             graph.DrawLine(graphPen, CInt(startPt.X), CInt(startPt.Y), CInt(EndPt.X), CInt(EndPt.Y))
@@ -251,10 +251,10 @@ Public Module C_ControlMethods
         Dim index = -1
         Dim mPt = New Point(m_pt.X * pictureBox.Width, m_pt.Y * pictureBox.Height)
         For Each item In obj_list
-            If item.measure_type < MeasureType.C_Line Then
+            If item.measure_type < MeasureType.objLine Then
                 Continue For
             End If
-            If item.measure_type = MeasureType.C_CuPoly Then
+            If item.measure_type = MeasureType.objCuPoly Then
                 Dim obj = item.curve_object.CuPolyItem(0)
                 For i = 0 To obj.CuPolyPointIndx_j
                     For j = 0 To obj.CuPolyPointIndx_k(i) - 1
@@ -274,7 +274,7 @@ Public Module C_ControlMethods
                         End If
                     End If
                 Next
-            ElseIf item.measure_type = MeasureType.C_Curve Then
+            ElseIf item.measure_type = MeasureType.objCurve Then
                 Dim obj = item.curve_object.CurveItem(0)
                 For i = 0 To obj.CPointIndx - 1
                     If m_pt.X > obj.CurvePoint(i).X - 0.01 And m_pt.X < obj.CurvePoint(i).X + 0.01 And m_pt.Y > obj.CurvePoint(i).Y - 0.01 And m_pt.Y < obj.CurvePoint(i).Y + 0.01 Then
@@ -282,7 +282,7 @@ Public Module C_ControlMethods
                         Exit For
                     End If
                 Next
-            ElseIf item.measure_type = MeasureType.C_Line Then
+            ElseIf item.measure_type = MeasureType.objLine Then
                 Dim obj = item.curve_object.LineItem(0)
                 Dim startPt = New Point(obj.FirstPointOfLine.X * pictureBox.Width, obj.FirstPointOfLine.Y * pictureBox.Height)
                 Dim EndPt = New Point(obj.SecndPointOfLine.X * pictureBox.Width, obj.SecndPointOfLine.Y * pictureBox.Height)
@@ -290,12 +290,12 @@ Public Module C_ControlMethods
                 If dist < 5 And Main_Form.OutPointFlag = False Then
                     index = item.obj_num
                 End If
-            ElseIf item.measure_type = MeasureType.C_Point Then
+            ElseIf item.measure_type = MeasureType.objPoint Then
                 Dim obj = item.curve_object.PointItem(0)
                 If m_pt.X < obj.PointPoint.X + 0.01 And m_pt.X > obj.PointPoint.X - 0.01 And m_pt.Y < obj.PointPoint.Y + 0.01 And m_pt.Y > obj.PointPoint.Y - 0.01 Then
                     index = item.obj_num
                 End If
-            ElseIf item.measure_type = MeasureType.C_Poly Then
+            ElseIf item.measure_type = MeasureType.objPoly Then
                 Dim obj = item.curve_object.PolyItem(0)
                 If obj.PolyPointIndx > 0 Then
                     Dim dist = Find_BPointPolyDistance(obj, mPt, pictureBox.Width, pictureBox.Height)
@@ -490,7 +490,7 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Min"
         result.length = dLineCurve
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.start_point = New PointF(MSx / CSng(width), MSy / CSng(height))
         result.end_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         Return result
@@ -537,7 +537,7 @@ Public Module C_ControlMethods
         End If
         result.name = Obj1.name & "To" & Obj2.name & "Min"
         result.start_point = PointItem.PointPoint
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.length = dMinPointCuPoly
         Return result
     End Function
@@ -577,7 +577,7 @@ Public Module C_ControlMethods
         result.end_point = CurveItem.CurvePoint(minIndex)
         result.name = Obj1.name & "To" & Obj2.name & "Min"
         result.length = dLineCurve
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         Return result
     End Function
 
@@ -608,7 +608,7 @@ Public Module C_ControlMethods
         result.end_point = CurveItem.CurvePoint(minIndexP)
         result.length = dMinPointCurve
         result.name = Obj1.name & "To" & Obj2.name & "Min"
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         Return result
     End Function
 
@@ -634,7 +634,7 @@ Public Module C_ControlMethods
         result.end_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         result.length = dLinePoint
         result.name = Obj1.name & "To" & Obj2.name & "Min"
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         Return result
     End Function
 
@@ -658,7 +658,7 @@ Public Module C_ControlMethods
         result.end_point = New PointF(Main_Form.PXs / CSng(width), Main_Form.PYs / CSng(height))
         result.length = dPolyPoint
         result.name = Obj1.name & "To" & Obj2.name & "Min"
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         Return result
     End Function
 
@@ -697,7 +697,7 @@ Public Module C_ControlMethods
         result.end_point = New PointF(LPx1 / CSng(width), LPy1 / CSng(height))
         result.length = minLinePoly
         result.name = Obj1.name & "To" & Obj2.name & "Min"
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         Return result
     End Function
 
@@ -727,7 +727,7 @@ Public Module C_ControlMethods
         result.end_point = New PointF(PPx / CSng(width), PPy / CSng(height))
         result.length = mindPolyCurve
         result.name = Obj1.name & "To" & Obj2.name & "Min"
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         Return result
     End Function
 #End Region
@@ -783,7 +783,7 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.start_point = CuPolyItem.CuPolyPoint(maxIdx_j, maxIdx_k)
         result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
@@ -817,7 +817,7 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = dMaxPointCuPoly
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.start_point = CuPolyItem.CuPolyPoint(maxIndexPCuPoly_j, maxIndexPCuPoly_k)
         result.end_point = PointItem.PointPoint
         Return result
@@ -868,7 +868,7 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.start_point = CurveItem.CurvePoint(maxIdx)
         result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
@@ -909,7 +909,7 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.start_point = CurveItem.CurvePoint(maxIdx)
         result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
@@ -952,7 +952,7 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.start_point = CurveItem.CurvePoint(maxIdx)
         result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
@@ -989,7 +989,7 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.start_point = PointItem.PointPoint
         result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
@@ -1039,7 +1039,7 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.start_point = PolyItem.PolyPoint(maxIdx)
         result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
@@ -1079,7 +1079,7 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "Max"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.start_point = PolyItem.PolyPoint(maxIdx)
         result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
@@ -1214,7 +1214,7 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
         result.length = dLineCurve
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.start_point = New PointF(MSx / CSng(width), MSy / CSng(height))
         result.end_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         Return result
@@ -1261,7 +1261,7 @@ Public Module C_ControlMethods
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
         result.start_point = PointItem.PointPoint
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.length = dMinPointCuPoly
         Return result
     End Function
@@ -1302,7 +1302,7 @@ Public Module C_ControlMethods
         result.end_point = CurveItem.CurvePoint(minIndex)
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
         result.length = dLineCurve
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         Return result
     End Function
 
@@ -1333,7 +1333,7 @@ Public Module C_ControlMethods
         result.end_point = CurveItem.CurvePoint(minIndexP)
         result.length = dMinPointCurve
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         Return result
     End Function
 
@@ -1363,7 +1363,7 @@ Public Module C_ControlMethods
         result.start_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         result.length = dLinePoint
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         Return result
     End Function
 
@@ -1391,7 +1391,7 @@ Public Module C_ControlMethods
         result.start_point = New PointF(Main_Form.PXs / CSng(width), Main_Form.PYs / CSng(height))
         result.length = dPolyPoint
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         Return result
     End Function
 
@@ -1439,7 +1439,7 @@ Public Module C_ControlMethods
         result.end_point = New PointF(LPx1 / CSng(width), LPy1 / CSng(height))
         result.length = minLinePoly
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         Return result
     End Function
 
@@ -1480,7 +1480,7 @@ Public Module C_ControlMethods
         result.start_point = New PointF(PPx / CSng(width), PPy / CSng(height))
         result.length = mindPolyCurve
         result.name = Obj1.name & "To" & Obj2.name & "PMin"
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         Return result
     End Function
 
@@ -1527,7 +1527,7 @@ Public Module C_ControlMethods
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = dMaxLineCurve
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.end_point = CuPolyItem.CuPolyPoint(maxIndex_j, maxIndex_k)
         result.start_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         Return result
@@ -1561,7 +1561,7 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = dMaxPointCuPoly
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.start_point = CuPolyItem.CuPolyPoint(maxIndexPCuPoly_j, maxIndexPCuPoly_k)
         result.end_point = PointItem.PointPoint
         Return result
@@ -1603,7 +1603,7 @@ Public Module C_ControlMethods
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = dMaxLineCurve
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.end_point = CurveItem.CurvePoint(maxIndex)
         result.start_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         Return result
@@ -1644,7 +1644,7 @@ Public Module C_ControlMethods
 
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = maxCL_Dis
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.start_point = CurveItem.CurvePoint(maxIdx)
         result.end_point = New PointF(CrosPoint.X / CSng(width), CrosPoint.Y / CSng(height))
         Return result
@@ -1687,7 +1687,7 @@ Public Module C_ControlMethods
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = maxdPolyCurve
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.end_point = CurveItem.CurvePoint(maxIdx)
         result.start_point = New PointF(PPx / CSng(width), PPy / CSng(height))
         Return result
@@ -1719,7 +1719,7 @@ Public Module C_ControlMethods
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = dLinePoint
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.end_point = PointItem.PointPoint
         result.start_point = New PointF(Main_Form.XsLinePoint / CSng(width), Main_Form.YsLinePoint / CSng(height))
         Return result
@@ -1767,7 +1767,7 @@ Public Module C_ControlMethods
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = maxLinePoly
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.start_point = New PointF(LPx / CSng(width), LPy / CSng(height))
         result.end_point = New PointF(LPx1 / CSng(width), LPy1 / CSng(height))
         Return result
@@ -1798,7 +1798,7 @@ Public Module C_ControlMethods
         End If
         result.name = Obj1.name & "To" & Obj2.name & "PMax"
         result.length = dPolyPoint
-        result.measure_type = MeasureType.C_MinMax
+        result.measure_type = MeasureType.objMinMax
         result.end_point = PointItem.PointPoint
         result.start_point = New PointF(Main_Form.PXs / CSng(width), Main_Form.PYs / CSng(height))
         Return result
