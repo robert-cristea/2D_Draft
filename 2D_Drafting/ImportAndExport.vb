@@ -382,7 +382,7 @@ Public Module ImportAndExport
                 If Obj.measureType = SegType.blobSegment Then
                     DrawLabelForCount(graph, pic, Obj.BlobSegObj.BlobList, font)
                 ElseIf Obj.measureType = SegType.interSect Then
-                    IdentifyInterSections(graph, Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image, Obj.sectObj.threshold, Obj)
+                    IdentifyInterSections(graph, Main_Form.PictureBox.Image, Obj.sectObj.threshold, Obj)
                 End If
 
                 graph.Flush()

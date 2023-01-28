@@ -8,8 +8,8 @@
     Private maxRatio As Single = 0
 
     Private Sub RangeDistribution_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        For i = 0 To Main_Form.Obj_Seg.BlobSegObj.BlobList.Count - 1
-            Dim Obj = Main_Form.Obj_Seg.BlobSegObj.BlobList(i)
+        For i = 0 To Main_Form.objSeg.BlobSegObj.BlobList.Count - 1
+            Dim Obj = Main_Form.objSeg.BlobSegObj.BlobList(i)
             If minArea > Obj.Area Then
                 minArea = Obj.Area
             End If
@@ -40,8 +40,8 @@
                 Cnt(i) = 0
             Next
 
-            For i = 0 To Main_Form.Obj_Seg.BlobSegObj.BlobList.Count - 1
-                Dim Obj = Main_Form.Obj_Seg.BlobSegObj.BlobList(i)
+            For i = 0 To Main_Form.objSeg.BlobSegObj.BlobList.Count - 1
+                Dim Obj = Main_Form.objSeg.BlobSegObj.BlobList(i)
                 If Obj.Area < minArea + dist Then
                     Cnt(0) += 1
                 ElseIf minArea + dist <= Obj.Area And Obj.Area < minArea + 2 * dist Then
@@ -97,8 +97,8 @@
                 Cnt(i) = 0
             Next
 
-            For i = 0 To Main_Form.Obj_Seg.BlobSegObj.BlobList.Count - 1
-                Dim Obj = Main_Form.Obj_Seg.BlobSegObj.BlobList(i)
+            For i = 0 To Main_Form.objSeg.BlobSegObj.BlobList.Count - 1
+                Dim Obj = Main_Form.objSeg.BlobSegObj.BlobList(i)
                 If Obj.roundness < minRound + dist Then
                     Cnt(0) += 1
                 ElseIf minRound + dist <= Obj.roundness And Obj.roundness < minRound + 2 * dist Then
@@ -154,8 +154,8 @@
                 Cnt(i) = 0
             Next
 
-            For i = 0 To Main_Form.Obj_Seg.BlobSegObj.BlobList.Count - 1
-                Dim Obj = Main_Form.Obj_Seg.BlobSegObj.BlobList(i)
+            For i = 0 To Main_Form.objSeg.BlobSegObj.BlobList.Count - 1
+                Dim Obj = Main_Form.objSeg.BlobSegObj.BlobList(i)
                 Dim ratio = Obj.Perimeter / Obj.Area
                 If ratio < minRatio + dist Then
                     Cnt(0) += 1

@@ -150,7 +150,8 @@ Partial Class Main_Form
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ID_STATUS_LABEL = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.ID_TAG_CTRL = New System.Windows.Forms.TabControl()
+        Me.PanelPic = New System.Windows.Forms.Panel()
+        Me.PictureBox = New System.Windows.Forms.PictureBox()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -162,6 +163,8 @@ Partial Class Main_Form
         CType(Me.ID_NUM_DIGIT, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ID_LISTVIEW, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.StatusStrip1.SuspendLayout()
+        Me.PanelPic.SuspendLayout()
+        CType(Me.PictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -1255,25 +1258,37 @@ Partial Class Main_Form
         Me.ID_STATUS_LABEL.Name = "ID_STATUS_LABEL"
         Me.ID_STATUS_LABEL.Size = New System.Drawing.Size(0, 17)
         '
-        'ID_TAG_CTRL
+        'PanelPic
         '
-        Me.ID_TAG_CTRL.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.PanelPic.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ID_TAG_CTRL.Location = New System.Drawing.Point(262, 165)
-        Me.ID_TAG_CTRL.Name = "ID_TAG_CTRL"
-        Me.ID_TAG_CTRL.SelectedIndex = 0
-        Me.ID_TAG_CTRL.Size = New System.Drawing.Size(782, 699)
-        Me.ID_TAG_CTRL.TabIndex = 5
+        Me.PanelPic.AutoScroll = True
+        Me.PanelPic.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.PanelPic.BackColor = System.Drawing.Color.Gray
+        Me.PanelPic.Controls.Add(Me.PictureBox)
+        Me.PanelPic.Location = New System.Drawing.Point(262, 165)
+        Me.PanelPic.Name = "PanelPic"
+        Me.PanelPic.Size = New System.Drawing.Size(782, 690)
+        Me.PanelPic.TabIndex = 8
+        '
+        'PictureBox
+        '
+        Me.PictureBox.Location = New System.Drawing.Point(0, 0)
+        Me.PictureBox.Name = "PictureBox"
+        Me.PictureBox.Size = New System.Drawing.Size(782, 690)
+        Me.PictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
+        Me.PictureBox.TabIndex = 0
+        Me.PictureBox.TabStop = False
         '
         'Main_Form
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1350, 882)
+        Me.Controls.Add(Me.PanelPic)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.ID_LISTVIEW)
-        Me.Controls.Add(Me.ID_TAG_CTRL)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.MenuStrip1)
@@ -1297,6 +1312,9 @@ Partial Class Main_Form
         CType(Me.ID_LISTVIEW, System.ComponentModel.ISupportInitialize).EndInit()
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
+        Me.PanelPic.ResumeLayout(False)
+        Me.PanelPic.PerformLayout()
+        CType(Me.PictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1429,5 +1447,6 @@ End Sub
     Friend WithEvents CALIBRATIONINFOToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CONFIGINFOToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents LEGENDINFOToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ID_TAG_CTRL As TabControl
+    Friend WithEvents PanelPic As Panel
+    Friend WithEvents PictureBox As PictureBox
 End Class

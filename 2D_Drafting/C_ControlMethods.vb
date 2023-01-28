@@ -326,64 +326,7 @@ Public Module C_ControlMethods
 
 #End Region
 
-#Region "Initialize"
-    ''' <summary>
-    ''' Initialize variables.
-    ''' </summary>
-    Public Sub initVar()
 
-        Main_Form.CurvePreviousPoint = Nothing
-        Main_Form.CReadySelectFalg = False
-        Main_Form.LReadySelectArrayIndx = -1
-        Main_Form.LRealSelectArrayIndx = -1
-        Main_Form.PolyDrawEndFlag = False
-        Main_Form.PReadySelectArrayIndx = -1
-        Main_Form.PRealSelectArrayIndx = -1
-        Main_Form.PolyReadySelectArrayIndx = -1
-        Main_Form.PolyRealSelectArrayIndx = -1
-        Main_Form.CReadySelectArrayIndx = -1
-        Main_Form.CRealSelectArrayIndx = -1
-        Main_Form.CuPolyReadySelectArrayIndx = -1
-        Main_Form.CuPolyRealSelectArrayIndx = -1
-        Main_Form.dumyPoint.X = -1
-        Main_Form.dumyPoint.Y = -1
-
-        Main_Form.PRealSelectArrayIndx_L = -1
-        Main_Form.CRealSelectArrayIndx_L = -1
-        Main_Form.PolyRealSelectArrayIndx_L = -1
-        Main_Form.PolyRealSelectArrayIndx_L = -1
-        Main_Form.PReadySelectArrayIndx_L = -1
-        Main_Form.CReadySelectArrayIndx_L = -1
-        Main_Form.PolyReadySelectArrayIndx_L = -1
-        Main_Form.PolyReadySelectArrayIndx_L = -1
-        Main_Form.CuPolyRealSelectArrayIndx_L = -1
-        Main_Form.CuPolyReadySelectArrayIndx_L = -1
-
-        Main_Form.COutPointFlag = False
-
-        Main_Form.annoNum = -1
-        Main_Form.curMeasureType = -1
-        Main_Form.MeasureTypePrev = -1
-        Main_Form.ID_BTN_CUR_COL.BackColor = Color.Black
-        Main_Form.ID_BTN_TEXT_COL.BackColor = Color.Black
-        Main_Form.ID_COMBO_LINE_SHAPE.SelectedIndex = 0
-
-        Main_Form.initialRatio = 1
-        Main_Form.curObjNum = 0
-        Main_Form.brightness = 0
-        Main_Form.contrast = 0
-        Main_Form.gamma = 100
-        Main_Form.zoomFactor = 1.0
-
-        Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = Nothing
-        Main_Form.objSelected.Refresh()
-        Main_Form.objectList.Clear()
-        Main_Form.curMeasureType = -1
-        Main_Form.selIndex = -1
-        Main_Form.curve_selIndex = -1
-
-    End Sub
-#End Region
 
 #Region "Min"
     ''' <summary>

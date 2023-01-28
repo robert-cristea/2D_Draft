@@ -53,9 +53,9 @@ Public Class ParticipleSize
             Dim output = BlobDetection(OriImage, BinaryImage, ObjListTemp, 0, 0, 1)
             Dim index = GetSelectedBlob()
             If index >= 0 Then
-                Main_Form.Obj_Seg.BlobSegObj.BlobList.Add(ObjListTemp(index))
+                Main_Form.objSeg.BlobSegObj.BlobList.Add(ObjListTemp(index))
             End If
-            DrawLabelForCount(Main_Form.ID_PICTURE_BOX(Main_Form.tab_index), Main_Form.Obj_Seg.BlobSegObj.BlobList, font)
+            DrawLabelForCount(Main_Form.PictureBox, Main_Form.objSeg.BlobSegObj.BlobList, font)
             LoadDataToGridView()
             Main_Form.MouseDownFlag = False
         End If
@@ -82,7 +82,7 @@ Public Class ParticipleSize
             CvInvoke.Resize(BinaryImage, resizedBinary, sz)
             Dim BinImg = GetImageFromEmgu(resizedBinary)
             Dim outPut = OverLapSegToOri(Main_Form.resizedImage.ToBitmap(), BinImg)
-            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = outPut
+            Main_Form.PictureBox.Image = outPut
             Main_Form.currentImage = GetMatFromSDImage(outPut)
         Catch ex As Exception
 
@@ -93,8 +93,8 @@ Public Class ParticipleSize
         DataGridView1.Rows.Clear()
         Dim str_item = New String(5) {}
 
-        For i = 0 To Main_Form.Obj_Seg.BlobSegObj.BlobList.Count - 1
-            Dim Obj = Main_Form.Obj_Seg.BlobSegObj.BlobList(i)
+        For i = 0 To Main_Form.objSeg.BlobSegObj.BlobList.Count - 1
+            Dim Obj = Main_Form.objSeg.BlobSegObj.BlobList(i)
             str_item(0) = (i + 1).ToString()
             str_item(1) = Obj.height.ToString()
             str_item(2) = Obj.Width.ToString()
@@ -133,12 +133,12 @@ Public Class ParticipleSize
         If fontDialog.ShowDialog() = DialogResult.OK Then
             font = fontDialog.Font
         End If
-        DrawLabelForCount(Main_Form.ID_PICTURE_BOX(Main_Form.tab_index), Main_Form.Obj_Seg.BlobSegObj.BlobList, font)
+        DrawLabelForCount(Main_Form.PictureBox, Main_Form.objSeg.BlobSegObj.BlobList, font)
     End Sub
 
     Private Sub BtnDel_Click(sender As Object, e As EventArgs) Handles BtnDel.Click
-        Main_Form.Obj_Seg.Refresh()
-        DrawLabelForCount(Main_Form.ID_PICTURE_BOX(Main_Form.tab_index), Main_Form.Obj_Seg.BlobSegObj.BlobList, font)
+        Main_Form.objSeg.Refresh()
+        DrawLabelForCount(Main_Form.PictureBox, Main_Form.objSeg.BlobSegObj.BlobList, font)
         LoadDataToGridView()
     End Sub
 
@@ -149,7 +149,7 @@ Public Class ParticipleSize
     Private Sub BtnReport_Click(sender As Object, e As EventArgs) Handles BtnReport.Click
         Dim filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
         Dim title = "Save"
-        SaveListToReport(Main_Form.ID_PICTURE_BOX(Main_Form.tab_index), DataGridView1, filter, title, Main_Form.Obj_Seg, font)
+        SaveListToReport(Main_Form.PictureBox, DataGridView1, filter, title, Main_Form.objSeg, font)
     End Sub
 
     Private Sub BtnExcel_Click(sender As Object, e As EventArgs) Handles BtnExcel.Click

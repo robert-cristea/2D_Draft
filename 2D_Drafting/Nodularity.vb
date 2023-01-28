@@ -68,7 +68,7 @@ Public Class Nodularity
             CvInvoke.Resize(BinaryImage, resizedBinary, sz)
             Dim BinImg = GetImageFromEmgu(resizedBinary)
             Dim outPut = OverLapSegToOri(Main_Form.resizedImage.ToBitmap(), BinImg)
-            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = outPut
+            Main_Form.PictureBox.Image = outPut
             Main_Form.currentImage = GetMatFromSDImage(outPut)
             BlobDetection(OriImage, BinaryImage, ObjListTotal, AreaLimit)
 
@@ -116,14 +116,14 @@ Public Class Nodularity
     Private Sub GetMinMax()
         Dim fieldID = Datarows.Count
         m_totalCnt = ObjListTotal.Count
-        m_NodCnt = Main_Form.Obj_Seg.BlobSegObj.BlobList.Count
+        m_NodCnt = Main_Form.objSeg.BlobSegObj.BlobList.Count
         m_maxPer = 0
         m_minPer = 9999999
         m_maxArea = 0
         m_minArea = 99999999
 
         For i = 0 To m_NodCnt - 1
-            Dim Obj = Main_Form.Obj_Seg.BlobSegObj.BlobList(i)
+            Dim Obj = Main_Form.objSeg.BlobSegObj.BlobList(i)
             If m_maxPer < Obj.Perimeter Then m_maxPer = Obj.Perimeter
             If m_minPer > Obj.Perimeter Then m_minPer = Obj.Perimeter
             If m_maxArea < Obj.Area Then m_maxArea = Obj.Area
@@ -197,8 +197,8 @@ Public Class Nodularity
         If form.ShowDialog() = DialogResult.OK Then
             RoundUpper = form.RoundUpper
             RoundLower = form.RoundLower
-            Main_Form.Obj_Seg.BlobSegObj.BlobList.Clear()
-            Main_Form.Obj_Seg.BlobSegObj.BlobList = form.ObjList.ToList()
+            Main_Form.objSeg.BlobSegObj.BlobList.Clear()
+            Main_Form.objSeg.BlobSegObj.BlobList = form.ObjList.ToList()
             GetMinMax()
         End If
     End Sub
@@ -210,7 +210,7 @@ Public Class Nodularity
 
     Private Sub BtnUndo_Click(sender As Object, e As EventArgs) Handles BtnUndo.Click
         Initialize()
-        Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = Main_Form.resizedImage.ToBitmap()
+        Main_Form.PictureBox.Image = Main_Form.resizedImage.ToBitmap()
     End Sub
 
     Private Sub BtnGraph_Click(sender As Object, e As EventArgs) Handles BtnGraph.Click
@@ -227,7 +227,7 @@ Public Class Nodularity
     Private Sub BtnReport_Click(sender As Object, e As EventArgs) Handles BtnReport.Click
         Dim filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
         Dim title = "Save"
-        SaveListToReport(Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image, DataGridView1, filter, title)
+        SaveListToReport(Main_Form.PictureBox.Image, DataGridView1, filter, title)
     End Sub
 
     Private Sub BtnExcel_Click(sender As Object, e As EventArgs) Handles BtnExcel.Click

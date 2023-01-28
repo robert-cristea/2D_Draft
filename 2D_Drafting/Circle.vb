@@ -34,11 +34,11 @@ Public Class Circle
 
         Dim str_item = New String(3) {}
 
-        For i = 0 To Main_Form.Obj_Seg.circleObj.Cnt - 1
+        For i = 0 To Main_Form.objSeg.circleObj.Cnt - 1
             str_item(0) = (i + 1).ToString
-            str_item(1) = CInt(Main_Form.Obj_Seg.circleObj.pos(i).X * Width).ToString
-            str_item(2) = CInt(Main_Form.Obj_Seg.circleObj.pos(i).Y * Height).ToString
-            str_item(3) = CInt(Main_Form.Obj_Seg.circleObj.size(i) * Width).ToString
+            str_item(1) = CInt(Main_Form.objSeg.circleObj.pos(i).X * Width).ToString
+            str_item(2) = CInt(Main_Form.objSeg.circleObj.pos(i).Y * Height).ToString
+            str_item(3) = CInt(Main_Form.objSeg.circleObj.size(i) * Width).ToString
             DataGridView1.Rows.Add(str_item)
         Next
     End Sub
@@ -47,13 +47,13 @@ Public Class Circle
         Try
             roundness = ID_SCROLL_ROUNDNESS.Value
             ID_LABEL_ROUND.Text = roundness.ToString()
-            Main_Form.Obj_Seg.Refresh()
+            Main_Form.objSeg.Refresh()
 
             Dim image = Main_Form.resizedImage.ToBitmap()
-            Dim output = IdentifyCicles(image, roundness, thr_cir, Main_Form.Obj_Seg)
-            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
+            Dim output = IdentifyCicles(image, roundness, thr_cir, Main_Form.objSeg)
+            Main_Form.PictureBox.Image = output
             Main_Form.currentImage = GetMatFromSDImage(output)
-            img_circle = Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image
+            img_circle = Main_Form.PictureBox.Image
             img_active = img_circle
             subtract = 0
             InitLabel()
@@ -70,8 +70,8 @@ Public Class Circle
 
                 'subtract circles from image
                 Dim image = Main_Form.resizedImage.ToBitmap()
-                Dim output = SubtractCircles(image, Main_Form.Obj_Seg, percent_circle)
-                Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
+                Dim output = SubtractCircles(image, Main_Form.objSeg, percent_circle)
+                Main_Form.PictureBox.Image = output
                 Main_Form.currentImage = GetMatFromSDImage(output)
                 img_subtracted = output
                 img_circle = img_subtracted
@@ -85,8 +85,8 @@ Public Class Circle
             'when button "ID_BUTTON_SUBTRACT" is clicked
             If subtract = 1 Then
                 'Segment Remaing Image into Black and White
-                Dim output = SegmentIntoBlackAndWhite(img_subtracted, thr_seg, Main_Form.Obj_Seg, percent_black, percent_white)
-                Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
+                Dim output = SegmentIntoBlackAndWhite(img_subtracted, thr_seg, Main_Form.objSeg, percent_black, percent_white)
+                Main_Form.PictureBox.Image = output
                 Main_Form.currentImage = GetMatFromSDImage(output)
                 'format img_segmented
                 img_segmented = output
@@ -105,13 +105,13 @@ Public Class Circle
     Private Sub ID_NUM_THR_CIR_ValueChanged(sender As Object, e As EventArgs) Handles ID_NUM_THR_CIR.ValueChanged
         Try
             thr_cir = CInt(ID_NUM_THR_CIR.Value)
-            Main_Form.Obj_Seg.Refresh()
+            Main_Form.objSeg.Refresh()
             'identify circles 
             Dim image = Main_Form.resizedImage.ToBitmap()
-            Dim output = IdentifyCicles(image, roundness, thr_cir, Main_Form.Obj_Seg)
-            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
+            Dim output = IdentifyCicles(image, roundness, thr_cir, Main_Form.objSeg)
+            Main_Form.PictureBox.Image = output
             Main_Form.currentImage = GetMatFromSDImage(output)
-            img_circle = Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image
+            img_circle = Main_Form.PictureBox.Image
             img_active = img_circle
             subtract = 0
             InitLabel()
@@ -130,7 +130,7 @@ Public Class Circle
     Private Sub BtnReport_Click(sender As Object, e As EventArgs) Handles BtnReport.Click
         Dim filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
         Dim title = "Save"
-        SaveListToReport(Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image, DataGridView1, filter, title)
+        SaveListToReport(Main_Form.PictureBox.Image, DataGridView1, filter, title)
     End Sub
 
     Private Sub BtnExit_Click(sender As Object, e As EventArgs) Handles BtnExit.Click

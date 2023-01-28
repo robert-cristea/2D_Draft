@@ -67,14 +67,14 @@ Public Class Count_Classification
         End If
     End Sub
     Private Sub GetMinMax()
-        totalCnt = Main_Form.Obj_Seg.BlobSegObj.BlobList.Count
+        totalCnt = Main_Form.objSeg.BlobSegObj.BlobList.Count
         maxPer = 0
         minPer = 9999999
         maxArea = 0
         minArea = 99999999
 
         For i = 0 To totalCnt - 1
-            Dim Obj = Main_Form.Obj_Seg.BlobSegObj.BlobList(i)
+            Dim Obj = Main_Form.objSeg.BlobSegObj.BlobList(i)
             If maxPer < Obj.Perimeter Then maxPer = Obj.Perimeter
             If minPer > Obj.Perimeter Then minPer = Obj.Perimeter
             If maxArea < Obj.Area Then maxArea = Obj.Area
@@ -112,7 +112,7 @@ Public Class Count_Classification
             CvInvoke.Resize(BinaryImage, resizedBinary, sz)
             Dim BinImg = GetImageFromEmgu(resizedBinary)
             Dim outPut = OverLapSegToOri(Main_Form.resizedImage.ToBitmap(), BinImg)
-            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = outPut
+            Main_Form.PictureBox.Image = outPut
             Main_Form.currentImage = GetMatFromSDImage(outPut)
         Catch ex As Exception
 
@@ -123,8 +123,8 @@ Public Class Count_Classification
         DataGridView1.Rows.Clear()
         Dim str_item = New String(6) {}
 
-        For i = 0 To Main_Form.Obj_Seg.BlobSegObj.BlobList.Count - 1
-            Dim Obj = Main_Form.Obj_Seg.BlobSegObj.BlobList(i)
+        For i = 0 To Main_Form.objSeg.BlobSegObj.BlobList.Count - 1
+            Dim Obj = Main_Form.objSeg.BlobSegObj.BlobList(i)
             str_item(0) = (i + 1).ToString()
             str_item(1) = Obj.height.ToString()
             str_item(2) = Obj.Width.ToString()
@@ -163,11 +163,11 @@ Public Class Count_Classification
             Return
         End If
         Try
-            Main_Form.Obj_Seg.BlobSegObj.BlobList.Clear()
+            Main_Form.objSeg.BlobSegObj.BlobList.Clear()
             AreaLimit = CSng(TxtLimit.Text)
             If AreaLimit Then
-                Dim output = BlobDetection(OriImage, BinaryImage, Main_Form.Obj_Seg.BlobSegObj.BlobList, AreaLimit)
-                DrawLabelForCount(Main_Form.ID_PICTURE_BOX(Main_Form.tab_index), Main_Form.Obj_Seg.BlobSegObj.BlobList, font)
+                Dim output = BlobDetection(OriImage, BinaryImage, Main_Form.objSeg.BlobSegObj.BlobList, AreaLimit)
+                DrawLabelForCount(Main_Form.PictureBox, Main_Form.objSeg.BlobSegObj.BlobList, font)
                 GetMinMax()
                 LoadDataToGridView()
                 Pic1.BackColor = Color.LimeGreen
@@ -204,7 +204,7 @@ Public Class Count_Classification
         If RadioState2 = 0 Then
             delta = (maxArea - minArea) / 4
             For i = 0 To totalCnt - 1
-                Dim Obj = Main_Form.Obj_Seg.BlobSegObj.BlobList(i)
+                Dim Obj = Main_Form.objSeg.BlobSegObj.BlobList(i)
                 If Obj.Area > minArea And Obj.Area <= minArea + delta Then
                     Cnt(0) += 1
                 ElseIf Obj.Area > minArea + delta And Obj.Area <= minArea + 2 * delta Then
@@ -218,7 +218,7 @@ Public Class Count_Classification
         Else
             delta = (maxPer - minPer) / 4
             For i = 0 To totalCnt - 1
-                Dim Obj = Main_Form.Obj_Seg.BlobSegObj.BlobList(i)
+                Dim Obj = Main_Form.objSeg.BlobSegObj.BlobList(i)
                 If Obj.Perimeter > minPer And Obj.Perimeter <= minPer + delta Then
                     Cnt(0) += 1
                 ElseIf Obj.Perimeter > minPer + delta And Obj.Perimeter <= minPer + 2 * delta Then
@@ -264,7 +264,7 @@ Public Class Count_Classification
         LabMaxArea.Text = "00.00"
         LabMinArea.Text = "00.00"
 
-        Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = Main_Form.resizedImage.ToBitmap()
+        Main_Form.PictureBox.Image = Main_Form.resizedImage.ToBitmap()
         Main_Form.currentImage = Main_Form.resizedImage
     End Sub
 
@@ -278,13 +278,13 @@ Public Class Count_Classification
         If fontDialog.ShowDialog() = DialogResult.OK Then
             font = fontDialog.Font
         End If
-        DrawLabelForCount(Main_Form.ID_PICTURE_BOX(Main_Form.tab_index), Main_Form.Obj_Seg.BlobSegObj.BlobList, font)
+        DrawLabelForCount(Main_Form.PictureBox, Main_Form.objSeg.BlobSegObj.BlobList, font)
     End Sub
 
     Private Sub BtnReport_Click(sender As Object, e As EventArgs) Handles BtnReport.Click
         Dim filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
         Dim title = "Save"
-        SaveListToReport(Main_Form.ID_PICTURE_BOX(Main_Form.tab_index), DataGridView1, filter, title, Main_Form.Obj_Seg, font)
+        SaveListToReport(Main_Form.PictureBox, DataGridView1, filter, title, Main_Form.objSeg, font)
     End Sub
 
     Private Sub BtnExcel_Click(sender As Object, e As EventArgs) Handles BtnExcel.Click

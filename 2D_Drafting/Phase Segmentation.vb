@@ -172,7 +172,7 @@ Public Class Phase_Segmentation
             Dim flag As Boolean = False
             If Main_Form.EdgeRegionDrawed And Main_Form.EdgeRegionDrawReady Then flag = True
             Dim output = MultiSegment(image, PhaseVal, PhaseCol, PhaseArea, PhaseSel, FirstPt, SecondPt, flag)
-            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = output
+            Main_Form.PictureBox.Image = output
             Main_Form.currentImage = GetMatFromSDImage(output)
         Catch ex As Exception
 
@@ -191,7 +191,7 @@ Public Class Phase_Segmentation
         If PhaseNum = 0 Then
             PhaseVal.Add(0)
             PhaseVal.Add(128)
-            cur_col = Main_Form.Col_list(PhaseNum + 1)
+            cur_col = Main_Form.colorList(PhaseNum + 1)
             If SetCol(0) = 300 Then
                 PhaseCol.Add(cur_col)
             Else
@@ -210,7 +210,7 @@ Public Class Phase_Segmentation
                 Return
             End If
             PhaseVal.Add(256)
-            cur_col = Main_Form.Col_list(PhaseNum + 1)
+            cur_col = Main_Form.colorList(PhaseNum + 1)
             If SetCol(0) = 300 Then
                 PhaseCol.Add(cur_col)
             Else
@@ -359,7 +359,7 @@ Public Class Phase_Segmentation
     Private Sub BtnReport_Click(sender As Object, e As EventArgs) Handles BtnReport.Click
         Dim filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
         Dim title = "Save"
-        SaveListToReport(Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image, DataGridView1, filter, title)
+        SaveListToReport(Main_Form.PictureBox.Image, DataGridView1, filter, title)
     End Sub
 
     Private Sub BtnCol_Click(sender As Object, e As EventArgs) Handles BtnCol.Click

@@ -29,7 +29,7 @@ Public Class Intensity
             CvInvoke.Resize(BinaryImage, resizedBinary, sz)
             Dim BinImg = GetImageFromEmgu(resizedBinary)
             Dim outPut = OverLapSegToOri(Main_Form.resizedImage.ToBitmap(), BinImg)
-            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = outPut
+            Main_Form.PictureBox.Image = outPut
             Main_Form.currentImage = GetMatFromSDImage(outPut)
         Catch ex As Exception
 

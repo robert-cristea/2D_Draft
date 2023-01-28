@@ -60,7 +60,7 @@ Public Class RoundnessLimit
             Dim sz = New Size(Main_Form.resizedImage.Width, Main_Form.resizedImage.Height)
             CvInvoke.Resize(output, output, sz)
             Dim Image = GetImageFromEmgu(output)
-            Main_Form.ID_PICTURE_BOX(Main_Form.tab_index).Image = Image
+            Main_Form.PictureBox.Image = Image
             Main_Form.currentImage = GetMatFromSDImage(Image)
         Catch ex As Exception
 
