@@ -23,21 +23,20 @@ Public Module ImportAndExport
 
     <Extension()>
     Public Function LoadImageFromFiles(ByVal pictureBox As PictureBox, ByVal filter As String, ByVal fileDialogTitle As String,
-                                          ByRef origin_image As Mat, ByRef resized_image As Mat, ByRef current_image As Mat)
+                                          ByRef origin_image As Mat, ByRef resized_image As Mat, ByRef current_image As Mat) As Boolean
         Dim openFileDialog As OpenFileDialog = New OpenFileDialog()
         openFileDialog.Filter = filter
         openFileDialog.Title = fileDialogTitle
 
         Dim image_filepath = ""
         If openFileDialog.ShowDialog() = DialogResult.OK Then
-
             image_filepath = openFileDialog.FileName
+            origin_image = CvInvoke.Imread(image_filepath, ImreadModes.AnyColor)
+            resized_image = CvInvoke.Imread(image_filepath, ImreadModes.AnyColor)
+            current_image = CvInvoke.Imread(image_filepath, ImreadModes.AnyColor)
+            Return True
         End If
-
-        origin_image = CvInvoke.Imread(image_filepath, ImreadModes.AnyColor)
-        resized_image = CvInvoke.Imread(image_filepath, ImreadModes.AnyColor)
-        current_image = CvInvoke.Imread(image_filepath, ImreadModes.AnyColor)
-
+        Return False
     End Function
 
     ''' <summary>
@@ -49,7 +48,7 @@ Public Module ImportAndExport
     ''' <paramname="resized_image">The list of image which is resized to fit the picturebox control.</param>
 
     <Extension()>
-    Public Function LoadImageFromFile(ByVal pictureBox As PictureBox, ByVal filename As String,
+    Public Sub LoadImageFromFile(ByVal pictureBox As PictureBox, ByVal filename As String,
                                           ByRef origin_image As Mat, ByRef resized_image As Mat, ByRef current_image As Mat)
 
 
@@ -59,7 +58,7 @@ Public Module ImportAndExport
         origin_image = CvInvoke.Imread(filename, ImreadModes.AnyColor)
         resized_image = CvInvoke.Imread(filename, ImreadModes.AnyColor)
         current_image = CvInvoke.Imread(filename, ImreadModes.AnyColor)
-    End Function
+    End Sub
 
 
     ''' <summary>

@@ -18,12 +18,13 @@ Public Class ParticipleSize
 
     Private Sub ParticipleSize_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
-            Dim scr = Main_Form.originalImage.ToBitmap()
+            Dim scr = Main_Form.originalImage.Clone().ToBitmap()
             Dim bmpImage As Bitmap = New Bitmap(scr)
             OriImage = bmpImage.ToImage(Of Bgr, Byte)()
             bmpImage.Dispose()
             GrayImage = getGrayScale(OriImage)
             BinaryImage = GrayImage.CopyBlank()
+            scr.Dispose()
             Timer1.Interval = 30
             Timer1.Start()
         Catch ex As Exception
@@ -77,13 +78,14 @@ Public Class ParticipleSize
                 'CvInvoke.Imshow("1", BinaryImage)
             End If
 
-            Dim resizedBinary = BinaryImage.Copy()
+            Dim outPut = OverLapSegToOri(OriImage, BinaryImage)
             Dim sz = New Size(Main_Form.resizedImage.Width, Main_Form.resizedImage.Height)
-            CvInvoke.Resize(BinaryImage, resizedBinary, sz)
-            Dim BinImg = GetImageFromEmgu(resizedBinary)
-            Dim outPut = OverLapSegToOri(Main_Form.resizedImage.ToBitmap(), BinImg)
-            Main_Form.PictureBox.Image = outPut
-            Main_Form.currentImage = GetMatFromSDImage(outPut)
+            Dim Resized As Mat = New Mat()
+            CvInvoke.Resize(outPut, Resized, sz)
+
+            Main_Form.PictureBox.Image = Resized.ToBitmap()
+            Main_Form.currentImage = outPut.Clone().Mat
+            outPut.Dispose()
         Catch ex As Exception
 
         End Try

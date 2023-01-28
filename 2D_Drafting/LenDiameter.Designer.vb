@@ -23,7 +23,7 @@ Partial Class LenDiameter
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.ID_TEXT_FIXED = New System.Windows.Forms.TextBox()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label = New System.Windows.Forms.Label()
         Me.ID_BTN_OK = New System.Windows.Forms.Button()
         Me.ID_BTN_CANCEL = New System.Windows.Forms.Button()
         Me.SuspendLayout()
@@ -35,14 +35,14 @@ Partial Class LenDiameter
         Me.ID_TEXT_FIXED.Size = New System.Drawing.Size(100, 20)
         Me.ID_TEXT_FIXED.TabIndex = 0
         '
-        'Label1
+        'Label
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(29, 36)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(88, 13)
-        Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Length(Diameter)"
+        Me.Label.AutoSize = True
+        Me.Label.Location = New System.Drawing.Point(29, 36)
+        Me.Label.Name = "Label"
+        Me.Label.Size = New System.Drawing.Size(88, 13)
+        Me.Label.TabIndex = 1
+        Me.Label.Text = "Length(Diameter)"
         '
         'ID_BTN_OK
         '
@@ -64,23 +64,23 @@ Partial Class LenDiameter
         Me.ID_BTN_CANCEL.Text = "Cancel"
         Me.ID_BTN_CANCEL.UseVisualStyleBackColor = True
         '
-        'Form3
+        'LenDiameter
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(249, 119)
         Me.Controls.Add(Me.ID_BTN_CANCEL)
         Me.Controls.Add(Me.ID_BTN_OK)
-        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.Label)
         Me.Controls.Add(Me.ID_TEXT_FIXED)
-        Me.Name = "Form3"
+        Me.Name = "LenDiameter"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
 
     Friend WithEvents ID_TEXT_FIXED As TextBox
-    Friend WithEvents Label1 As Label
+    Friend WithEvents Label As Label
     Friend WithEvents ID_BTN_OK As Button
     Friend WithEvents ID_BTN_CANCEL As Button
 End Class

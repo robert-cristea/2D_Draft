@@ -52,7 +52,12 @@ Public Class Circle
             Dim image = Main_Form.resizedImage.ToBitmap()
             Dim output = IdentifyCicles(image, roundness, thr_cir, Main_Form.objSeg)
             Main_Form.PictureBox.Image = output
-            Main_Form.currentImage = GetMatFromSDImage(output)
+
+            Dim ResizedMat = GetMatFromSDImage(output)
+            Dim sz = New Size(Main_Form.originalImage.Width, Main_Form.originalImage.Height)
+            CvInvoke.Resize(ResizedMat, Main_Form.currentImage, sz)
+            ResizedMat.Dispose()
+
             img_circle = Main_Form.PictureBox.Image
             img_active = img_circle
             subtract = 0
@@ -72,7 +77,12 @@ Public Class Circle
                 Dim image = Main_Form.resizedImage.ToBitmap()
                 Dim output = SubtractCircles(image, Main_Form.objSeg, percent_circle)
                 Main_Form.PictureBox.Image = output
-                Main_Form.currentImage = GetMatFromSDImage(output)
+
+                Dim ResizedMat = GetMatFromSDImage(output)
+                Dim sz = New Size(Main_Form.originalImage.Width, Main_Form.originalImage.Height)
+                CvInvoke.Resize(ResizedMat, Main_Form.currentImage, sz)
+                ResizedMat.Dispose()
+
                 img_subtracted = output
                 img_circle = img_subtracted
                 img_active = img_subtracted
@@ -87,7 +97,12 @@ Public Class Circle
                 'Segment Remaing Image into Black and White
                 Dim output = SegmentIntoBlackAndWhite(img_subtracted, thr_seg, Main_Form.objSeg, percent_black, percent_white)
                 Main_Form.PictureBox.Image = output
-                Main_Form.currentImage = GetMatFromSDImage(output)
+
+                Dim ResizedMat = GetMatFromSDImage(output)
+                Dim sz = New Size(Main_Form.originalImage.Width, Main_Form.originalImage.Height)
+                CvInvoke.Resize(ResizedMat, Main_Form.currentImage, sz)
+                ResizedMat.Dispose()
+
                 'format img_segmented
                 img_segmented = output
                 img_active = img_segmented
@@ -110,7 +125,12 @@ Public Class Circle
             Dim image = Main_Form.resizedImage.ToBitmap()
             Dim output = IdentifyCicles(image, roundness, thr_cir, Main_Form.objSeg)
             Main_Form.PictureBox.Image = output
-            Main_Form.currentImage = GetMatFromSDImage(output)
+
+            Dim ResizedMat = GetMatFromSDImage(output)
+            Dim sz = New Size(Main_Form.originalImage.Width, Main_Form.originalImage.Height)
+            CvInvoke.Resize(ResizedMat, Main_Form.currentImage, sz)
+            ResizedMat.Dispose()
+
             img_circle = Main_Form.PictureBox.Image
             img_active = img_circle
             subtract = 0

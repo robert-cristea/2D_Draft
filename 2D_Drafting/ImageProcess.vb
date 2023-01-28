@@ -966,26 +966,16 @@ Public Module ImageProcess
     ''' <paramname="ori">The original image.</param>
     ''' <paramname="segmented">The segmented image.</param>
 
-    Public Function OverLapSegToOri(ByVal ori As Image, ByVal segmented As Image) As Image
-
-        Dim bmpImage As Bitmap = New Bitmap(ori)
-        Dim ori_Image As Emgu.CV.Image(Of Bgr, Byte) = bmpImage.ToImage(Of Bgr, Byte)()
-        bmpImage.Dispose()
-
-        Dim bmpImage2 As Bitmap = New Bitmap(segmented)
-        Dim seg_Image As Emgu.CV.Image(Of Gray, Byte) = bmpImage2.ToImage(Of Gray, Byte)()
-        bmpImage2.Dispose()
-
-        'ImageView.imshow(ori_Image);
-        'ImageView.imShow(seg_Image);
+    Public Function OverLapSegToOri(ByVal ori As Emgu.CV.Image(Of Emgu.CV.Structure.Bgr, Byte), ByVal segmented As Emgu.CV.Image(Of Emgu.CV.Structure.Gray, Byte)) As Emgu.CV.Image(Of Emgu.CV.Structure.Bgr, Byte)
+        Dim Result = ori.Clone()
 
         ' Data, it's faster not to iterate over a property
-        Dim data = ori_Image.Data
-        Dim pixels = seg_Image.Data
+        Dim data = Result.Data
+        Dim pixels = segmented.Data
 
         ' Assign color to each pixel
-        For y = 0 To ori_Image.Height - 1
-            For x = 0 To ori_Image.Width - 1
+        For y = 0 To ori.Height - 1
+            For x = 0 To ori.Width - 1
                 Dim xImg = x
                 Dim yImg = y
                 If pixels(yImg, xImg, 0) > 128 Then
@@ -996,15 +986,7 @@ Public Module ImageProcess
             Next
         Next
 
-        'ImageView.imshow(ori_Image);
-        Dim array As Byte() = ori_Image.ToJpegData()
-        ori_Image.Dispose()
-        seg_Image.Dispose()
-
-        Dim stream As MemoryStream = New MemoryStream(array)
-        Dim img = Image.FromStream(stream)
-
-        Return img
+        Return Result
     End Function
 
     ''' <summary>
@@ -1049,23 +1031,21 @@ Public Module ImageProcess
     ''' <paramname="PhaseVal">The list of phase values.</param>
     ''' <paramname="PhaseCol">The list of colors for each phase.</param>
     ''' <paramname="PhaseArea">The list of areas for each phase.</param>
-    Public Function MultiSegment(ori As Image, PhaseVal As List(Of Integer), PhaseCol As List(Of Integer()), PhaseArea As List(Of Integer), PhaseSel As List(Of Integer), FirstPt As Point, SecondPt As Point, flag As Boolean) As Image
+    Public Function MultiSegment(src As Emgu.CV.Image(Of Bgr, Byte), PhaseVal As List(Of Integer), PhaseCol As List(Of Integer()), PhaseArea As List(Of Integer), PhaseSel As List(Of Integer), FirstPt As Point, SecondPt As Point, flag As Boolean) As Emgu.CV.Image(Of Bgr, Byte)
         PhaseArea.Clear()
         For i = 0 To PhaseCol.Count - 1
             PhaseArea.Add(0)
         Next
-        Dim bmpImage As Bitmap = New Bitmap(ori)
-        Dim colorImage As Emgu.CV.Image(Of Bgr, Byte) = bmpImage.ToImage(Of Bgr, Byte)()
-        bmpImage.Dispose()
 
-        Dim grayImage = getGrayScale(colorImage)
-        Dim color = colorImage.Data
+        Dim Result = src.Clone()
+        Dim grayImage = getGrayScale(src)
+        Dim color = Result.Data
         Dim gray = grayImage.Data
 
         Dim startX = 0
-        Dim endX = colorImage.Width - 1
+        Dim endX = src.Width - 1
         Dim startY = 0
-        Dim endY = colorImage.Height - 1
+        Dim endY = src.Height - 1
         If flag Then
             startX = FirstPt.X
             endX = SecondPt.X
@@ -1088,14 +1068,9 @@ Public Module ImageProcess
                 Next
             Next
         Next
-        Dim array As Byte() = colorImage.ToJpegData()
-        colorImage.Dispose()
         grayImage.Dispose()
 
-        Dim stream As MemoryStream = New MemoryStream(array)
-        Dim img = Image.FromStream(stream)
-
-        Return img
+        Return Result
     End Function
 
     ''' <summary>
@@ -1256,6 +1231,7 @@ Public Module ImageProcess
             Dim Obj = ObjList(i)
             Dim pos = New Point((Obj.topLeft.X + Obj.rightBottom.X) * width / 2, (Obj.topLeft.Y + Obj.rightBottom.Y) * Height / 2)
             g.DrawString((i + 1).ToString(), font, graphBrush, pos)
+
         Next
         graphBrush.Dispose()
     End Sub

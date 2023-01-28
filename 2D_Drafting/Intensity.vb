@@ -24,13 +24,14 @@ Public Class Intensity
     Public Sub DrawResult()
         Try
             BinaryImage = GetBinaryWith2Thr(GrayImage, Lower, Upper)
-            Dim resizedBinary = BinaryImage.Copy()
+            Dim outPut = OverLapSegToOri(OriImage, BinaryImage)
             Dim sz = New Size(Main_Form.resizedImage.Width, Main_Form.resizedImage.Height)
-            CvInvoke.Resize(BinaryImage, resizedBinary, sz)
-            Dim BinImg = GetImageFromEmgu(resizedBinary)
-            Dim outPut = OverLapSegToOri(Main_Form.resizedImage.ToBitmap(), BinImg)
-            Main_Form.PictureBox.Image = outPut
-            Main_Form.currentImage = GetMatFromSDImage(outPut)
+            Dim Resized As Mat = New Mat()
+            CvInvoke.Resize(outPut, Resized, sz)
+
+            Main_Form.PictureBox.Image = Resized.ToBitmap()
+            Main_Form.currentImage = outPut.Clone().Mat
+            outPut.Dispose()
         Catch ex As Exception
 
         End Try

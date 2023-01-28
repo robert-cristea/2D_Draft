@@ -1,18 +1,19 @@
 ﻿Imports Emgu.CV
+Imports Emgu.CV.Structure
 
 Public Class Intersection
     Public thr_seg As Integer
-    Private img_segmented As Image
-    Private img_active As Image
-
-
-    Public Edge As Image
+    Public ResizedImg As Emgu.CV.Image(Of Bgr, Byte)
     Public Sub New()
         InitializeComponent()
     End Sub
 
     Private Sub Intersection_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Main_Form.objSeg.Refresh()
+        Dim scr = Main_Form.resizedImage.ToBitmap()
+        Dim bmpImage As Bitmap = New Bitmap(scr)
+        ResizedImg = bmpImage.ToImage(Of Bgr, Byte)()
+        bmpImage.Dispose()
     End Sub
 
     Private Sub LoadDataToGridView()
@@ -47,10 +48,12 @@ Public Class Intersection
             Dim image = Main_Form.resizedImage.ToBitmap()
             Dim output = SegmentIntoBlackAndWhite(image, thr_seg, Main_Form.objSeg, percent_black, percent_white)
             Main_Form.PictureBox.Image = output
-            Main_Form.currentImage = GetMatFromSDImage(output)
-            'format img_segmented
-            img_segmented = output
-            img_active = img_segmented
+
+            Dim ResizedMat = GetMatFromSDImage(output)
+            Dim sz = New Size(Main_Form.originalImage.Width, Main_Form.originalImage.Height)
+            CvInvoke.Resize(ResizedMat, Main_Form.currentImage, sz)
+            ResizedMat.Dispose()
+
         Catch ex As Exception
 
         End Try
@@ -62,13 +65,18 @@ Public Class Intersection
 
             Dim image = Main_Form.resizedImage.ToBitmap()
             Dim edge = GetEdgeFromBinary(image, thr_seg)
-            edge = edge
-            Dim output = OverLapSegToOri(image, edge)
-            Main_Form.PictureBox.Image = output
-            Main_Form.currentImage = GetMatFromSDImage(output)
-            'format img_segmented
-            img_segmented = output
-            img_active = img_segmented
+
+            Dim bmpImage As Bitmap = New Bitmap(edge)
+            Dim edgeEmgu As Emgu.CV.Image(Of Gray, Byte) = bmpImage.ToImage(Of Gray, Byte)()
+            bmpImage.Dispose()
+
+            Dim output = OverLapSegToOri(ResizedImg, edgeEmgu)
+            Main_Form.PictureBox.Image = output.ToBitmap()
+
+            Dim sz = New Size(Main_Form.originalImage.Width, Main_Form.originalImage.Height)
+            CvInvoke.Resize(output, Main_Form.currentImage, sz)
+            output.Dispose()
+
         Catch ex As Exception
 
         End Try

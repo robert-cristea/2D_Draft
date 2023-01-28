@@ -58,10 +58,12 @@ Public Class RoundnessLimit
             End If
 
             Dim sz = New Size(Main_Form.resizedImage.Width, Main_Form.resizedImage.Height)
-            CvInvoke.Resize(output, output, sz)
-            Dim Image = GetImageFromEmgu(output)
-            Main_Form.PictureBox.Image = Image
-            Main_Form.currentImage = GetMatFromSDImage(Image)
+            Dim Resized As Mat = New Mat()
+            CvInvoke.Resize(output, Resized, sz)
+
+            Main_Form.PictureBox.Image = Resized.ToBitmap()
+            Main_Form.currentImage = output.Clone().Mat
+            output.Dispose()
         Catch ex As Exception
 
         End Try

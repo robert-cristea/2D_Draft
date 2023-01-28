@@ -80,35 +80,35 @@ Public Module C_Utils
     ''' clear C_Line Object.
     ''' </summary>
     ''' <paramname="C_line">The C_Line object.</param>
-    Function Clear(ByRef C_line As LineObj)
+    Sub Clear(ByRef C_line As LineObj)
         Dim tempPt = New PointF(0, 0)
         C_line.FirstPointOfLine = tempPt
         C_line.SecndPointOfLine = tempPt
         C_line.LDrawPos = tempPt
-    End Function
+    End Sub
 
     ''' <summary>
     ''' clear C_Point Object.
     ''' </summary>
     ''' <paramname="C_Point">The C_Point object.</param>
-    Function Clear(ByRef C_Point As PointObj)
+    Sub Clear(ByRef C_Point As PointObj)
         Dim tempPt = New PointF(0, 0)
         C_Point.PointPoint = tempPt
         C_Point.PDrawPos = tempPt
-    End Function
+    End Sub
 
     ''' <summary>
     ''' clear C_Poly Object.
     ''' </summary>
     ''' <paramname="C_Poly">The C_Poly object.</param>
-    Function Clear(ByRef C_Poly As PolyObj)
+    Sub Clear(ByRef C_Poly As PolyObj)
         Dim tempPt = New PointF(0, 0)
         C_Poly.PolyDrawPos = tempPt
         C_Poly.PolyPointIndx = 0
         For i = 0 To 49
             C_Poly.PolyPoint(i) = tempPt
         Next
-    End Function
+    End Sub
 
     ''' <summary>
     ''' Clone C_Poly Object.
@@ -183,20 +183,20 @@ Public Module C_Utils
     ''' clear C_Curve Object.
     ''' </summary>
     ''' <paramname="C_Curve">The C_Curve object.</param>
-    Function Clear(ByRef C_Curve As CurveObj)
+    Sub Clear(ByRef C_Curve As CurveObj)
         Dim tempPt = New PointF(0, 0)
         C_Curve.CDrawPos = tempPt
         C_Curve.CPointIndx = 0
         For i = 0 To 9999
             C_Curve.CurvePoint(i) = tempPt
         Next
-    End Function
+    End Sub
 
     ''' <summary>
     ''' clear C_CuPoly Object.
     ''' </summary>
     ''' <paramname="C_CuPoly">The C_CuPoly object.</param>
-    Function Clear(ByRef C_CuPoly As CuPolyObj)
+    Sub Clear(ByRef C_CuPoly As CuPolyObj)
         Dim tempPt = New PointF(0, 0)
         C_CuPoly.CuPolyDrawPos = tempPt
         C_CuPoly.CuPolyPointIndx_j = 0
@@ -206,27 +206,27 @@ Public Module C_Utils
             Next
             C_CuPoly.CuPolyPointIndx_k(i) = 0
         Next
-    End Function
+    End Sub
 
     ''' <summary>
     ''' clear Curve Object.
     ''' </summary>
     ''' <paramname="Curve">The Curve object.</param>
-    Function Clear(ByRef Curve As CurveObject)
+    Sub Clear(ByRef Curve As CurveObject)
         Curve.CuPolyItem.Clear()
         Curve.PolyItem.Clear()
         Curve.PointItem.Clear()
         Curve.LineItem.Clear()
         Curve.CurveItem.Clear()
-    End Function
+    End Sub
 
-    Function SetLineAndFont(ByRef item As MeasureObject, ByVal line_infor As LineStyle, ByVal font_infor As FontInfor)
+    Sub SetLineAndFont(ByRef item As MeasureObject, ByVal line_infor As LineStyle, ByVal font_infor As FontInfor)
         item.lineInfor.line_style = line_infor.line_style
         item.lineInfor.line_width = line_infor.line_width
         item.lineInfor.line_color = line_infor.line_color
         item.fontInfor.font_color = font_infor.font_color
         item.fontInfor.text_font = font_infor.text_font
-    End Function
+    End Sub
 
     ''' <summary>
     ''' Initiate label indexs.

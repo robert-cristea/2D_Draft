@@ -46,12 +46,13 @@ Public Class Nodularity
     End Sub
     Private Sub Nodularity_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
-            Dim scr = Main_Form.originalImage.ToBitmap()
+            Dim scr = Main_Form.originalImage.Clone().ToBitmap()
             Dim bmpImage As Bitmap = New Bitmap(scr)
             OriImage = bmpImage.ToImage(Of Bgr, Byte)()
             bmpImage.Dispose()
             GrayImage = getGrayScale(OriImage)
             BinaryImage = GrayImage.CopyBlank()
+            scr.Dispose()
         Catch ex As Exception
 
         End Try
@@ -63,14 +64,15 @@ Public Class Nodularity
     Private Sub GetBinaryImage()
         Try
             ObjListTotal.Clear()
-            Dim resizedBinary = BinaryImage.Copy()
+
+            Dim outPut = OverLapSegToOri(OriImage, BinaryImage)
             Dim sz = New Size(Main_Form.resizedImage.Width, Main_Form.resizedImage.Height)
-            CvInvoke.Resize(BinaryImage, resizedBinary, sz)
-            Dim BinImg = GetImageFromEmgu(resizedBinary)
-            Dim outPut = OverLapSegToOri(Main_Form.resizedImage.ToBitmap(), BinImg)
-            Main_Form.PictureBox.Image = outPut
-            Main_Form.currentImage = GetMatFromSDImage(outPut)
-            BlobDetection(OriImage, BinaryImage, ObjListTotal, AreaLimit)
+            Dim Resized As Mat = New Mat()
+            CvInvoke.Resize(outPut, Resized, sz)
+
+            Main_Form.PictureBox.Image = Resized.ToBitmap()
+            Main_Form.currentImage = outPut.Clone().Mat
+            outPut.Dispose()
 
             Dim maxArea = 0
             Dim minArea = 99999

@@ -66,13 +66,6 @@ Public Class Main_Form
     Public imagePath As String = ""                                     'path of folder storing captured images
     Private flag As Boolean = False                                     'flag for live image
 
-    'member variable for keygen
-    Dim licState As licState                                            'the state of this program is licensed or not
-    Public licModel As New licensInfoModel
-    Dim licGen As New LicGen
-    Dim licpath As String = "active.lic"                                'the path of license file
-    Private path As String
-
     'member variable for setting.ini
     Private caliPath As String = "C:\Users\Public\Documents\Calibration.ini"    'the path of setting.ini
     Private configPath As String = "C:\Users\Public\Documents\Config.ini"    'the path of setting.ini
@@ -128,26 +121,26 @@ Public Class Main_Form
     Public PDotY As Integer                                            'Y-coordinate of point which is used for drawing dotted line in case of polygen object
     Public POutFlag As Boolean                                         'flag specifies whether the foot of perpendicular is in range of polygen object or not
 
-    Private C_PolyObj As PolyObj = New PolyObj()
-    Private C_PointObj As PointObj = New PointObj()
-    Private C_LineObj As LineObj = New LineObj()
-    Private C_CuPolyObj As CuPolyObj = New CuPolyObj()
-    Private C_CurveObj As CurveObj = New CurveObj()
-    Public curveObjSelIndex As Integer
-    Private moveLine As Boolean
-    Private StartPtOfMove As PointF = New PointF()
-    Private EndPtOfMove As PointF = New PointF()
+    Private C_PolyObj As PolyObj = New PolyObj()                        'PolyObj
+    Private C_PointObj As PointObj = New PointObj()                     'PointObj
+    Private C_LineObj As LineObj = New LineObj()                        'LineObj
+    Private C_CuPolyObj As CuPolyObj = New CuPolyObj()                  'CuPolyObj
+    Private C_CurveObj As CurveObj = New CurveObj()                     'CurveObj
+    Public curveObjSelIndex As Integer                                  'index of CurveObject which is selected
+    Private moveLine As Boolean                                         'state indentifying whether user can move curve line or not
+    Private StartPtOfMove As PointF = New PointF()                      'start point of moving line
+    Private EndPtOfMove As PointF = New PointF()                        'end point of moving line
 
     'member variables for edge detection
-    Public EdgeRegionDrawReady As Boolean
-    Public EdgeRegionDrawed As Boolean
-    Public FirstPtOfEdge As Point = New Point()
-    Public SecondPtOfEdge As Point = New Point()
-    Public MouseDownFlag As Boolean
-    Public colorList As List(Of Integer()) = New List(Of Integer())
-    Public objSeg As SegObject = New SegObject()
+    Public EdgeRegionDrawReady As Boolean                               'state indentifying if the program is ready for edgeDetection
+    Public EdgeRegionDrawed As Boolean                                  'state indentifying if the edge drawing is finished
+    Public FirstPtOfEdge As Point = New Point()                         'start point of edge detection
+    Public SecondPtOfEdge As Point = New Point()                        'end point of edge detection
+    Public MouseDownFlag As Boolean                                     'state indentifying whether mouse lbutton is clicked
+    Public colorList As List(Of Integer()) = New List(Of Integer())     'List of colors
+    Public objSeg As SegObject = New SegObject()                        'SegObj
 
-
+    Private controlIntialized As Boolean                            'state indentifying whether controls are intialized or not
 
     Public Sub New()
         InitializeComponent()
@@ -357,46 +350,56 @@ Public Class Main_Form
         End If
     End Sub
 
-    'check license information when main dialog is loading
-    Private Sub Main_Form_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub GetInformationAndGetReady()
         Try
             Initialize_Button_Colors()
-            Timer1.Interval = 30
-            Timer1.Start()
             GetCalibrationInfo()
             GetConfigInfo()
             GetLegendInfo()
             initVar()
+
+            If My.Settings.imagefilepath.Equals("") Then
+                imagePath = "MyImages"
+                My.Settings.imagefilepath = imagePath
+                My.Settings.Save()
+                txtbx_imagepath.Text = imagePath
+            Else
+                imagePath = My.Settings.imagefilepath
+                txtbx_imagepath.Text = My.Settings.imagefilepath
+            End If
+
+            objSeg.circleObj = New CircleObj()
+            objSeg.sectObj = New InterSectionObj()
+            objSeg.phaseSegObj = New PhaseSegObj()
+            objSeg.BlobSegObj = New BlobSegObj()
+            Dim colType As Type = GetType(System.Drawing.Color)
+
+            For Each prop As PropertyInfo In colType.GetProperties()
+                If prop.PropertyType Is GetType(System.Drawing.Color) Then
+                    Dim Col = Color.FromName(prop.Name)
+                    Dim Col_Array = New Integer() {Col.B, Col.G, Col.R}
+                    colorList.Add(Col_Array)
+                End If
+            Next
+
+            DeleteImages(imagePath)
+            Createdirectory(imagePath)
         Catch ex As Exception
             MessageBox.Show(ex.Message.ToString())
         End Try
 
-        If My.Settings.imagefilepath.Equals("") Then
-            imagePath = "MyImages"
-            My.Settings.imagefilepath = imagePath
-            My.Settings.Save()
-            txtbx_imagepath.Text = imagePath
-        Else
-            imagePath = My.Settings.imagefilepath
-            txtbx_imagepath.Text = My.Settings.imagefilepath
-        End If
+    End Sub
+    'check license information when main dialog is loading
+    Private Sub Main_Form_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Try
 
-        objSeg.circleObj = New CircleObj()
-        objSeg.sectObj = New InterSectionObj()
-        objSeg.phaseSegObj = New PhaseSegObj()
-        objSeg.BlobSegObj = New BlobSegObj()
-        Dim colType As Type = GetType(System.Drawing.Color)
+            Timer1.Interval = 30
+            Timer1.Start()
 
-        For Each prop As PropertyInfo In colType.GetProperties()
-            If prop.PropertyType Is GetType(System.Drawing.Color) Then
-                Dim Col = Color.FromName(prop.Name)
-                Dim Col_Array = New Integer() {Col.B, Col.G, Col.R}
-                colorList.Add(Col_Array)
-            End If
-        Next
+        Catch ex As Exception
+            MessageBox.Show(ex.Message.ToString())
+        End Try
 
-        DeleteImages(imagePath)
-        Createdirectory(imagePath)
     End Sub
 
     'change the color of button when it is clicked
@@ -460,6 +463,11 @@ Public Class Main_Form
 
         End If
 
+        If controlIntialized = False Then
+
+            GetInformationAndGetReady()
+            controlIntialized = True
+        End If
     End Sub
 
     'open camera
@@ -497,10 +505,13 @@ Public Class Main_Form
         Dim filter = "JPEG Files|*.jpg|PNG Files|*.png|BMP Files|*.bmp|All Files|*.*"
         Dim title = "Open"
 
-        PictureBox.LoadImageFromFiles(filter, title, originalImage, resizedImage, currentImage)
-        PictureBox.Invoke(New Action(Sub() PictureBox.Image = originalImage.ToBitmap()))
-        DrawAndCenteringImage()
-        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
+        Dim selected = PictureBox.LoadImageFromFiles(filter, title, originalImage, resizedImage, currentImage)
+        If selected Then
+            PictureBox.Invoke(New Action(Sub() PictureBox.Image = originalImage.ToBitmap()))
+            DrawAndCenteringImage()
+            ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
+        End If
+
     End Sub
 
     'export image to jpg
@@ -712,6 +723,7 @@ Public Class Main_Form
 
         ID_STATUS_LABEL.Text = "Drawing a circle which has fixed radius"
         Dim form = New LenDiameter()
+        form.Label.Text = "Radius:"
         If form.ShowDialog() = DialogResult.OK Then
             objSelected.scaleObject.length = CSng(form.ID_TEXT_FIXED.Text)
             objSelected.arc = objSelected.scaleObject.length / PictureBox.Width
@@ -727,6 +739,7 @@ Public Class Main_Form
 
         ID_STATUS_LABEL.Text = "Drawing a line which has fixed length"
         Dim form = New LenDiameter()
+        form.Label.Text = "Length:"
         If form.ShowDialog() = DialogResult.OK Then
             objSelected.scaleObject.length = CSng(form.ID_TEXT_FIXED.Text)
             objSelected.length = objSelected.scaleObject.length / PictureBox.Width
@@ -738,10 +751,12 @@ Public Class Main_Form
         menuClick = True
         objSelected.Refresh()
         curMeasureType = MeasureType.angleFixed
+
         objSelected.measuringType = curMeasureType
 
         ID_STATUS_LABEL.Text = "Drawing a angle which has fixed angle"
         Dim form = New LenDiameter()
+        form.Label.Text = "Angle:"
         If form.ShowDialog() = DialogResult.OK Then
             objSelected.angle = CSng(form.ID_TEXT_FIXED.Text)
         End If

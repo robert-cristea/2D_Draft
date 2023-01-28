@@ -37,15 +37,11 @@ Public Class Phase_Segmentation
     End Sub
 
     Private Sub Phase_Segmentation_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        RadioStateSeg = 0
-        RadioStatePreview = 2
-        RadioAll.Checked = True
-        RadioPreAll.Checked = True
 
         Try
             Timer1.Interval = 30
             Timer1.Start()
-            Dim scr = Main_Form.resizedImage.ToBitmap()
+            Dim scr = Main_Form.originalImage.ToBitmap()
             Dim bmpImage As Bitmap = New Bitmap(scr)
             OriImage = bmpImage.ToImage(Of Bgr, Byte)()
             bmpImage.Dispose()
@@ -59,7 +55,10 @@ Public Class Phase_Segmentation
                     ComboBox1.Items.Add(Item)
                 Next
             End If
-
+            RadioStateSeg = 0
+            RadioStatePreview = 2
+            RadioAll.Checked = True
+            RadioPreAll.Checked = True
             DrawResult()
         Catch ex As Exception
             MessageBox.Show(ex.Message)
@@ -171,9 +170,15 @@ Public Class Phase_Segmentation
             Dim image = Main_Form.resizedImage.ToBitmap()
             Dim flag As Boolean = False
             If Main_Form.EdgeRegionDrawed And Main_Form.EdgeRegionDrawReady Then flag = True
-            Dim output = MultiSegment(image, PhaseVal, PhaseCol, PhaseArea, PhaseSel, FirstPt, SecondPt, flag)
-            Main_Form.PictureBox.Image = output
-            Main_Form.currentImage = GetMatFromSDImage(output)
+            Dim output = MultiSegment(OriImage, PhaseVal, PhaseCol, PhaseArea, PhaseSel, FirstPt, SecondPt, flag)
+
+            Dim sz = New Size(Main_Form.resizedImage.Width, Main_Form.resizedImage.Height)
+            Dim Resized As Mat = New Mat()
+            CvInvoke.Resize(output, Resized, sz)
+
+            Main_Form.PictureBox.Image = Resized.ToBitmap()
+            Main_Form.currentImage = output.Mat.Clone()
+            output.Dispose()
         Catch ex As Exception
 
         End Try
@@ -233,7 +238,7 @@ Public Class Phase_Segmentation
 
     Private Sub BtnDel_Click(sender As Object, e As EventArgs) Handles BtnDel.Click
         Dim cur_col As Integer() = New Integer() {255, 255, 255}
-        Dim item As String
+
         If PhaseNum > 0 Then
             PhaseVal.RemoveAt(PhaseVal.Count - 1)
             PhaseCol.RemoveAt(PhaseCol.Count - 1)

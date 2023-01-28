@@ -40,7 +40,7 @@
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
     <DocumentationFile>2D_Drafting.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022, 42304</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -257,8 +257,6 @@
     </Compile>
     <Compile Include="Key.vb" />
     <Compile Include="KeyComparer.vb" />
-    <Compile Include="LicGen.vb" />
-    <Compile Include="LicInfo.Designer.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -344,10 +342,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Intersection.resx">
       <DependentUpon>Intersection.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LicInfo.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>LicInfo1.Designer.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
