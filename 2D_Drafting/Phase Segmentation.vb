@@ -59,7 +59,15 @@ Public Class Phase_Segmentation
             RadioStatePreview = 2
             RadioAll.Checked = True
             RadioPreAll.Checked = True
+
             DrawResult()
+
+            Main_Form.EdgeRegionDrawed = False
+            Main_Form.EdgeRegionDrawReady = False
+            Main_Form.FirstPtOfEdge.X = 0
+            Main_Form.FirstPtOfEdge.Y = 0
+            Main_Form.SecondPtOfEdge.X = 0
+            Main_Form.SecondPtOfEdge.Y = 0
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try

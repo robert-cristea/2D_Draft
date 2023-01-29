@@ -29,22 +29,22 @@ Partial Class Circle
         Me.ID_LABEL_THR_SEG = New System.Windows.Forms.Label()
         Me.ID_NUM_THR_CIR = New System.Windows.Forms.NumericUpDown()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.No = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PosX = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PosY = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Size = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.BtnExcel = New System.Windows.Forms.Button()
         Me.BtnReport = New System.Windows.Forms.Button()
         Me.BtnExit = New System.Windows.Forms.Button()
         Me.ID_SCROLL_ROUNDNESS = New System.Windows.Forms.TrackBar()
         Me.ID_SCROLL_THR_SEG = New System.Windows.Forms.TrackBar()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.LabCircle = New System.Windows.Forms.Label()
-        Me.LabBlack = New System.Windows.Forms.Label()
         Me.LabWhite = New System.Windows.Forms.Label()
+        Me.LabBlack = New System.Windows.Forms.Label()
+        Me.LabCircle = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.No = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PosX = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PosY = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RadiusSize = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.ID_NUM_THR_CIR, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ID_SCROLL_ROUNDNESS, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -107,31 +107,11 @@ Partial Class Circle
         'DataGridView1
         '
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.No, Me.PosX, Me.PosY, Me.Size})
+        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.No, Me.PosX, Me.PosY, Me.RadiusSize})
         Me.DataGridView1.Location = New System.Drawing.Point(12, 313)
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.Size = New System.Drawing.Size(308, 155)
         Me.DataGridView1.TabIndex = 10
-        '
-        'No
-        '
-        Me.No.HeaderText = "No"
-        Me.No.Name = "No"
-        '
-        'PosX
-        '
-        Me.PosX.HeaderText = "PosX"
-        Me.PosX.Name = "PosX"
-        '
-        'PosY
-        '
-        Me.PosY.HeaderText = "PosY"
-        Me.PosY.Name = "PosY"
-        '
-        'Size
-        '
-        Me.Size.HeaderText = "Size"
-        Me.Size.Name = "Size"
         '
         'BtnExcel
         '
@@ -190,23 +170,29 @@ Partial Class Circle
         Me.GroupBox1.TabIndex = 16
         Me.GroupBox1.TabStop = False
         '
-        'Label4
+        'LabWhite
         '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(51, 26)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(61, 13)
-        Me.Label4.TabIndex = 0
-        Me.Label4.Text = "Circle Area:"
+        Me.LabWhite.AutoSize = True
+        Me.LabWhite.Location = New System.Drawing.Point(152, 96)
+        Me.LabWhite.Name = "LabWhite"
+        Me.LabWhite.Size = New System.Drawing.Size(0, 13)
+        Me.LabWhite.TabIndex = 5
         '
-        'Label5
+        'LabBlack
         '
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(51, 61)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(62, 13)
-        Me.Label5.TabIndex = 1
-        Me.Label5.Text = "Black Area:"
+        Me.LabBlack.AutoSize = True
+        Me.LabBlack.Location = New System.Drawing.Point(152, 61)
+        Me.LabBlack.Name = "LabBlack"
+        Me.LabBlack.Size = New System.Drawing.Size(0, 13)
+        Me.LabBlack.TabIndex = 4
+        '
+        'LabCircle
+        '
+        Me.LabCircle.AutoSize = True
+        Me.LabCircle.Location = New System.Drawing.Point(152, 26)
+        Me.LabCircle.Name = "LabCircle"
+        Me.LabCircle.Size = New System.Drawing.Size(0, 13)
+        Me.LabCircle.TabIndex = 3
         '
         'Label6
         '
@@ -217,29 +203,43 @@ Partial Class Circle
         Me.Label6.TabIndex = 2
         Me.Label6.Text = "White Area:"
         '
-        'LabCircle
+        'Label5
         '
-        Me.LabCircle.AutoSize = True
-        Me.LabCircle.Location = New System.Drawing.Point(152, 26)
-        Me.LabCircle.Name = "LabCircle"
-        Me.LabCircle.Size = New System.Drawing.Size(0, 13)
-        Me.LabCircle.TabIndex = 3
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(51, 61)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(62, 13)
+        Me.Label5.TabIndex = 1
+        Me.Label5.Text = "Black Area:"
         '
-        'LabBlack
+        'Label4
         '
-        Me.LabBlack.AutoSize = True
-        Me.LabBlack.Location = New System.Drawing.Point(152, 61)
-        Me.LabBlack.Name = "LabBlack"
-        Me.LabBlack.Size = New System.Drawing.Size(0, 13)
-        Me.LabBlack.TabIndex = 4
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(51, 26)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(61, 13)
+        Me.Label4.TabIndex = 0
+        Me.Label4.Text = "Circle Area:"
         '
-        'LabWhite
+        'No
         '
-        Me.LabWhite.AutoSize = True
-        Me.LabWhite.Location = New System.Drawing.Point(152, 96)
-        Me.LabWhite.Name = "LabWhite"
-        Me.LabWhite.Size = New System.Drawing.Size(0, 13)
-        Me.LabWhite.TabIndex = 5
+        Me.No.HeaderText = "No"
+        Me.No.Name = "No"
+        '
+        'PosX
+        '
+        Me.PosX.HeaderText = "PosX"
+        Me.PosX.Name = "PosX"
+        '
+        'PosY
+        '
+        Me.PosY.HeaderText = "PosY"
+        Me.PosY.Name = "PosY"
+        '
+        'RadiusSize
+        '
+        Me.RadiusSize.HeaderText = "Size"
+        Me.RadiusSize.Name = "RadiusSize"
         '
         'Circle
         '
@@ -279,10 +279,6 @@ Partial Class Circle
     Friend WithEvents ID_LABEL_THR_SEG As Label
     Friend WithEvents ID_NUM_THR_CIR As NumericUpDown
     Friend WithEvents DataGridView1 As DataGridView
-    Friend WithEvents No As DataGridViewTextBoxColumn
-    Friend WithEvents PosX As DataGridViewTextBoxColumn
-    Friend WithEvents PosY As DataGridViewTextBoxColumn
-    Friend WithEvents Size As DataGridViewTextBoxColumn
     Friend WithEvents BtnExcel As Button
     Friend WithEvents BtnReport As Button
     Friend WithEvents BtnExit As Button
@@ -295,4 +291,8 @@ Partial Class Circle
     Friend WithEvents Label6 As Label
     Friend WithEvents Label5 As Label
     Friend WithEvents Label4 As Label
+    Friend WithEvents No As DataGridViewTextBoxColumn
+    Friend WithEvents PosX As DataGridViewTextBoxColumn
+    Friend WithEvents PosY As DataGridViewTextBoxColumn
+    Friend WithEvents RadiusSize As DataGridViewTextBoxColumn
 End Class

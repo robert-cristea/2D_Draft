@@ -10,7 +10,6 @@ Public Class ParticipleSize
     Private RadioState As Integer
     Private Upper As Integer
     Private Lower As Integer
-    Private font = New Font("Arial", 10, FontStyle.Regular)
 
     Public Sub New()
         InitializeComponent()

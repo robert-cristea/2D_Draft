@@ -30,12 +30,6 @@ Partial Class ParticipleSize
         Me.BtnFont = New System.Windows.Forms.Button()
         Me.BtnDel = New System.Windows.Forms.Button()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.No = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Height = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Width = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Area = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Ratio = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Roundness = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.Label8 = New System.Windows.Forms.Label()
@@ -49,6 +43,12 @@ Partial Class ParticipleSize
         Me.BtnReport = New System.Windows.Forms.Button()
         Me.BtnExcel = New System.Windows.Forms.Button()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.No = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BlobHeight = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BlobWidth = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Area = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Ratio = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Roundness = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.GroupBox1.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox2.SuspendLayout()
@@ -120,41 +120,11 @@ Partial Class ParticipleSize
         'DataGridView1
         '
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.No, Me.Height, Me.Width, Me.Area, Me.Ratio, Me.Roundness})
+        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.No, Me.BlobHeight, Me.BlobWidth, Me.Area, Me.Ratio, Me.Roundness})
         Me.DataGridView1.Location = New System.Drawing.Point(12, 132)
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.Size = New System.Drawing.Size(316, 137)
         Me.DataGridView1.TabIndex = 3
-        '
-        'No
-        '
-        Me.No.HeaderText = "No"
-        Me.No.Name = "No"
-        '
-        'Height
-        '
-        Me.Height.HeaderText = "Height"
-        Me.Height.Name = "Height"
-        '
-        'Width
-        '
-        Me.Width.HeaderText = "Width"
-        Me.Width.Name = "Width"
-        '
-        'Area
-        '
-        Me.Area.HeaderText = "Area"
-        Me.Area.Name = "Area"
-        '
-        'Ratio
-        '
-        Me.Ratio.HeaderText = "Asp.Ratio"
-        Me.Ratio.Name = "Ratio"
-        '
-        'Roundness
-        '
-        Me.Roundness.HeaderText = "Roundness"
-        Me.Roundness.Name = "Roundness"
         '
         'Label1
         '
@@ -274,6 +244,36 @@ Partial Class ParticipleSize
         'Timer1
         '
         '
+        'No
+        '
+        Me.No.HeaderText = "No"
+        Me.No.Name = "No"
+        '
+        'BlobHeight
+        '
+        Me.BlobHeight.HeaderText = "Height"
+        Me.BlobHeight.Name = "BlobHeight"
+        '
+        'BlobWidth
+        '
+        Me.BlobWidth.HeaderText = "Width"
+        Me.BlobWidth.Name = "BlobWidth"
+        '
+        'Area
+        '
+        Me.Area.HeaderText = "Area"
+        Me.Area.Name = "Area"
+        '
+        'Ratio
+        '
+        Me.Ratio.HeaderText = "Asp.Ratio"
+        Me.Ratio.Name = "Ratio"
+        '
+        'Roundness
+        '
+        Me.Roundness.HeaderText = "Roundness"
+        Me.Roundness.Name = "Roundness"
+        '
         'ParticipleSize
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -306,12 +306,6 @@ Partial Class ParticipleSize
     Friend WithEvents BtnFont As Button
     Friend WithEvents BtnDel As Button
     Friend WithEvents DataGridView1 As DataGridView
-    Friend WithEvents No As DataGridViewTextBoxColumn
-    Friend WithEvents Height As DataGridViewTextBoxColumn
-    Friend WithEvents Width As DataGridViewTextBoxColumn
-    Friend WithEvents Area As DataGridViewTextBoxColumn
-    Friend WithEvents Ratio As DataGridViewTextBoxColumn
-    Friend WithEvents Roundness As DataGridViewTextBoxColumn
     Friend WithEvents Label1 As Label
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents Label8 As Label
@@ -325,4 +319,10 @@ Partial Class ParticipleSize
     Friend WithEvents BtnReport As Button
     Friend WithEvents BtnExcel As Button
     Friend WithEvents Timer1 As Timer
+    Friend WithEvents No As DataGridViewTextBoxColumn
+    Friend WithEvents BlobHeight As DataGridViewTextBoxColumn
+    Friend WithEvents BlobWidth As DataGridViewTextBoxColumn
+    Friend WithEvents Area As DataGridViewTextBoxColumn
+    Friend WithEvents Ratio As DataGridViewTextBoxColumn
+    Friend WithEvents Roundness As DataGridViewTextBoxColumn
 End Class

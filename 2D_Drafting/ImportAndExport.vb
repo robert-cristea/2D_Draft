@@ -151,43 +151,43 @@ Public Module ImportAndExport
         Dim xlsx_savepath = ""
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
             xlsx_savepath = SaveFileDialog.FileName
+
+            Dim listView As ListView = New ListView()
+            listView.Columns.Add("Object")
+            listView.Columns.Add("Length")
+            listView.Columns.Add("Angle")
+            listView.Columns.Add("Radius")
+            listView.Columns.Add("Unit")
+            listView.Columns.Add("Remarks")
+
+
+            Using workbook = New XLWorkbook()
+                Dim img = picturebox.Image
+                If img IsNot Nothing Then
+                    listView.Clear()
+                    listView.LoadObjectList(obj_list, CF, digit, unit)
+
+                    Dim worksheet = workbook.Worksheets.Add("Result Sheet")
+                    worksheet.Cell("A1").Value = "Object"
+                    worksheet.Cell("B1").Value = "Length"
+                    worksheet.Cell("C1").Value = "Angle"
+                    worksheet.Cell("D1").Value = "Radius"
+                    worksheet.Cell("E1").Value = "Unit"
+                    worksheet.Cell("F1").Value = "Remarks"
+                    Dim row_count_listbox = listView.Items.Count
+                    For i = 0 To row_count_listbox - 1
+                        worksheet.Cell("A" & (i + 2).ToString()).Value = listView.Items(i).SubItems(0).Text
+                        worksheet.Cell("B" & (i + 2).ToString()).Value = listView.Items(i).SubItems(1).Text
+                        worksheet.Cell("C" & (i + 2).ToString()).Value = listView.Items(i).SubItems(2).Text
+                        worksheet.Cell("D" & (i + 2).ToString()).Value = listView.Items(i).SubItems(3).Text
+                        worksheet.Cell("E" & (i + 2).ToString()).Value = listView.Items(i).SubItems(4).Text
+                        worksheet.Cell("F" & (i + 2).ToString()).Value = listView.Items(i).SubItems(5).Text
+                    Next
+                End If
+
+                workbook.SaveAs(xlsx_savepath)
+            End Using
         End If
-
-        Dim listView As ListView = New ListView()
-        listView.Columns.Add("Object")
-        listView.Columns.Add("Length")
-        listView.Columns.Add("Angle")
-        listView.Columns.Add("Radius")
-        listView.Columns.Add("Unit")
-        listView.Columns.Add("Remarks")
-
-
-        Using workbook = New XLWorkbook()
-            Dim img = picturebox.Image
-            If img IsNot Nothing Then
-                listView.Clear()
-                listView.LoadObjectList(obj_list, CF, digit, unit)
-
-                Dim worksheet = workbook.Worksheets.Add("Result Sheet")
-                worksheet.Cell("A1").Value = "Object"
-                worksheet.Cell("B1").Value = "Length"
-                worksheet.Cell("C1").Value = "Angle"
-                worksheet.Cell("D1").Value = "Radius"
-                worksheet.Cell("E1").Value = "Unit"
-                worksheet.Cell("F1").Value = "Remarks"
-                Dim row_count_listbox = listView.Items.Count
-                For i = 0 To row_count_listbox - 1
-                    worksheet.Cell("A" & (i + 2).ToString()).Value = listView.Items(i).SubItems(0).Text
-                    worksheet.Cell("B" & (i + 2).ToString()).Value = listView.Items(i).SubItems(1).Text
-                    worksheet.Cell("C" & (i + 2).ToString()).Value = listView.Items(i).SubItems(2).Text
-                    worksheet.Cell("D" & (i + 2).ToString()).Value = listView.Items(i).SubItems(3).Text
-                    worksheet.Cell("E" & (i + 2).ToString()).Value = listView.Items(i).SubItems(4).Text
-                    worksheet.Cell("F" & (i + 2).ToString()).Value = listView.Items(i).SubItems(5).Text
-                Next
-            End If
-
-            workbook.SaveAs(xlsx_savepath)
-        End Using
     End Sub
 
     ''' <summary>
@@ -209,59 +209,60 @@ Public Module ImportAndExport
         Dim xlsx_savepath = ""
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
             xlsx_savepath = SaveFileDialog.FileName
+
+            Dim listView As ListView = New ListView()
+            listView.Columns.Add("Object")
+            listView.Columns.Add("Length")
+            listView.Columns.Add("Angle")
+            listView.Columns.Add("Radius")
+            listView.Columns.Add("Unit")
+            listView.Columns.Add("Remarks")
+
+            Using workbook = New XLWorkbook()
+                Dim img = picturebox.Image
+                If img IsNot Nothing Then
+                    Dim result As Bitmap = New Bitmap(img.Width, img.Height)
+
+                    Using graph = Graphics.FromImage(result)
+                        Dim PointX = 0
+                        Dim PointY = 0
+                        Dim Width = img.Width
+                        Dim Height = img.Height
+                        graph.DrawImage(img, PointX, PointY, Width, Height)
+                        DrawObjList2(graph, picturebox, obj_list, digit, CF)
+                        graph.Flush()
+                    End Using
+
+                    Dim ms As MemoryStream = New MemoryStream()
+                    result.Save(ms, Imaging.ImageFormat.Png)
+
+                    listView.Clear()
+                    listView.LoadObjectList(obj_list, CF, digit, unit)
+
+                    Dim worksheet = workbook.Worksheets.Add("Result Sheet")
+                    worksheet.Cell("A1").Value = "Object"
+                    worksheet.Cell("B1").Value = "Length"
+                    worksheet.Cell("C1").Value = "Angle"
+                    worksheet.Cell("D1").Value = "Radius"
+                    worksheet.Cell("E1").Value = "Unit"
+                    worksheet.Cell("F1").Value = "Remarks"
+                    Dim row_count_listbox = listView.Items.Count
+                    For j = 0 To row_count_listbox - 1
+                        worksheet.Cell("A" & (j + 2).ToString()).Value = listView.Items(j).SubItems(0).Text
+                        worksheet.Cell("B" & (j + 2).ToString()).Value = listView.Items(j).SubItems(1).Text
+                        worksheet.Cell("C" & (j + 2).ToString()).Value = listView.Items(j).SubItems(2).Text
+                        worksheet.Cell("D" & (j + 2).ToString()).Value = listView.Items(j).SubItems(3).Text
+                        worksheet.Cell("E" & (j + 2).ToString()).Value = listView.Items(j).SubItems(4).Text
+                        worksheet.Cell("F" & (j + 2).ToString()).Value = listView.Items(j).SubItems(5).Text
+                    Next
+                    Dim image = worksheet.AddPicture(ms).MoveTo(worksheet.Cell("G2")) 'the cast is only to be sure
+                    'Or the cell you want to bind the picture
+
+                End If
+                workbook.SaveAs(xlsx_savepath)
+            End Using
         End If
 
-        Dim listView As ListView = New ListView()
-        listView.Columns.Add("Object")
-        listView.Columns.Add("Length")
-        listView.Columns.Add("Angle")
-        listView.Columns.Add("Radius")
-        listView.Columns.Add("Unit")
-        listView.Columns.Add("Remarks")
-
-        Using workbook = New XLWorkbook()
-            Dim img = picturebox.Image
-            If img IsNot Nothing Then
-                Dim result As Bitmap = New Bitmap(img.Width, img.Height)
-
-                Using graph = Graphics.FromImage(result)
-                    Dim PointX = 0
-                    Dim PointY = 0
-                    Dim Width = img.Width
-                    Dim Height = img.Height
-                    graph.DrawImage(img, PointX, PointY, Width, Height)
-                    DrawObjList2(graph, picturebox, obj_list, digit, CF)
-                    graph.Flush()
-                End Using
-
-                Dim ms As MemoryStream = New MemoryStream()
-                result.Save(ms, Imaging.ImageFormat.Png)
-
-                listView.Clear()
-                listView.LoadObjectList(obj_list, CF, digit, unit)
-
-                Dim worksheet = workbook.Worksheets.Add("Result Sheet")
-                worksheet.Cell("A1").Value = "Object"
-                worksheet.Cell("B1").Value = "Length"
-                worksheet.Cell("C1").Value = "Angle"
-                worksheet.Cell("D1").Value = "Radius"
-                worksheet.Cell("E1").Value = "Unit"
-                worksheet.Cell("F1").Value = "Remarks"
-                Dim row_count_listbox = listView.Items.Count
-                For j = 0 To row_count_listbox - 1
-                    worksheet.Cell("A" & (j + 2).ToString()).Value = listView.Items(j).SubItems(0).Text
-                    worksheet.Cell("B" & (j + 2).ToString()).Value = listView.Items(j).SubItems(1).Text
-                    worksheet.Cell("C" & (j + 2).ToString()).Value = listView.Items(j).SubItems(2).Text
-                    worksheet.Cell("D" & (j + 2).ToString()).Value = listView.Items(j).SubItems(3).Text
-                    worksheet.Cell("E" & (j + 2).ToString()).Value = listView.Items(j).SubItems(4).Text
-                    worksheet.Cell("F" & (j + 2).ToString()).Value = listView.Items(j).SubItems(5).Text
-                Next
-                Dim image = worksheet.AddPicture(ms).MoveTo(worksheet.Cell("G2")) 'the cast is only to be sure
-                'Or the cell you want to bind the picture
-
-            End If
-            workbook.SaveAs(xlsx_savepath)
-        End Using
     End Sub
 
     ''' <summary>
@@ -279,26 +280,28 @@ Public Module ImportAndExport
         Dim xlsx_savepath = ""
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
             xlsx_savepath = SaveFileDialog.FileName
-        End If
-        Dim NameSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-        Using workbook = New XLWorkbook()
-            For cnt = 0 To 24
-                Dim worksheet = workbook.Worksheets.Add("Result Sheet" & cnt.ToString())
-                For i = 0 To listview.Columns.Count - 1
-                    worksheet.Cell(NameSet(i) & 1).Value = listview.Columns(i).HeaderText
-                Next
+            Dim NameSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-                Dim row_count_listbox = listview.Rows.Count
-                For i = 0 To row_count_listbox - 1
-                    For j = 0 To listview.Columns.Count - 1
-                        worksheet.Cell(NameSet(j) & (i + 2).ToString()).Value = listview.Rows(i).Cells(j).Value
+            Using workbook = New XLWorkbook()
+                For cnt = 0 To 24
+                    Dim worksheet = workbook.Worksheets.Add("Result Sheet" & cnt.ToString())
+                    For i = 0 To listview.Columns.Count - 1
+                        worksheet.Cell(NameSet(i) & 1).Value = listview.Columns(i).HeaderText
+                    Next
+
+                    Dim row_count_listbox = listview.Rows.Count
+                    For i = 0 To row_count_listbox - 1
+                        For j = 0 To listview.Columns.Count - 1
+                            worksheet.Cell(NameSet(j) & (i + 2).ToString()).Value = listview.Rows(i).Cells(j).Value
+                        Next
                     Next
                 Next
-            Next
 
-            workbook.SaveAs(xlsx_savepath)
-        End Using
+                workbook.SaveAs(xlsx_savepath)
+            End Using
+        End If
+
     End Sub
 
 
@@ -318,37 +321,39 @@ Public Module ImportAndExport
         Dim xlsx_savepath = ""
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
             xlsx_savepath = SaveFileDialog.FileName
-        End If
-        Dim NameSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        Using workbook = New XLWorkbook()
-            Dim result As Bitmap = New Bitmap(img.Width, img.Height)
 
-            Using graph = Graphics.FromImage(result)
-                Dim PointX = 0
-                Dim PointY = 0
-                Dim Width = img.Width
-                Dim Height = img.Height
-                graph.DrawImage(img, PointX, PointY, Width, Height)
-                graph.Flush()
-            End Using
+            Dim NameSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            Using workbook = New XLWorkbook()
+                Dim result As Bitmap = New Bitmap(img.Width, img.Height)
 
-            Dim ms As MemoryStream = New MemoryStream()
-            result.Save(ms, Imaging.ImageFormat.Png)
-            Dim worksheet = workbook.Worksheets.Add("Result Sheet")
-            For i = 0 To listview.Columns.Count - 1
-                worksheet.Cell(NameSet(i) & 1).Value = listview.Columns(i).HeaderText
-            Next
+                Using graph = Graphics.FromImage(result)
+                    Dim PointX = 0
+                    Dim PointY = 0
+                    Dim Width = img.Width
+                    Dim Height = img.Height
+                    graph.DrawImage(img, PointX, PointY, Width, Height)
+                    graph.Flush()
+                End Using
 
-            Dim row_count_listbox = listview.Rows.Count
-            For i = 0 To row_count_listbox - 1
-                For j = 0 To listview.Columns.Count - 1
-                    worksheet.Cell(NameSet(j) & (i + 2).ToString()).Value = listview.Rows(i).Cells(j).Value
+                Dim ms As MemoryStream = New MemoryStream()
+                result.Save(ms, Imaging.ImageFormat.Png)
+                Dim worksheet = workbook.Worksheets.Add("Result Sheet")
+                For i = 0 To listview.Columns.Count - 1
+                    worksheet.Cell(NameSet(i) & 1).Value = listview.Columns(i).HeaderText
                 Next
-            Next
-            Dim image = worksheet.AddPicture(ms).MoveTo(worksheet.Cell(NameSet(listview.Columns.Count) & 2)) 'the cast is only to be sure
 
-            workbook.SaveAs(xlsx_savepath)
-        End Using
+                Dim row_count_listbox = listview.Rows.Count
+                For i = 0 To row_count_listbox - 1
+                    For j = 0 To listview.Columns.Count - 1
+                        worksheet.Cell(NameSet(j) & (i + 2).ToString()).Value = listview.Rows(i).Cells(j).Value
+                    Next
+                Next
+                Dim image = worksheet.AddPicture(ms).MoveTo(worksheet.Cell(NameSet(listview.Columns.Count) & 2)) 'the cast is only to be sure
+
+                workbook.SaveAs(xlsx_savepath)
+            End Using
+        End If
+
     End Sub
 
     ''' <summary>
@@ -367,43 +372,45 @@ Public Module ImportAndExport
         Dim xlsx_savepath = ""
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
             xlsx_savepath = SaveFileDialog.FileName
-        End If
-        Dim NameSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        Using workbook = New XLWorkbook()
-            Dim result As Bitmap = New Bitmap(pic.Width, pic.Height)
 
-            Using graph = Graphics.FromImage(result)
-                Dim PointX = 0
-                Dim PointY = 0
-                Dim Width = pic.Width
-                Dim Height = pic.Height
-                graph.DrawImage(pic.Image, PointX, PointY, Width, Height)
-                If Obj.measureType = SegType.blobSegment Then
-                    DrawLabelForCount(graph, pic, Obj.BlobSegObj.BlobList, font)
-                ElseIf Obj.measureType = SegType.interSect Then
-                    IdentifyInterSections(graph, Main_Form.PictureBox.Image, Obj.sectObj.threshold, Obj)
-                End If
+            Dim NameSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            Using workbook = New XLWorkbook()
+                Dim result As Bitmap = New Bitmap(pic.Width, pic.Height)
 
-                graph.Flush()
-            End Using
+                Using graph = Graphics.FromImage(result)
+                    Dim PointX = 0
+                    Dim PointY = 0
+                    Dim Width = pic.Width
+                    Dim Height = pic.Height
+                    graph.DrawImage(pic.Image, PointX, PointY, Width, Height)
+                    If Obj.measureType = SegType.blobSegment Then
+                        DrawLabelForCount(graph, pic, Obj.BlobSegObj.BlobList, font)
+                    ElseIf Obj.measureType = SegType.interSect Then
+                        IdentifyInterSections(graph, Main_Form.PictureBox.Image, Obj.sectObj.threshold, Obj)
+                    End If
 
-            Dim ms As MemoryStream = New MemoryStream()
-            result.Save(ms, Imaging.ImageFormat.Png)
-            Dim worksheet = workbook.Worksheets.Add("Result Sheet")
-            For i = 0 To listview.Columns.Count - 1
-                worksheet.Cell(NameSet(i) & 1).Value = listview.Columns(i).HeaderText
-            Next
+                    graph.Flush()
+                End Using
 
-            Dim row_count_listbox = listview.Rows.Count
-            For i = 0 To row_count_listbox - 1
-                For j = 0 To listview.Columns.Count - 1
-                    worksheet.Cell(NameSet(j) & (i + 2).ToString()).Value = listview.Rows(i).Cells(j).Value
+                Dim ms As MemoryStream = New MemoryStream()
+                result.Save(ms, Imaging.ImageFormat.Png)
+                Dim worksheet = workbook.Worksheets.Add("Result Sheet")
+                For i = 0 To listview.Columns.Count - 1
+                    worksheet.Cell(NameSet(i) & 1).Value = listview.Columns(i).HeaderText
                 Next
-            Next
-            Dim image = worksheet.AddPicture(ms).MoveTo(worksheet.Cell(NameSet(listview.Columns.Count) & 2)) 'the cast is only to be sure
 
-            workbook.SaveAs(xlsx_savepath)
-        End Using
+                Dim row_count_listbox = listview.Rows.Count
+                For i = 0 To row_count_listbox - 1
+                    For j = 0 To listview.Columns.Count - 1
+                        worksheet.Cell(NameSet(j) & (i + 2).ToString()).Value = listview.Rows(i).Cells(j).Value
+                    Next
+                Next
+                Dim image = worksheet.AddPicture(ms).MoveTo(worksheet.Cell(NameSet(listview.Columns.Count) & 2)) 'the cast is only to be sure
+
+                workbook.SaveAs(xlsx_savepath)
+            End Using
+        End If
+
     End Sub
     ''' <summary>
     ''' Load text file and append data-table to existing list.

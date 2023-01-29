@@ -63,9 +63,9 @@ Public Module ImageProcess
         For y = 0 To colorImage.Height - 1
             For x = 0 To colorImage.Width - 1
                 For c = 0 To 2
-                    '''brightness and contrast
+                    'brightness and contrast
                     'double pixelValue = (color_data[y, x, c] - 127.5 * (1 - B)) * K + 127.5 * (1 + B);
-                    '''gamma correction
+                    'gamma correction
                     'pixelValue = Math.Pow((ColorRange(pixelValue) / 255.0), G) * 255.0;
                     color_data(y, x, c) = BCtrans(color_data(y, x, c))
                 Next
@@ -481,7 +481,7 @@ Public Module ImageProcess
     ''' <paramname="thr_seg">The threshold for segmetation.</param>
     ''' <paramname="Obj">The object containing items.</param>
 
-    Public Function IdentifyInterSections(g As Graphics, scr As Image, ByVal thr_seg As Integer, Obj As SegObject) As Image
+    Public Sub IdentifyInterSections(g As Graphics, scr As Image, ByVal thr_seg As Integer, Obj As SegObject) As Image
 
         Dim Pen As Pen = New Pen(Color.Blue, 1)
         Dim Pen2 As Pen = New Pen(Color.Green, 1)
@@ -539,7 +539,7 @@ Public Module ImageProcess
         Pen.Dispose()
         Pen2.Dispose()
 
-    End Function
+    End Sub
 
     ''' <summary>
     ''' Identify circles according to roundness and thr_cir.
@@ -549,12 +549,12 @@ Public Module ImageProcess
     ''' <paramname="thr_seg">The threshold for segmetation.</param>
     ''' <paramname="Obj">The object containing items.</param>
 
-    Public Function IdentifyInterSections(ByVal pictureBox As PictureBox, scr As Image, ByVal thr_seg As Integer, Obj As SegObject) As Image
+    Public Sub IdentifyInterSections(ByVal pictureBox As PictureBox, scr As Image, ByVal thr_seg As Integer, Obj As SegObject) As Image
         Dim g As Graphics = pictureBox.CreateGraphics()
         IdentifyInterSections(g, scr, thr_seg, Obj)
         g.Dispose()
 
-    End Function
+    End Sub
 
     ''' <summary>
     ''' Segment Remaing Image into Black and White.

@@ -15,7 +15,6 @@ Public Class CountAndClassification
     Private Upper As Integer
     Private Lower As Integer
     Private AreaLimit As Single
-    Private font = New Font("Arial", 10, FontStyle.Regular)
 
     Private totalCnt As Integer
     Private maxPer As Single

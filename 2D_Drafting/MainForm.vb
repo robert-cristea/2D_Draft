@@ -467,11 +467,13 @@ Public Class Main_Form
 
             GetInformationAndGetReady()
             controlIntialized = True
+            ID_STATUS_LABEL.Text = "loading..."
         End If
     End Sub
 
     'open camera
     Private Sub ID_MENU_OPEN_CAM_Click(sender As Object, e As EventArgs) Handles ID_MENU_OPEN_CAM.Click
+        ID_STATUS_LABEL.Text = "connect to webcam."
         Try
             OpenCamera()
             SelectResolution(videoDevice, CameraResolutionsCB)
@@ -487,6 +489,7 @@ Public Class Main_Form
 
     'close camera
     Private Sub ID_MENU_CLOSE_CAM_Click(sender As Object, e As EventArgs) Handles ID_MENU_CLOSE_CAM.Click
+        ID_STATUS_LABEL.Text = "disconnect from webcam."
         Try
             CloseCamera()
             PictureBox.Image = Nothing
@@ -501,6 +504,7 @@ Public Class Main_Form
     'import image and draw it to picturebox
     'format variables
     Private Sub ID_MENU_OPEN_Click(sender As Object, e As EventArgs) Handles ID_MENU_OPEN.Click
+        ID_STATUS_LABEL.Text = "import image."
         initVar()
         Dim filter = "JPEG Files|*.jpg|PNG Files|*.png|BMP Files|*.bmp|All Files|*.*"
         Dim title = "Open"
@@ -516,6 +520,7 @@ Public Class Main_Form
 
     'export image to jpg
     Private Sub ID_MENU_SAVE_Click(sender As Object, e As EventArgs) Handles ID_MENU_SAVE.Click
+        ID_STATUS_LABEL.Text = "save image."
         Dim filter = "JPEG Files|*.jpg"
         Dim title = "Save"
         PictureBox.SaveImageInFile(filter, title, objectList, digit, CF)
@@ -523,6 +528,7 @@ Public Class Main_Form
 
     'save object information as excel file
     Private Sub ID_MENU_SAVE_XLSX_Click(sender As Object, e As EventArgs) Handles ID_MENU_SAVE_XLSX.Click
+        ID_STATUS_LABEL.Text = "save measurements to excel."
         Dim filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
         Dim title = "Save"
         PictureBox.SaveListToExcel(objectList, filter, title, CF, digit, scaleUnit)
@@ -530,6 +536,7 @@ Public Class Main_Form
 
     'save object list and image as excel file
     Private Sub ID_MENU_EXPORT_REPORT_Click(sender As Object, e As EventArgs) Handles ID_MENU_EXPORT_REPORT.Click
+        ID_STATUS_LABEL.Text = "save measurements and image to excel."
         Dim filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
         Dim title = "Save"
         PictureBox.SaveReportToExcel(filter, title, objectList, digit, CF, scaleUnit)
@@ -876,6 +883,7 @@ Public Class Main_Form
     Private Sub RESIZEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RESIZEToolStripMenuItem.Click
         Try
             Dim form As New Resize
+            ID_STATUS_LABEL.Text = "Resizing"
             If form.ShowDialog = DialogResult.OK Then
                 If form.RadioState Then
                     CustomeResize(CSng(form.PixHor), CSng(form.PixVer))
@@ -883,6 +891,7 @@ Public Class Main_Form
                     CustomeResize(form.PerHor / 100.0, form.PerVer / 100.0, True)
                 End If
             End If
+
         Catch ex As Exception
             MessageBox.Show(ex.Message.ToString())
         End Try
@@ -1475,12 +1484,12 @@ Public Class Main_Form
 
     'set brightness, contrast and gamma to current image
     Private Sub ID_BTN_BRIGHTNESS_Click(sender As Object, e As EventArgs) Handles ID_BTN_BRIGHTNESS.Click
+        ID_STATUS_LABEL.Text = "Adjust Brightness/Contrast/Gamma"
         redrawFlag = True
         Dim ratio = zoomFactor
         Dim zoomed = ZoomImage(ratio, currentImage)
         Dim Image = zoomed.ToBitmap()
         Dim form As Brightness = New Brightness(PictureBox, Image, brightness, contrast, gamma)
-
         Dim InitialImage = AdjustBrightnessAndContrast(Image, brightness, contrast, gamma)
         If form.ShowDialog() = DialogResult.OK Then
             brightness = form.brightness
@@ -1643,6 +1652,7 @@ Public Class Main_Form
     'show About dialog
     Private Sub ID_MENU_ABOUT_Click(sender As Object, e As EventArgs) Handles ID_MENU_ABOUT.Click
         Dim ad As New About
+        ID_STATUS_LABEL.Text = "About the program"
         If ad.ShowDialog() = DialogResult.OK Then
 
         End If
@@ -1655,20 +1665,25 @@ Public Class Main_Form
         Else
             sideDrag = False
         End If
+        ID_STATUS_LABEL.Text = "Side drawing effect changed"
     End Sub
 
     'show legend when ID_CHECK_showLegend is checked
     Private Sub ID_CHECK_showLegend_CheckedChanged(sender As Object, e As EventArgs) Handles ID_CHECK_SHOW_LEGEND.CheckedChanged
         If ID_CHECK_SHOW_LEGEND.Checked = True Then
             showLegend = True
+            ID_STATUS_LABEL.Text = "Show Legend"
         Else
             showLegend = False
+            ID_STATUS_LABEL.Text = "Hide Legend"
         End If
         PictureBox.DrawObjList(objectList, digit, CF, False)
+
     End Sub
 
     'open calibration ini file
     Private Sub CALIBRATIONINFOToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CALIBRATIONINFOToolStripMenuItem.Click
+        ID_STATUS_LABEL.Text = "Show calibration information"
         Try
             Dim alive As System.Diagnostics.Process
             If System.IO.File.Exists(caliPath) = False Then
@@ -1696,6 +1711,7 @@ Public Class Main_Form
 
     'open config ini file
     Private Sub CONFIGINFOToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CONFIGINFOToolStripMenuItem.Click
+        ID_STATUS_LABEL.Text = "show config information"
         Try
             Dim alive As System.Diagnostics.Process
             If System.IO.File.Exists(configPath) = False Then
@@ -1717,6 +1733,7 @@ Public Class Main_Form
 
     'open legend ini file
     Private Sub LEGENDINFOToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LEGENDINFOToolStripMenuItem.Click
+        ID_STATUS_LABEL.Text = "Show legend information"
         Try
             Dim alive As System.Diagnostics.Process
             If System.IO.File.Exists(legendPath) = False Then
@@ -1791,7 +1808,7 @@ Public Class Main_Form
 
     'capture image and add it to ID_LISTVIEW_IMAGE
     Private Sub ID_BTN_CAPTURE_Click(sender As Object, e As EventArgs) Handles ID_BTN_CAPTURE.Click
-
+        ID_STATUS_LABEL.Text = "Capturing frames from Webcam"
         Try
 
             If ID_PICTURE_BOX_CAM.Image Is Nothing Then
@@ -1829,6 +1846,7 @@ Public Class Main_Form
 
     'clear all image list and items in ID_LISTVIEW_CAM
     Private Sub ID_BTN_CLEAR_ALL_Click(sender As Object, e As EventArgs) Handles ID_BTN_CLEAR_ALL.Click
+        ID_STATUS_LABEL.Text = "Delete all captured images"
         fileCounter = 0
         ID_LISTVIEW_IMAGE.Clear()
         ID_LISTVIEW_IMAGE.Items.Clear()
@@ -1840,6 +1858,7 @@ Public Class Main_Form
 
     'stop camera and display the selected image to ID_PICTURE_BOX
     Private Sub ID_LISTVIEW_IMAGE_DoubleClick(sender As Object, e As EventArgs) Handles ID_LISTVIEW_IMAGE.DoubleClick
+        ID_STATUS_LABEL.Text = "Open captured image"
         Try
             flag = True
 
@@ -1864,7 +1883,7 @@ Public Class Main_Form
 
     'display property window for the video capture
     Private Sub Btn_CameraProperties_Click(sender As Object, e As EventArgs) Handles Btn_CameraProperties.Click
-
+        ID_STATUS_LABEL.Text = "camera property"
         If videoDevice Is Nothing Then
             MsgBox("Please start Camera First")
 
@@ -1876,7 +1895,7 @@ Public Class Main_Form
     'set flag for live image so that live images can be displayed to tab
     Private Sub btn_live_Click(sender As Object, e As EventArgs) Handles btn_live.Click
         flag = False
-
+        ID_STATUS_LABEL.Text = "Show live images"
     End Sub
 
     'change the resolution of webcam
@@ -1889,7 +1908,7 @@ Public Class Main_Form
             Threading.Thread.Sleep(500)
             OpenCamera()
         End If
-
+        ID_STATUS_LABEL.Text = "Changing camera resolution"
     End Sub
 
     'set the path of directory for captured images
@@ -1897,6 +1916,7 @@ Public Class Main_Form
         Dim dialog = New FolderBrowserDialog With {
             .SelectedPath = Application.StartupPath
         }
+        ID_STATUS_LABEL.Text = "Set the path for captured images"
         If DialogResult.OK = dialog.ShowDialog() Then
             txtbx_imagepath.Text = dialog.SelectedPath & "\MyImages"
             imagePath = txtbx_imagepath.Text
@@ -1917,7 +1937,7 @@ Public Class Main_Form
                 'File.Delete(FileDelete)
             End If
         Next
-
+        ID_STATUS_LABEL.Text = "Delete selected captured image"
     End Sub
 
     'open browser and load captured images
@@ -1927,7 +1947,7 @@ Public Class Main_Form
             .Multiselect = True,
             .FilterIndex = 1
         }
-
+        ID_STATUS_LABEL.Text = "Open folder which has captured images"
         If ofd.ShowDialog() = DialogResult.OK Then
             Try
                 Dim files As String() = ofd.FileNames
@@ -1980,7 +2000,6 @@ Public Class Main_Form
         objSelected.Refresh()
         curMeasureType = MeasureType.objLine
         objSelected.measuringType = curMeasureType
-
     End Sub
     Private Sub LINEToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles LINEToolStripMenuItem1.Click
         menuClick = True
@@ -2341,6 +2360,7 @@ Public Class Main_Form
         objSeg.Refresh()
         objSeg.measureType = SegType.circle
         Dim form = New Circle()
+        ID_STATUS_LABEL.Text = "Open form for circle detection"
         form.Show()
     End Sub
 
@@ -2351,6 +2371,7 @@ Public Class Main_Form
         objSeg.Refresh()
         objSeg.measureType = SegType.interSect
         Dim form = New Intersection()
+        ID_STATUS_LABEL.Text = "Open form for intersection detection"
         form.Show()
     End Sub
 
@@ -2361,6 +2382,7 @@ Public Class Main_Form
         objSeg.Refresh()
         objSeg.measureType = SegType.phaseSegment
         Dim form = New Phase_Segmentation()
+        ID_STATUS_LABEL.Text = "Open form for segmentation"
         form.Show()
     End Sub
 
@@ -2371,6 +2393,7 @@ Public Class Main_Form
         objSeg.Refresh()
         objSeg.measureType = SegType.blobSegment
         Dim form = New CountAndClassification()
+        ID_STATUS_LABEL.Text = "Open form for blob detection"
         form.Show()
     End Sub
 
@@ -2381,6 +2404,7 @@ Public Class Main_Form
         objSeg.Refresh()
         objSeg.measureType = SegType.blobSegment
         Dim form = New ParticipleSize()
+        ID_STATUS_LABEL.Text = "Open form for blob selection"
         form.Show()
     End Sub
 
@@ -2391,6 +2415,7 @@ Public Class Main_Form
         objSeg.Refresh()
         objSeg.measureType = SegType.blobSegment
         Dim form = New Nodularity()
+        ID_STATUS_LABEL.Text = "Open form for nodule detection"
         form.Show()
     End Sub
 #End Region
