@@ -464,9 +464,8 @@ Public Class Main_Form
         End If
 
         If controlIntialized = False Then
-
-            GetInformationAndGetReady()
             controlIntialized = True
+            GetInformationAndGetReady()
             ID_STATUS_LABEL.Text = "loading..."
         End If
     End Sub
