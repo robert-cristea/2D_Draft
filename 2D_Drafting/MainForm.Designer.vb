@@ -141,17 +141,18 @@ Partial Class Main_Form
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.ID_LISTVIEW = New System.Windows.Forms.DataGridView()
-        Me.Item = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.Length = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Angle = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Radius = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Unit = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ID_STATUS_LABEL = New System.Windows.Forms.ToolStripStatusLabel()
         Me.PanelPic = New System.Windows.Forms.Panel()
         Me.PictureBox = New System.Windows.Forms.PictureBox()
+        Me.No = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Legend = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Description = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.Parameter = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Spec = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Observation = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Judgement = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -1199,46 +1200,11 @@ Partial Class Main_Form
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ID_LISTVIEW.BackgroundColor = System.Drawing.SystemColors.ControlLightLight
         Me.ID_LISTVIEW.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.ID_LISTVIEW.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Item, Me.Length, Me.Angle, Me.Radius, Me.Unit, Me.Remarks})
+        Me.ID_LISTVIEW.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.No, Me.Legend, Me.Description, Me.Parameter, Me.Spec, Me.Observation, Me.Judgement})
         Me.ID_LISTVIEW.Location = New System.Drawing.Point(1050, 165)
         Me.ID_LISTVIEW.Name = "ID_LISTVIEW"
         Me.ID_LISTVIEW.Size = New System.Drawing.Size(298, 399)
         Me.ID_LISTVIEW.TabIndex = 6
-        '
-        'Item
-        '
-        Me.Item.HeaderText = "Item"
-        Me.Item.Name = "Item"
-        Me.Item.Width = 70
-        '
-        'Length
-        '
-        Me.Length.HeaderText = "Length"
-        Me.Length.Name = "Length"
-        Me.Length.Width = 50
-        '
-        'Angle
-        '
-        Me.Angle.HeaderText = "Angle"
-        Me.Angle.Name = "Angle"
-        Me.Angle.Width = 50
-        '
-        'Radius
-        '
-        Me.Radius.HeaderText = "Radius"
-        Me.Radius.Name = "Radius"
-        Me.Radius.Width = 50
-        '
-        'Unit
-        '
-        Me.Unit.HeaderText = "Unit"
-        Me.Unit.Name = "Unit"
-        Me.Unit.Width = 50
-        '
-        'Remarks
-        '
-        Me.Remarks.HeaderText = "Remarks"
-        Me.Remarks.Name = "Remarks"
         '
         'Timer1
         '
@@ -1280,6 +1246,50 @@ Partial Class Main_Form
         Me.PictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
         Me.PictureBox.TabIndex = 0
         Me.PictureBox.TabStop = False
+        '
+        'No
+        '
+        Me.No.HeaderText = "Sr.No"
+        Me.No.Name = "No"
+        Me.No.Width = 30
+        '
+        'Legend
+        '
+        Me.Legend.HeaderText = "Legend"
+        Me.Legend.Name = "Legend"
+        Me.Legend.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Legend.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Legend.Width = 30
+        '
+        'Description
+        '
+        Me.Description.HeaderText = "Description"
+        Me.Description.Name = "Description"
+        Me.Description.Width = 50
+        '
+        'Parameter
+        '
+        Me.Parameter.HeaderText = "Parameter"
+        Me.Parameter.Name = "Parameter"
+        '
+        'Spec
+        '
+        Me.Spec.HeaderText = "Spec"
+        Me.Spec.Name = "Spec"
+        Me.Spec.Width = 50
+        '
+        'Observation
+        '
+        Me.Observation.HeaderText = "Observation"
+        Me.Observation.Name = "Observation"
+        Me.Observation.Width = 50
+        '
+        'Judgement
+        '
+        Me.Judgement.HeaderText = "Judgement"
+        Me.Judgement.Items.AddRange(New Object() {"OK", "N.G", "AUD"})
+        Me.Judgement.Name = "Judgement"
+        Me.Judgement.Width = 50
         '
         'Main_Form
         '
@@ -1377,12 +1387,6 @@ End Sub
     Friend WithEvents CameraResolutionsCB As ComboBox
     Friend WithEvents btn_live As Button
     Friend WithEvents ID_LISTVIEW As DataGridView
-    Friend WithEvents Item As DataGridViewComboBoxColumn
-    Friend WithEvents Length As DataGridViewTextBoxColumn
-    Friend WithEvents Angle As DataGridViewTextBoxColumn
-    Friend WithEvents Radius As DataGridViewTextBoxColumn
-    Friend WithEvents Unit As DataGridViewTextBoxColumn
-    Friend WithEvents Remarks As DataGridViewTextBoxColumn
     Friend WithEvents btn_setpath As Button
     Friend WithEvents txtbx_imagepath As TextBox
     Friend WithEvents btn_delete As Button
@@ -1449,4 +1453,11 @@ End Sub
     Friend WithEvents LEGENDINFOToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents PanelPic As Panel
     Friend WithEvents PictureBox As PictureBox
+    Friend WithEvents No As DataGridViewTextBoxColumn
+    Friend WithEvents Legend As DataGridViewTextBoxColumn
+    Friend WithEvents Description As DataGridViewComboBoxColumn
+    Friend WithEvents Parameter As DataGridViewTextBoxColumn
+    Friend WithEvents Spec As DataGridViewTextBoxColumn
+    Friend WithEvents Observation As DataGridViewTextBoxColumn
+    Friend WithEvents Judgement As DataGridViewComboBoxColumn
 End Class

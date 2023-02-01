@@ -461,7 +461,7 @@ Public Module ControlsMethods
     ''' <paramname="font_infor">The information for font and color.</param>
     ''' <paramname="CF">The factor for measuring scale.</param>
 
-    Public Function ModifyObjSelected(ByRef obj_selected As MeasureObject, ByVal cur_measure_type As Integer, ByVal m_pt As PointF, ByVal width As Integer, ByVal height As Integer, ByVal line_infor As LineStyle, ByVal font_infor As FontInfor, ByVal CF As Double) As Boolean
+    Public Function ModifyObjSelected(ByRef obj_selected As MeasureObject, objList As List(Of MeasureObject), cur_measure_type As Integer, ByVal m_pt As PointF, ByVal width As Integer, ByVal height As Integer, ByVal line_infor As LineStyle, ByVal font_infor As FontInfor, ByVal CF As Double, unit As String) As Boolean
         obj_selected.intialized = True
 
         Dim item_set_limit = 0
@@ -607,17 +607,17 @@ Public Module ControlsMethods
                     End If
 
                     obj_selected.angle = angle * 360 / Math.PI / 2
-                    obj_selected.name = "line aline"
+                    GetObjName(objList, obj_selected, unit)
                 ElseIf cur_measure_type = MeasureType.lineHorizontal Then
                     obj_selected.length = Math.Abs(CDbl(end_point.X - start_point.X))
 
                     obj_selected.angle = 0
-                    obj_selected.name = "line horizonal"
+                    GetObjName(objList, obj_selected, unit)
                 ElseIf cur_measure_type = MeasureType.lineVertical Then
                     obj_selected.length = Math.Abs(CDbl(end_point.Y - start_point.Y))
 
                     obj_selected.angle = 90
-                    obj_selected.name = "line vertical"
+                    GetObjName(objList, obj_selected, unit)
                 ElseIf cur_measure_type = MeasureType.lineParallel OrElse cur_measure_type = MeasureType.ptToLine Then
                     obj_selected.length = CalcDistFromPointToLine(start_point, middle_point, end_point)
 
@@ -631,16 +631,12 @@ Public Module ControlsMethods
 
                     obj_selected.angle = angle * 360 / Math.PI / 2 + 90
 
-                    If cur_measure_type = MeasureType.lineParallel Then
-                        obj_selected.name = "line para"
-                    Else
-                        obj_selected.name = "pt to line"
-                    End If
+                    GetObjName(objList, obj_selected, unit)
                 ElseIf cur_measure_type = MeasureType.angle Then
                     'correct code
                     Dim angle = CalcAngleBetweenTwoLines(start_point, middle_point, end_point)
                     obj_selected.angle = angle * 360 / Math.PI / 2
-                    obj_selected.name = "angle"
+                    GetObjName(objList, obj_selected, unit)
                 ElseIf cur_measure_type = MeasureType.arc Then
                     Dim A = start_point
                     Dim B = middle_point
@@ -662,10 +658,10 @@ Public Module ControlsMethods
 
                     obj_selected.arcObject.radius = obj_selected.arc / width
                     obj_selected.arcObject.center_pt = New PointF(centerpt.X / CSng(width), centerpt.Y / CSng(height))
-                    obj_selected.name = "radius"
+                    GetObjName(objList, obj_selected, unit)
                 ElseIf cur_measure_type = MeasureType.annotation Then
                     obj_selected.annotation = "annotation"
-                    obj_selected.name = "anno"
+                    GetObjName(objList, obj_selected, unit)
                 ElseIf cur_measure_type = MeasureType.angle2Line Then
                     Dim inter_pt = CalcInterSection(start_point, middle_point, end_point, last_point)
                     If inter_pt.X = 10000 AndAlso inter_pt.Y = 10000 Then
@@ -675,11 +671,11 @@ Public Module ControlsMethods
                         obj_selected.angle = angle * 360 / Math.PI / 2
                         obj_selected.commonPoint = New PointF(CSng(inter_pt.X) / width, CSng(inter_pt.Y) / height)
                     End If
-                    obj_selected.name = "angle"
+                    GetObjName(objList, obj_selected, unit)
                 ElseIf cur_measure_type = MeasureType.angleFixed Then
-                    obj_selected.name = "angle"
+                    GetObjName(objList, obj_selected, unit)
                 ElseIf cur_measure_type = MeasureType.arcFixed Then
-                    obj_selected.name = "circle"
+                    GetObjName(objList, obj_selected, unit)
                 End If
             End If
 
@@ -706,7 +702,7 @@ Public Module ControlsMethods
                 End If
 
                 obj_selected.endPoint = New PointF(end_point.X / CSng(width), end_point.Y / CSng(height))
-                obj_selected.name = "scale"
+                GetObjName(objList, obj_selected, unit)
             End If
 
             If obj_selected.itemSet = item_set_limit Then
@@ -2431,6 +2427,99 @@ Public Module ControlsMethods
         graphPen.Dispose()
         graph.Dispose()
     End Sub
+
+    Public Sub GetObjName(objectList As List(Of MeasureObject), ByRef objSelected As MeasureObject, unit As String)
+        Dim L, A, An, Ar, S, C, P, CP, Pt As Integer
+        L = 0 : A = 0 : An = 0 : Ar = 0 : S = 0 : C = 0 : P = 0 : CP = 0 : Pt = 0
+
+        For Each item In objectList
+            Select Case item.measuringType
+                Case MeasureType.lineAlign
+                    L += 1
+                Case MeasureType.lineHorizontal
+                    L += 1
+                Case MeasureType.lineVertical
+                    L += 1
+                Case MeasureType.lineParallel
+                    L += 1
+                Case MeasureType.ptToLine
+                    L += 1
+                Case MeasureType.angle
+                    An += 1
+                Case MeasureType.angle2Line
+                    An += 1
+                Case MeasureType.arc
+                    Ar += 1
+                Case MeasureType.annotation
+                    A += 1
+                Case MeasureType.pencil
+                    L += 1
+                Case MeasureType.measureScale
+                    S += 1
+                Case MeasureType.objMinMax
+                    L += 1
+                Case MeasureType.lineFixed
+                    L += 1
+                Case MeasureType.arcFixed
+                    Ar += 1
+                Case MeasureType.angleFixed
+                    An += 1
+                Case MeasureType.objCuPoly
+                    CP += 1
+                Case MeasureType.objCurve
+                    C += 1
+                Case MeasureType.objLine
+                    L += 1
+                Case MeasureType.objPoint
+                    Pt += 1
+                Case MeasureType.objPoly
+                    P += 1
+            End Select
+        Next
+
+        Select Case objSelected.measuringType
+            Case MeasureType.lineAlign
+                objSelected.name = "L" & L
+            Case MeasureType.lineHorizontal
+                objSelected.name = "L" & L
+            Case MeasureType.lineVertical
+                objSelected.name = "L" & L
+            Case MeasureType.lineParallel
+                objSelected.name = "L" & L
+            Case MeasureType.ptToLine
+                objSelected.name = "L" & L
+            Case MeasureType.angle
+                objSelected.name = "An" & An
+            Case MeasureType.angle2Line
+                objSelected.name = "An" & An
+            Case MeasureType.arc
+                objSelected.name = "Ar" & Ar
+            Case MeasureType.annotation
+                objSelected.name = "A" & A
+            Case MeasureType.pencil
+                objSelected.name = "L" & L
+            Case MeasureType.measureScale
+                objSelected.name = "S" & S
+            Case MeasureType.objMinMax
+                objSelected.name = "L" & L
+            Case MeasureType.lineFixed
+                objSelected.name = "L" & L
+            Case MeasureType.arcFixed
+                objSelected.name = "Ar" & Ar
+            Case MeasureType.angleFixed
+                objSelected.name = "An" & An
+            Case MeasureType.objCuPoly
+                objSelected.name = "CP" & CP
+            Case MeasureType.objCurve
+                objSelected.name = "C" & C
+            Case MeasureType.objLine
+                objSelected.name = "L" & L
+            Case MeasureType.objPoint
+                objSelected.name = "Pt" & Pt
+            Case MeasureType.objPoly
+                objSelected.name = "P" & P
+        End Select
+    End Sub
 #End Region
 
 #Region "DataGrid Methods"
@@ -2439,15 +2528,20 @@ Public Module ControlsMethods
     ''' </summary>
     ''' <paramname="name">The string which is display.</param>
     ''' <paramname="name_list">The list of strings which are included in combobox item.</param>
-    Public Function SetComboItemContent(ByVal name As String, ByVal name_list As List(Of String)) As DataGridViewComboBoxCell
+    Public Function SetComboItemContent(name As String, ByVal name_list As List(Of String)) As DataGridViewComboBoxCell
         Dim cell As DataGridViewComboBoxCell = New DataGridViewComboBoxCell()
-        Dim str_array As String() = New String(name_list.Count) {}
+        Dim str_array As String() = New String(name_list.Count - 1) {}
+        Dim cnt As Integer = 0
+        If name <> "" Then
+            str_array(cnt) = name
+            cnt += 1
+        End If
+
         For i = 0 To str_array.Length() - 1
-            If i = 0 Then
-                str_array(i) = name
-                Continue For
+            If name <> name_list(i) Then
+                str_array(cnt) = name_list(i)
+                cnt += 1
             End If
-            str_array(i) = name_list(i - 1)
         Next
         cell.Items.AddRange(str_array)
         cell.Value = cell.Items(0)
@@ -2471,75 +2565,74 @@ Public Module ControlsMethods
         If object_list.Count > 0 Then
             Dim i = 0
             Dim length As Double
+
             For Each item In object_list
-                Dim str_item = New String(5) {}
-                str_item(0) = item.name
-                str_item(1) = ""
+                Dim str_item = New String(6) {}
+                str_item(0) = (i + 1).ToString()
+                str_item(1) = item.name
                 str_item(2) = ""
-                str_item(3) = ""
-                str_item(4) = ""
-                str_item(5) = item.remarks
+                str_item(3) = item.parameter
+                str_item(4) = item.spec
+                str_item(5) = ""
+                str_item(6) = item.judgement
 
                 Select Case item.measuringType
                     Case MeasureType.lineAlign
                         length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
+                        str_item(5) = length.ToString() & " " & unit
+
                     Case MeasureType.lineHorizontal
                         length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
+                        str_item(5) = length.ToString() & " " & unit
+
                     Case MeasureType.lineVertical
                         length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
+                        str_item(5) = length.ToString() & " " & unit
+
                     Case MeasureType.lineParallel
                         length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
+                        str_item(5) = length.ToString() & " " & unit
+
                     Case MeasureType.ptToLine
                         length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
+                        str_item(5) = length.ToString() & " " & unit
+
                     Case MeasureType.angle
                         length = GetDecimalNumber(item.angleObject.sweep_angle, digit, 1)
-                        str_item(2) = length.ToString()
-                        str_item(4) = "degree"
+                        str_item(5) = length.ToString() & " degree"
+
                     Case MeasureType.angle2Line
                         length = GetDecimalNumber(item.angleObject.sweep_angle, digit, 1)
-                        str_item(2) = length.ToString()
-                        str_item(4) = "degree"
+                        str_item(5) = length.ToString() & " degree"
+
                     Case MeasureType.arc
                         length = GetDecimalNumber(item.arc, digit, CF)
-                        str_item(3) = length.ToString()
-                        str_item(4) = unit
-                    Case MeasureType.annotation
-                    Case MeasureType.pencil
-                        str_item(0) = "line"
+                        str_item(5) = length.ToString() & " " & unit
+
                     Case MeasureType.measureScale
                         length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
+                        str_item(5) = length.ToString() & " " & unit
+
                     Case MeasureType.objMinMax
                         length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
+                        str_item(5) = length.ToString() & " " & unit
+
                     Case MeasureType.lineFixed
                         length = item.scaleObject.length
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
+                        str_item(5) = length.ToString() & " " & unit
+
                     Case MeasureType.arcFixed
                         length = GetDecimalNumber(item.scaleObject.length, digit, 1)
-                        str_item(3) = length.ToString()
-                        str_item(4) = unit
+                        str_item(5) = length.ToString() & " " & unit
+
                     Case MeasureType.angleFixed
                         length = item.scaleObject.length
-                        str_item(2) = length.ToString()
-                        str_item(4) = "degree"
+                        str_item(5) = length.ToString() & " degree"
+
                 End Select
 
                 listView.Rows.Add(str_item)
-                listView.Rows(i).Cells(0) = SetComboItemContent(str_item(0), name_list)
+                listView.Rows(i).Cells(2) = SetComboItemContent(item.description, name_list)
                 i += 1
             Next
         End If
@@ -2547,99 +2640,6 @@ Public Module ControlsMethods
     End Sub
 #End Region
 
-#Region "ListView Methods"
-
-    ''' <summary>
-    ''' Loads all the data of objects.
-    ''' </summary>
-    ''' <paramname="listView">The list view to load objects on.</param>
-    ''' <paramname="circles">The list of objects which you are going to load.</param>
-    ''' <paramname="CF">The factor of measurig scale.</param>
-    ''' <paramname="digit">The digit of decimal numbers.</param>
-    ''' <paramname="unit">The unit in length.</param>
-    <Extension()>
-    Public Sub LoadObjectList(ByVal listView As ListView, ByVal object_list As List(Of MeasureObject), ByVal CF As Double, ByVal digit As Integer, ByVal unit As String)
-        listView.Items.Clear()
-        If object_list.Count > 0 Then
-            Dim i = 1
-            Dim length As Double
-            For Each item In object_list
-                Dim str_item = New String(5) {}
-                str_item(0) = item.name
-                str_item(1) = ""
-                str_item(2) = ""
-                str_item(3) = ""
-                str_item(4) = ""
-                str_item(5) = item.remarks
-
-                Select Case item.measuringType
-                    Case MeasureType.lineAlign
-                        length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
-                    Case MeasureType.lineHorizontal
-                        length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
-                    Case MeasureType.lineVertical
-                        length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
-                    Case MeasureType.lineParallel
-                        length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
-                    Case MeasureType.ptToLine
-                        length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
-                    Case MeasureType.angle
-                        length = GetDecimalNumber(item.angleObject.sweep_angle, digit, 1)
-                        str_item(2) = length.ToString()
-                        str_item(4) = "degree"
-                    Case MeasureType.angle2Line
-                        length = GetDecimalNumber(item.angleObject.sweep_angle, digit, 1)
-                        str_item(2) = length.ToString()
-                        str_item(4) = "degree"
-                    Case MeasureType.arc
-                        length = GetDecimalNumber(item.arc, digit, CF)
-                        str_item(3) = length.ToString()
-                        str_item(4) = unit
-                    Case MeasureType.annotation
-                    Case MeasureType.pencil
-                        str_item(0) = "line"
-                    Case MeasureType.measureScale
-                        length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
-                    Case MeasureType.objMinMax
-                        length = GetDecimalNumber(item.length, digit, CF)
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
-                    Case MeasureType.lineFixed
-                        length = item.scaleObject.length
-                        str_item(1) = length.ToString()
-                        str_item(4) = unit
-                    Case MeasureType.arcFixed
-                        length = GetDecimalNumber(item.scaleObject.length, digit, 1)
-                        str_item(3) = length.ToString()
-                        str_item(4) = unit
-                    Case MeasureType.angleFixed
-                        length = item.scaleObject.length
-                        str_item(2) = length.ToString()
-                        str_item(4) = "degree"
-                End Select
-
-                Dim listViewItem = New ListViewItem(str_item)
-                listView.Items.Add(listViewItem)
-                i += 1
-            Next
-        End If
-
-    End Sub
-
-
-#End Region
 
 #Region "HScrollBar Methods"
     ''' <summary>

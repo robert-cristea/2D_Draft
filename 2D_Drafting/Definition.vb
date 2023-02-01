@@ -142,8 +142,11 @@ Public Structure MeasureObject
     Public fontInfor As FontInfor      'information of text font
     Public leftTop As PointF           'the left top cornor of object
     Public rightBottom As PointF       'the right bottom cornor of object
-    Public name As String               'the name of object
-    Public remarks As String            'remarks of object
+    Public name As String
+    Public description As String               'the name of object
+    Public parameter As String            'parameter of object
+    Public spec As String               'specification of object
+    Public judgement As String
 
     Public curveObject As CurveObject
     Public dotFlag As Boolean
@@ -169,7 +172,10 @@ Public Structure MeasureObject
         itemSet = 0
 
         name = ""
-        remarks = ""
+        description = ""
+        parameter = ""
+        spec = ""
+        judgement = ""
         dotFlag = False
 
         measuringType = MeasureType.initState

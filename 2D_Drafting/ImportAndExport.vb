@@ -133,64 +133,6 @@ Public Module ImportAndExport
 
 
     ''' <summary>
-    ''' Save the information of objects to excel file.
-    ''' </summary>
-    ''' <paramname="picturebox">The picturbox contains image</param>
-    ''' <paramname="obj_list">The list  of objects</param>
-    ''' <paramname="filter">The filter to be used to get type of images. example ("PNG Files|*.png|BMP Files|*.bmp")</param>
-    ''' <paramname="saveDialogTitle">The title for the save dialog appears for the user.</param>
-    ''' <paramname="CF">The factor of measuing scale.</param>
-    ''' <paramname="digit">The number of decimals.</param>
-    ''' <paramname="unit">The unit in length.</param>
-    <Extension()>
-    Public Sub SaveListToExcel(ByVal picturebox As PictureBox, ByVal obj_list As List(Of MeasureObject), ByVal filter As String, ByVal saveDialogTitle As String, ByVal CF As Double, ByVal digit As Integer, ByVal unit As String)
-        Dim SaveFileDialog As SaveFileDialog = New SaveFileDialog()
-        SaveFileDialog.Filter = filter
-        SaveFileDialog.Title = saveDialogTitle
-
-        Dim xlsx_savepath = ""
-        If SaveFileDialog.ShowDialog() = DialogResult.OK Then
-            xlsx_savepath = SaveFileDialog.FileName
-
-            Dim listView As ListView = New ListView()
-            listView.Columns.Add("Object")
-            listView.Columns.Add("Length")
-            listView.Columns.Add("Angle")
-            listView.Columns.Add("Radius")
-            listView.Columns.Add("Unit")
-            listView.Columns.Add("Remarks")
-
-
-            Using workbook = New XLWorkbook()
-                Dim img = picturebox.Image
-                If img IsNot Nothing Then
-                    listView.Clear()
-                    listView.LoadObjectList(obj_list, CF, digit, unit)
-
-                    Dim worksheet = workbook.Worksheets.Add("Result Sheet")
-                    worksheet.Cell("A1").Value = "Object"
-                    worksheet.Cell("B1").Value = "Length"
-                    worksheet.Cell("C1").Value = "Angle"
-                    worksheet.Cell("D1").Value = "Radius"
-                    worksheet.Cell("E1").Value = "Unit"
-                    worksheet.Cell("F1").Value = "Remarks"
-                    Dim row_count_listbox = listView.Items.Count
-                    For i = 0 To row_count_listbox - 1
-                        worksheet.Cell("A" & (i + 2).ToString()).Value = listView.Items(i).SubItems(0).Text
-                        worksheet.Cell("B" & (i + 2).ToString()).Value = listView.Items(i).SubItems(1).Text
-                        worksheet.Cell("C" & (i + 2).ToString()).Value = listView.Items(i).SubItems(2).Text
-                        worksheet.Cell("D" & (i + 2).ToString()).Value = listView.Items(i).SubItems(3).Text
-                        worksheet.Cell("E" & (i + 2).ToString()).Value = listView.Items(i).SubItems(4).Text
-                        worksheet.Cell("F" & (i + 2).ToString()).Value = listView.Items(i).SubItems(5).Text
-                    Next
-                End If
-
-                workbook.SaveAs(xlsx_savepath)
-            End Using
-        End If
-    End Sub
-
-    ''' <summary>
     ''' Save the information of objects and image to excel file.
     ''' </summary>
     ''' <paramname="picturebox">The picturbox contains image</param>
@@ -201,7 +143,7 @@ Public Module ImportAndExport
     ''' <paramname="CF">The factor of measuring scale.</param>
     ''' <paramname="unit">The unit in length.</param>
     <Extension()>
-    Public Sub SaveReportToExcel(ByVal picturebox As PictureBox, ByVal filter As String, ByVal saveDialogTitle As String, ByVal obj_list As List(Of MeasureObject), ByVal digit As Integer, ByVal CF As Double, ByVal unit As String)
+    Public Sub SaveReportToExcel(ByVal picturebox As PictureBox, DGV As DataGridView, ByVal filter As String, ByVal saveDialogTitle As String, ByVal obj_list As List(Of MeasureObject), ByVal digit As Integer, ByVal CF As Double, ByVal unit As String)
         Dim SaveFileDialog As SaveFileDialog = New SaveFileDialog()
         SaveFileDialog.Filter = filter
         SaveFileDialog.Title = saveDialogTitle
@@ -210,13 +152,7 @@ Public Module ImportAndExport
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
             xlsx_savepath = SaveFileDialog.FileName
 
-            Dim listView As ListView = New ListView()
-            listView.Columns.Add("Object")
-            listView.Columns.Add("Length")
-            listView.Columns.Add("Angle")
-            listView.Columns.Add("Radius")
-            listView.Columns.Add("Unit")
-            listView.Columns.Add("Remarks")
+            Dim NameSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
             Using workbook = New XLWorkbook()
                 Dim img = picturebox.Image
@@ -236,30 +172,21 @@ Public Module ImportAndExport
                     Dim ms As MemoryStream = New MemoryStream()
                     result.Save(ms, Imaging.ImageFormat.Png)
 
-                    listView.Clear()
-                    listView.LoadObjectList(obj_list, CF, digit, unit)
-
                     Dim worksheet = workbook.Worksheets.Add("Result Sheet")
-                    worksheet.Cell("A1").Value = "Object"
-                    worksheet.Cell("B1").Value = "Length"
-                    worksheet.Cell("C1").Value = "Angle"
-                    worksheet.Cell("D1").Value = "Radius"
-                    worksheet.Cell("E1").Value = "Unit"
-                    worksheet.Cell("F1").Value = "Remarks"
-                    Dim row_count_listbox = listView.Items.Count
-                    For j = 0 To row_count_listbox - 1
-                        worksheet.Cell("A" & (j + 2).ToString()).Value = listView.Items(j).SubItems(0).Text
-                        worksheet.Cell("B" & (j + 2).ToString()).Value = listView.Items(j).SubItems(1).Text
-                        worksheet.Cell("C" & (j + 2).ToString()).Value = listView.Items(j).SubItems(2).Text
-                        worksheet.Cell("D" & (j + 2).ToString()).Value = listView.Items(j).SubItems(3).Text
-                        worksheet.Cell("E" & (j + 2).ToString()).Value = listView.Items(j).SubItems(4).Text
-                        worksheet.Cell("F" & (j + 2).ToString()).Value = listView.Items(j).SubItems(5).Text
-                    Next
-                    Dim image = worksheet.AddPicture(ms).MoveTo(worksheet.Cell("G2")) 'the cast is only to be sure
-                    'Or the cell you want to bind the picture
 
+                    For i = 0 To DGV.Columns.Count - 1
+                        worksheet.Cell(NameSet(i) & 1).Value = DGV.Columns(i).HeaderText
+                    Next
+
+                    Dim row_count_listbox = DGV.Rows.Count
+                    For i = 0 To row_count_listbox - 1
+                        For j = 0 To DGV.Columns.Count - 1
+                            worksheet.Cell(NameSet(j) & (i + 2).ToString()).Value = DGV.Rows(i).Cells(j).Value
+                        Next
+                    Next
+                    Dim image = worksheet.AddPicture(ms).MoveTo(worksheet.Cell(NameSet(DGV.Columns.Count) & 2)) 'the cast is only to be sure
+                    workbook.SaveAs(xlsx_savepath)
                 End If
-                workbook.SaveAs(xlsx_savepath)
             End Using
         End If
 
@@ -284,17 +211,15 @@ Public Module ImportAndExport
             Dim NameSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
             Using workbook = New XLWorkbook()
-                For cnt = 0 To 24
-                    Dim worksheet = workbook.Worksheets.Add("Result Sheet" & cnt.ToString())
-                    For i = 0 To listview.Columns.Count - 1
-                        worksheet.Cell(NameSet(i) & 1).Value = listview.Columns(i).HeaderText
-                    Next
+                Dim worksheet = workbook.Worksheets.Add("Result Sheet")
+                For i = 0 To listview.Columns.Count - 1
+                    worksheet.Cell(NameSet(i) & 1).Value = listview.Columns(i).HeaderText
+                Next
 
-                    Dim row_count_listbox = listview.Rows.Count
-                    For i = 0 To row_count_listbox - 1
-                        For j = 0 To listview.Columns.Count - 1
-                            worksheet.Cell(NameSet(j) & (i + 2).ToString()).Value = listview.Rows(i).Cells(j).Value
-                        Next
+                Dim row_count_listbox = listview.Rows.Count
+                For i = 0 To row_count_listbox - 1
+                    For j = 0 To listview.Columns.Count - 1
+                        worksheet.Cell(NameSet(j) & (i + 2).ToString()).Value = listview.Rows(i).Cells(j).Value
                     Next
                 Next
 

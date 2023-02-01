@@ -530,7 +530,7 @@ Public Class Main_Form
         ID_STATUS_LABEL.Text = "save measurements to excel."
         Dim filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
         Dim title = "Save"
-        PictureBox.SaveListToExcel(objectList, filter, title, CF, digit, scaleUnit)
+        SaveListToExcel(ID_LISTVIEW, filter, title)
     End Sub
 
     'save object list and image as excel file
@@ -538,7 +538,7 @@ Public Class Main_Form
         ID_STATUS_LABEL.Text = "save measurements and image to excel."
         Dim filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
         Dim title = "Save"
-        PictureBox.SaveReportToExcel(filter, title, objectList, digit, CF, scaleUnit)
+        PictureBox.SaveReportToExcel(ID_LISTVIEW, filter, title, objectList, digit, CF, scaleUnit)
     End Sub
 
     'exit the program
@@ -1059,7 +1059,7 @@ Public Class Main_Form
 
             If curMeasureType >= 0 Then
                 If curMeasureType < MeasureType.objLine Then
-                    Dim completed = ModifyObjSelected(objSelected, curMeasureType, m_pt, originalImage.Width, originalImage.Height, lineInfor, fontInfor, CF)
+                    Dim completed = ModifyObjSelected(objSelected, objectList, curMeasureType, m_pt, originalImage.Width, originalImage.Height, lineInfor, fontInfor, CF, scaleUnit)
 
                     If completed Then
                         objSelected.objNum = curObjNum
@@ -1163,7 +1163,7 @@ Public Class Main_Form
                 Dim tempObj = ClonePolyObj(C_PolyObj)
                 objSelected.curveObject = New CurveObject()
                 objSelected.curveObject.PolyItem.Add(tempObj)
-                objSelected.name = "PL" & curObjNum
+                GetObjName(objectList, objSelected, scaleUnit)
                 AddCurveToList()
                 C_PolyObj.Refresh()
                 PolyDrawEndFlag = True
@@ -1173,7 +1173,7 @@ Public Class Main_Form
                 Dim tempObj = CloneCuPolyObj(C_CuPolyObj)
                 objSelected.curveObject = New CurveObject()
                 objSelected.curveObject.CuPolyItem.Add(tempObj)
-                objSelected.name = "CP" & curObjNum
+                GetObjName(objectList, objSelected, scaleUnit)
                 AddCurveToList()
                 C_CuPolyObj.Refresh()
                 CuPolyDrawEndFlag = True
@@ -1365,7 +1365,7 @@ Public Class Main_Form
             Dim tempObj = ClonePointObj(C_PointObj)
             objSelected.curveObject = New CurveObject()
             objSelected.curveObject.PointItem.Add(tempObj)
-            objSelected.name = "P" & curObjNum
+            GetObjName(objectList, objSelected, scaleUnit)
             AddCurveToList()
             C_PointObj.Refresh()
         ElseIf curMeasureType = MeasureType.objLine Then
@@ -1375,7 +1375,7 @@ Public Class Main_Form
                 Dim tempObj = CloneLineObj(C_LineObj)
                 objSelected.curveObject = New CurveObject()
                 objSelected.curveObject.LineItem.Add(tempObj)
-                objSelected.name = "L" & curObjNum
+                GetObjName(objectList, objSelected, scaleUnit)
                 AddCurveToList()
                 C_LineObj.Refresh()
             End If
@@ -1385,7 +1385,7 @@ Public Class Main_Form
             Dim tempObj = CloneCurveObj(C_CurveObj)
             objSelected.curveObject = New CurveObject()
             objSelected.curveObject.CurveItem.Add(tempObj)
-            objSelected.name = "C" & curObjNum
+            GetObjName(objectList, objSelected, scaleUnit)
             AddCurveToList()
             C_CurveObj.Refresh()
         ElseIf curMeasureType = MeasureType.objCuPoly Then
@@ -1404,7 +1404,7 @@ Public Class Main_Form
                 Dim tempObj = CloneCurveObj(C_CurveObj)
                 objSelected.curveObject = New CurveObject()
                 objSelected.curveObject.CurveItem.Add(tempObj)
-                objSelected.name = "C" & curObjNum
+                GetObjName(objectList, objSelected, scaleUnit)
                 AddCurveToList()
                 C_CurveObj.Refresh()
                 EdgeRegionDrawReady = False
@@ -1441,7 +1441,7 @@ Public Class Main_Form
             Dim tempObj = CloneLineObj(C_LineObj)
             objSelected.curveObject = New CurveObject()
             objSelected.curveObject.LineItem.Add(tempObj)
-            objSelected.name = "L" & curObjNum
+            GetObjName(objectList, objSelected, scaleUnit)
             AddCurveToList()
             C_LineObj.Refresh()
             StartPtOfMove.X = 0
@@ -1565,89 +1565,6 @@ Public Class Main_Form
         cameraState = False
     End Sub
 
-    'Data grid events make combobox column editable
-    Private Sub ID_LISTVIEW_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles ID_LISTVIEW.EditingControlShowing
-
-        If ID_LISTVIEW.CurrentCell Is ID_LISTVIEW(0, 0) Then
-            Dim cb As ComboBox = TryCast(e.Control, ComboBox)
-
-            If cb IsNot Nothing Then
-                RemoveHandler cb.SelectedIndexChanged, AddressOf CB_SelectedIndexChanged
-
-                ' Following line needed for initial setup.
-                cb.DropDownStyle = If(cb.SelectedIndex = 0, ComboBoxStyle.DropDown, ComboBoxStyle.DropDownList)
-
-                AddHandler cb.SelectedIndexChanged, AddressOf CB_SelectedIndexChanged
-            End If
-        End If
-
-    End Sub
-
-    'make only first item of combobox item of datagridview editable
-    Private Sub CB_SelectedIndexChanged(sender As Object, e As EventArgs)
-        Dim cb As ComboBox = TryCast(sender, ComboBox)
-        cb.DropDownStyle = If(cb.SelectedIndex = 0, ComboBoxStyle.DropDown, ComboBoxStyle.DropDownList)
-    End Sub
-
-    'update first and fifth item of datagridview and update the object 
-    Private Sub ID_LISTVIEW_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles ID_LISTVIEW.CellValidating
-        If e.ColumnIndex = 0 Then
-
-            Dim cell = TryCast(ID_LISTVIEW.Rows(e.RowIndex).Cells(e.ColumnIndex), DataGridViewComboBoxCell)
-
-            If cell IsNot Nothing AndAlso Not Equals(e.FormattedValue.ToString(), String.Empty) AndAlso Not cell.Items.Contains(e.FormattedValue) Then
-                cell.Items(0) = e.FormattedValue
-
-                If ID_LISTVIEW.IsCurrentCellDirty Then
-                    ID_LISTVIEW.CommitEdit(DataGridViewDataErrorContexts.Commit)
-                End If
-
-                cell.Value = e.FormattedValue
-                Dim obj_list = objectList
-                Dim obj = obj_list.ElementAt(e.RowIndex)
-                obj.name = cell.Value
-                obj_list(e.RowIndex) = obj
-                objectList = obj_list
-
-            End If
-        ElseIf e.ColumnIndex = 5 Then
-            Dim cell = TryCast(ID_LISTVIEW.Rows(e.RowIndex).Cells(e.ColumnIndex), DataGridViewTextBoxCell)
-
-            If cell IsNot Nothing AndAlso Not Equals(e.FormattedValue.ToString(), String.Empty) Then
-
-                If ID_LISTVIEW.IsCurrentCellDirty Then
-                    ID_LISTVIEW.CommitEdit(DataGridViewDataErrorContexts.Commit)
-                End If
-
-                cell.Value = e.FormattedValue
-                Dim obj_list = objectList
-                Dim obj = obj_list.ElementAt(e.RowIndex)
-                obj.remarks = cell.Value
-                obj_list(e.RowIndex) = obj
-                objectList = obj_list
-
-            End If
-        End If
-    End Sub
-
-    'handles exception for datagridview
-    Private Sub ID_LISTVIEW_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles ID_LISTVIEW.DataError
-        If e.ColumnIndex = 0 AndAlso e.RowIndex = 0 Then
-            e.Cancel = True
-        End If
-    End Sub
-
-    'update CF value
-    'redraw objects
-    'reload object list to datagridView
-    Private Sub ID_COMBOBOX_CF_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ID_COMBOBOX_CF.SelectedIndexChanged
-        Dim index = ID_COMBOBOX_CF.SelectedIndex()
-        CF = CFNum(index)
-        PictureBox.DrawObjList(objectList, digit, CF, False)
-        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
-        ID_STATUS_LABEL.Text = "Changing CF."
-    End Sub
-
     'show About dialog
     Private Sub ID_MENU_ABOUT_Click(sender As Object, e As EventArgs) Handles ID_MENU_ABOUT.Click
         Dim ad As New About
@@ -1753,6 +1670,103 @@ Public Class Main_Form
         Catch ex As Exception
             MessageBox.Show(ex.Message.ToString())
         End Try
+    End Sub
+
+    'update CF value
+    'redraw objects
+    'reload object list to datagridView
+    Private Sub ID_COMBOBOX_CF_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ID_COMBOBOX_CF.SelectedIndexChanged
+        Dim index = ID_COMBOBOX_CF.SelectedIndex()
+        CF = CFNum(index)
+        PictureBox.DrawObjList(objectList, digit, CF, False)
+        ID_LISTVIEW.LoadObjectList(objectList, CF, digit, scaleUnit, nameList)
+        ID_STATUS_LABEL.Text = "Changing CF."
+    End Sub
+#End Region
+
+#Region "DataGridView"
+
+
+    'Data grid events make combobox column editable
+    'Private Sub ID_LISTVIEW_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles ID_LISTVIEW.EditingControlShowing
+
+    '    If ID_LISTVIEW.CurrentCell Is ID_LISTVIEW(0, 0) Then
+    '        Dim cb As ComboBox = TryCast(e.Control, ComboBox)
+
+    '        If cb IsNot Nothing Then
+    '            RemoveHandler cb.SelectedIndexChanged, AddressOf CB_SelectedIndexChanged
+
+    '            ' Following line needed for initial setup.
+    '            cb.DropDownStyle = If(cb.SelectedIndex = 0, ComboBoxStyle.DropDown, ComboBoxStyle.DropDownList)
+
+    '            AddHandler cb.SelectedIndexChanged, AddressOf CB_SelectedIndexChanged
+    '        End If
+    '    End If
+
+    'End Sub
+
+    'make only first item of combobox item of datagridview editable
+    'Private Sub CB_SelectedIndexChanged(sender As Object, e As EventArgs)
+    '    Dim cb As ComboBox = TryCast(sender, ComboBox)
+    '    cb.DropDownStyle = If(cb.SelectedIndex = 0, ComboBoxStyle.DropDown, ComboBoxStyle.DropDownList)
+    'End Sub
+
+    'update first and fifth item of datagridview and update the object 
+    Private Sub ID_LISTVIEW_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles ID_LISTVIEW.CellValidating
+        If e.ColumnIndex = 2 Or e.ColumnIndex = 6 Then
+
+            Dim cell = TryCast(ID_LISTVIEW.Rows(e.RowIndex).Cells(e.ColumnIndex), DataGridViewComboBoxCell)
+
+            If cell IsNot Nothing AndAlso Not Equals(e.FormattedValue.ToString(), String.Empty) Then
+                cell.Items(0) = e.FormattedValue
+
+                If ID_LISTVIEW.IsCurrentCellDirty Then
+                    ID_LISTVIEW.CommitEdit(DataGridViewDataErrorContexts.Commit)
+                End If
+
+                cell.Value = e.FormattedValue
+                Dim obj_list = objectList
+                Dim obj = obj_list.ElementAt(e.RowIndex)
+                If e.ColumnIndex = 2 Then
+                    obj.description = cell.Value
+                Else
+                    obj.judgement = cell.Value
+                End If
+
+                obj_list(e.RowIndex) = obj
+                objectList = obj_list
+
+            End If
+        ElseIf e.ColumnIndex = 3 Or e.ColumnIndex = 4 Then
+            Dim cell = TryCast(ID_LISTVIEW.Rows(e.RowIndex).Cells(e.ColumnIndex), DataGridViewTextBoxCell)
+
+            If cell IsNot Nothing AndAlso Not Equals(e.FormattedValue.ToString(), String.Empty) Then
+
+                If ID_LISTVIEW.IsCurrentCellDirty Then
+                    ID_LISTVIEW.CommitEdit(DataGridViewDataErrorContexts.Commit)
+                End If
+
+                cell.Value = e.FormattedValue
+                Dim obj_list = objectList
+                Dim obj = obj_list.ElementAt(e.RowIndex)
+                If e.ColumnIndex = 3 Then
+                    obj.parameter = cell.Value
+                Else
+                    obj.spec = cell.Value
+                End If
+
+                obj_list(e.RowIndex) = obj
+                objectList = obj_list
+
+            End If
+        End If
+    End Sub
+
+    'handles exception for datagridview
+    Private Sub ID_LISTVIEW_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles ID_LISTVIEW.DataError
+        If e.ColumnIndex = 0 AndAlso e.RowIndex = 0 Then
+            e.Cancel = True
+        End If
     End Sub
 
 #End Region
@@ -2107,6 +2121,7 @@ Public Class Main_Form
 
     Private Sub AddMaxMinToList()
         objSelected.objNum = curObjNum
+        GetObjName(objectList, objSelected, scaleUnit)
         SetLineAndFont(objSelected, lineInfor, fontInfor)
         objectList.Add(objSelected)
         objSelected.Refresh()
